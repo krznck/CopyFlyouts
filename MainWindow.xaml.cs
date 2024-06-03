@@ -21,14 +21,59 @@ namespace copy_flash_wpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        private NotifyIcon _notifyIcon;
         HotkeyHandler hotkeyHandler;
 
         public MainWindow()
         {
             InitializeComponent();
+            CreateNotifyIcon();
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
         }
+
+        private void CreateNotifyIcon()
+        {
+            _notifyIcon = new NotifyIcon();
+            var iconUri = new Uri("pack://application:,,,/assets/icons/ic_fluent_clipboard_checkmark_16_filled.ico", UriKind.RelativeOrAbsolute);
+            var streamResourceInfo = System.Windows.Application.GetResourceStream(iconUri);
+            if (streamResourceInfo != null)
+            {
+                using (var stream = streamResourceInfo.Stream)
+                {
+                    _notifyIcon.Icon = new System.Drawing.Icon(stream);
+                }
+            }
+            _notifyIcon.DoubleClick += (s, args) => ShowWindow();
+            _notifyIcon.ContextMenuStrip = new ContextMenuStrip();
+            _notifyIcon.ContextMenuStrip.Items.Add("Exit", null, (s, args) => Close());
+            _notifyIcon.Visible = true;
+        }
+
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                Hide();
+                _notifyIcon.BalloonTipTitle = "Application Minimized";
+                _notifyIcon.BalloonTipText = "Your application has been minimized to the system tray.";
+                _notifyIcon.ShowBalloonTip(3000);
+            }
+            base.OnStateChanged(e);
+        }
+
+        private void ShowWindow()
+        {
+            Show();
+            WindowState = WindowState.Normal;
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            _notifyIcon.Dispose();
+            base.OnClosing(e);
+        }
+
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {

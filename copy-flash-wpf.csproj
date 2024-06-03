@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\icons\ic_fluent_clipboard_checkmark_16_filled.ico" />
     <None Remove="assets\icons\ic_fluent_clipboard_checkmark_16_filled.png" />
   </ItemGroup>
 
@@ -25,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="assets\icons\ic_fluent_clipboard_checkmark_16_filled.ico" />
     <Resource Include="assets\icons\ic_fluent_clipboard_checkmark_16_filled.png" />
   </ItemGroup>
 

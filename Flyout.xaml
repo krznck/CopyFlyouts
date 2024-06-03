@@ -32,7 +32,7 @@
         </Grid.RenderTransform>
 
         <!-- Notification area -->
-        <Border BorderThickness="1" Background="#FFF9F9F9" CornerRadius="10">
+        <Border BorderThickness="1" Background="#E5F9F9F9" CornerRadius="10" Padding="10">
             <Grid MaxHeight="60">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -41,8 +41,8 @@
                     <!-- For the TextBlock to take the remaining space -->
                 </Grid.ColumnDefinitions>
 
-                <ui:ImageIcon Height="25" Width="25" Grid.Column="0" Source="pack://application:,,,/assets/icons/ic_fluent_clipboard_checkmark_16_filled.png" Margin="10,0,10,0"/>
-                <TextBlock x:Name="text" TextWrapping="WrapWithOverflow" Grid.Column="1" VerticalAlignment="Center" MaxHeight="60" Padding="10" TextAlignment="Left" Foreground="#FF1A1A1A" FontSize="20" LineHeight="20">
+                <ui:ImageIcon Height="25" Width="25" Grid.Column="0" Source="pack://application:,,,/assets/icons/ic_fluent_clipboard_checkmark_16_filled.png" Margin="5,0,15,0"/>
+                <TextBlock x:Name="text" TextWrapping="WrapWithOverflow" Grid.Column="1" VerticalAlignment="Center" MaxHeight="60" Padding="0" TextAlignment="Left" Foreground="#FF1A1A1A" FontSize="20" LineHeight="20">
             <Run Text="Text to display."/>
                 </TextBlock>
             </Grid>
