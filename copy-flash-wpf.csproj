@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\icons\ic_fluent_clipboard_checkmark_16_filled.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="WPF-UI" Version="3.0.4" />
   </ItemGroup>
 
@@ -18,6 +22,10 @@
     <Reference Include="System.Windows.Forms">
       <HintPath>lib\System.Windows.Forms.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\icons\ic_fluent_clipboard_checkmark_16_filled.png" />
   </ItemGroup>
 
 </Project>

@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace copy_flash_wpf
 {
@@ -59,7 +60,7 @@ namespace copy_flash_wpf
                 handled = true;
                 // unregister hotkey to send in a standard Ctrl+C to copy stuff
                 UnregisterHotKey(new WindowInteropHelper(this).Handle, HOTKEY_ID);
-
+                
                 SendKeys.SendWait("^c"); // send the Ctrl+C command that will be handled normally now
 
                 // register hotkey again
@@ -68,19 +69,30 @@ namespace copy_flash_wpf
 
                 string clipboard = System.Windows.Clipboard.GetText();
                 copyText.Text = clipboard;
-                var flyout = new Flyout(clipboard);
+                var flyout = new Flyout(clipboard.Trim());
                 flyout.Show();
+
+                // Create a DispatcherTimer to close the flyout after 1.5 seconds
+                var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1500) };
+                timer.Tick += (sender, args) =>
+                {
+                    timer.Stop();
+                    flyout.Close();
+                };
+                timer.Start();
             }
             return IntPtr.Zero;
         }
 
-        private void myButton_Click(object sender, RoutedEventArgs e)
+        private async void myButton_Click(object sender, RoutedEventArgs e)
         {
             string clipboard = System.Windows.Clipboard.GetText();
             copyText.Text = clipboard;
 
-            var flyout = new Flyout(clipboard);
+            var flyout = new Flyout(clipboard.Trim());
             flyout.Show();
+            await Task.Delay(1500);
+            flyout.Close();
         }
     }
 }

@@ -1,23 +1,16 @@
 <Window
-    x:Class="Flyout"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  Title="Flyout" Width="300" SizeToContent="Height"
-  WindowStyle="None" AllowsTransparency="True" Background="Transparent">
+  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    x:Class="Flyout"
+  Title="Flyout" SizeToContent="WidthAndHeight" MaxWidth="600"
+  WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+    Topmost="True">
 
     <Grid RenderTransformOrigin="0,1" >
 
-        <!-- Notification area -->
-        <Border BorderThickness="1" Background="White" BorderBrush="Black" CornerRadius="10">
-            <StackPanel Margin="20">
-                <TextBlock x:Name="text" TextWrapping="Wrap" Margin="5">
-          Text to display.
-                </TextBlock>
-			</StackPanel>
-        </Border>
-
         <!-- Animation -->
-        <Grid.Triggers>
+        <!--<Grid.Triggers>
             <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                 <BeginStoryboard>
                     <Storyboard>
@@ -32,11 +25,29 @@
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
-        </Grid.Triggers>
+        </Grid.Triggers>-->
 
         <Grid.RenderTransform>
             <ScaleTransform ScaleY="1" />
         </Grid.RenderTransform>
+
+        <!-- Notification area -->
+        <Border BorderThickness="1" Background="#FFF9F9F9" CornerRadius="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- For the ImageIcon -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- For the TextBlock to take the remaining space -->
+                </Grid.ColumnDefinitions>
+
+                <ui:ImageIcon Height="25" Width="25" Grid.Column="0" Source="pack://application:,,,/assets/icons/ic_fluent_clipboard_checkmark_16_filled.png" Margin="10,0,10,0"/>
+                <TextBlock x:Name="text" TextWrapping="WrapWithOverflow" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" MaxHeight="60" Padding="10" TextAlignment="Left" Foreground="#FF1A1A1A" FontSize="20" LineHeight="20">
+            <Run Text="Text to display."/>
+                </TextBlock>
+            </Grid>
+        </Border>
+
 
     </Grid>
 
