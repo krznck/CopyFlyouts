@@ -28,6 +28,9 @@ namespace copy_flash_wpf
         private const int HOTKEY_ID = 9000;
         private HwndSource _source;
 
+        private Flyout? currentFlyout = null;
+        private DispatcherTimer? currentTimer = null;
+
         public HotkeyHandler(Window affectedWindow)
         {
             this.affectedWindow = affectedWindow;
@@ -58,28 +61,54 @@ namespace copy_flash_wpf
         /// </summary>
         private void HandleHotkey()
         {
-            // unregister hotkey to send in a standard Ctrl+C to copy stuff
+            // unregisters hotkey to send in a standard Ctrl+C to copy stuff
             UnregisterHotKey(new WindowInteropHelper(affectedWindow).Handle, HOTKEY_ID);
 
-            SendKeys.SendWait("^c"); // send the Ctrl+C command that will be handled normally now
+            SendKeys.SendWait("^c"); // sends the Ctrl+C command that will be handled normally now
 
-            // register hotkey again
+            // registers hotkey again
             var helper = new WindowInteropHelper(affectedWindow);
             RegisterHotKey(helper.Handle, HOTKEY_ID, (uint)ModifierKeys.Control, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
 
+            // closes the existing flyout and stops the timer immediately
+            if (currentFlyout != null)
+            {
+                currentFlyout.Close();
+                currentFlyout = null;
+            }
+            if (currentTimer != null)
+            {
+                currentTimer.Stop();
+                currentTimer = null;
+            }
+
+            // gets the text from the clipboard
             string clipboard = System.Windows.Clipboard.GetText();
+
+            // creates and show the new flyout
             var flyout = new Flyout(clipboard.Trim());
             flyout.Show();
 
-            // Create a DispatcherTimer to close the flyout after 1.5 seconds
+            // updates the current flyout reference
+            currentFlyout = flyout;
+
+            // creates a DispatcherTimer to close the flyout after 1.5 seconds
             var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1500) };
             timer.Tick += (sender, args) =>
             {
                 timer.Stop();
-                flyout.Close();
+                if (flyout == currentFlyout) // checks if the flyout is still the current one
+                {
+                    flyout.Close();
+                    currentFlyout = null;
+                }
             };
             timer.Start();
+
+            // updates the current timer reference
+            currentTimer = timer;
         }
+
 
         /// <summary>
         /// Get rid of the hotkey. This is public to ensure that this can be invoked on closing the MainWindow.
