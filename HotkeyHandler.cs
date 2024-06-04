@@ -71,16 +71,7 @@ namespace copy_flash_wpf
             RegisterHotKey(helper.Handle, HOTKEY_ID, (uint)ModifierKeys.Control, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
 
             // closes the existing flyout and stops the timer immediately
-            if (currentFlyout != null)
-            {
-                currentFlyout.Close();
-                currentFlyout = null;
-            }
-            if (currentTimer != null)
-            {
-                currentTimer.Stop();
-                currentTimer = null;
-            }
+            CloseFlyout();
 
             // gets the text from the clipboard
             string clipboard = System.Windows.Clipboard.GetText();
@@ -109,12 +100,27 @@ namespace copy_flash_wpf
             currentTimer = timer;
         }
 
+        public void CloseFlyout()
+        {
+            if (currentFlyout != null)
+            {
+                currentFlyout.Close();
+                currentFlyout = null;
+            }
+            if (currentTimer != null)
+            {
+                currentTimer.Stop();
+                currentTimer = null;
+            }
+        }
+
 
         /// <summary>
         /// Get rid of the hotkey. This is public to ensure that this can be invoked on closing the MainWindow.
         /// </summary>
         public void Unregister()
         {
+            CloseFlyout();
             _source.RemoveHook(WndProc);
             UnregisterHotKey(new WindowInteropHelper(affectedWindow).Handle, HOTKEY_ID);
         }
