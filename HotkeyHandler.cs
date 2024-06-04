@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace copy_flash_wpf
 {
@@ -30,6 +32,8 @@ namespace copy_flash_wpf
 
         private Flyout? currentFlyout = null;
         private DispatcherTimer? currentTimer = null;
+
+        private string? previousClipboard = null;
 
         public HotkeyHandler(Window affectedWindow)
         {
@@ -75,10 +79,24 @@ namespace copy_flash_wpf
 
             // gets the text from the clipboard
             string clipboard = System.Windows.Clipboard.GetText();
+            bool copyIsEmpty = clipboard.Trim().Length == 0;
+            System.Threading.Thread.Sleep(100); // wait a little bit before opening the flyout to prevent clipboard access conflict
 
             // creates and show the new flyout
             var flyout = new Flyout(clipboard.Trim());
+            if (previousClipboard != null && (previousClipboard.Equals(clipboard)))
+            {
+                flyout.SetToErrorIcon();
+            }
+            if (copyIsEmpty)
+            {
+                flyout.SetToErrorIcon();
+                flyout.text.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
+                flyout.text.Text = "Copied text is empty!";
+            }
             flyout.Show();
+
+            previousClipboard = clipboard;
 
             // updates the current flyout reference
             currentFlyout = flyout;

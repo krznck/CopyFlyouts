@@ -41,7 +41,7 @@
                     <!-- For the TextBlock to take the remaining space -->
                 </Grid.ColumnDefinitions>
 
-                <ui:ImageIcon Height="25" Width="25" Grid.Column="0" Source="pack://application:,,,/assets/icons/ic_fluent_clipboard_checkmark_16_filled.png" Margin="5,0,15,0"/>
+                <ui:ImageIcon x:Name="icon" Height="30" Width="26" Grid.Column="0" Source="pack://application:,,,/assets/icons/ic_fluent_clipboard_checkmark_16_filled.png" Margin="5,0,15,0"/>
                 <TextBlock x:Name="text" TextWrapping="WrapWithOverflow" Grid.Column="1" VerticalAlignment="Center" MaxHeight="60" Padding="0" TextAlignment="Left" Foreground="#FF1A1A1A" FontSize="20" LineHeight="20">
             <Run Text="Text to display."/>
                 </TextBlock>

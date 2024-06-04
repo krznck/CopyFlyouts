@@ -1,6 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Color = System.Windows.Media.Color;
 
 public partial class Flyout : Window
 {
@@ -53,5 +57,11 @@ public partial class Flyout : Window
         int exStyle = GetWindowLong(helper.Handle, GWL_EXSTYLE);
         exStyle |= WS_EX_TOOLWINDOW;
         SetWindowLong(helper.Handle, GWL_EXSTYLE, exStyle);
+    }
+
+    public void SetToErrorIcon()
+    {
+        BitmapImage bitmapImage = new BitmapImage(new Uri("pack://application:,,,/assets/icons/ic_fluent_clipboard_error_16_filled.png", UriKind.RelativeOrAbsolute));
+        icon.Source = bitmapImage;
     }
 }
