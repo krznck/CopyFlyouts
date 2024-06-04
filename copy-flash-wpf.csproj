@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\audio\damage.wav" />
     <None Remove="assets\icons\ic_fluent_clipboard_checkmark_16_filled.ico" />
     <None Remove="assets\icons\ic_fluent_clipboard_checkmark_16_filled.png" />
     <None Remove="assets\icons\ic_fluent_clipboard_error_16_filled.png" />
@@ -27,9 +28,27 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="assets\audio\damage.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="assets\icons\ic_fluent_clipboard_checkmark_16_filled.ico" />
     <Resource Include="assets\icons\ic_fluent_clipboard_checkmark_16_filled.png" />
     <Resource Include="assets\icons\ic_fluent_clipboard_error_16_filled.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

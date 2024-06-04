@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,15 +85,17 @@ namespace copy_flash_wpf
 
             // creates and show the new flyout
             var flyout = new Flyout(clipboard.Trim());
-            if (previousClipboard != null && (previousClipboard.Equals(clipboard)))
-            {
-                flyout.SetToErrorIcon();
-            }
             if (copyIsEmpty)
             {
                 flyout.SetToErrorIcon();
+                PlayErrorSound();
                 flyout.text.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
                 flyout.text.Text = "Copied text is empty!";
+            }
+            else if (previousClipboard != null && (previousClipboard.Equals(clipboard)))
+            {
+                PlayErrorSound();
+                flyout.SetToErrorIcon();
             }
             flyout.Show();
 
@@ -132,6 +135,12 @@ namespace copy_flash_wpf
             }
         }
 
+        private void PlayErrorSound()
+        {
+            SoundPlayer player = new SoundPlayer(@"assets\audio\damage.wav");
+            player.Load();
+            player.Play();
+        }
 
         /// <summary>
         /// Get rid of the hotkey. This is public to ensure that this can be invoked on closing the MainWindow.
