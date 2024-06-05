@@ -86,13 +86,7 @@ namespace copy_flash_wpf
 
         private async void myButton_Click(object sender, RoutedEventArgs e)
         {
-            string clipboard = System.Windows.Clipboard.GetText();
-            copyText.Text = clipboard;
-
-            var flyout = new Flyout(clipboard.Trim());
-            flyout.Show();
-            await Task.Delay(1500);
-            flyout.Close();
+            //
         }
     }
 }

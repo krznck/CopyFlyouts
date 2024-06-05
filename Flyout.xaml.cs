@@ -1,10 +1,14 @@
-﻿using System.Runtime.InteropServices;
+﻿using copy_flash_wpf;
+using System.Media;
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Wpf.Ui.Controls;
 using Color = System.Windows.Media.Color;
 
 public partial class Flyout : Window
@@ -20,11 +24,31 @@ public partial class Flyout : Window
     public const int WS_EX_TOOLWINDOW = 0x00000080;
     public const int WS_EX_TRANSPARENT = 0x00000020;
 
-    public Flyout(string textToShow)
+    public Flyout(ClipboardContent clipContent)
     {
         InitializeComponent();
         this.Loaded += Flyout_Loaded;
-        text.Text = textToShow;
+        text.Text = clipContent.Text;
+
+        if (clipContent.fileAmount > 0)
+        {
+            fileGrid.Visibility = Visibility.Visible;
+            AddFileIcon();
+        }
+        if (clipContent.fileAmount > 1)
+        {
+            amount.Value = clipContent.fileAmount.ToString();
+            amount.Visibility = Visibility.Visible;
+        }
+
+        bool copyIsEmpty = clipContent.Text.Length == 0;
+        if (copyIsEmpty)
+        {
+            SetToErrorIcon();
+            PlayErrorSound();
+            text.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
+            text.Text = "Copied text is empty!";
+        }
 
         this.ShowInTaskbar = false;
         this.Focusable = false;
@@ -47,6 +71,12 @@ public partial class Flyout : Window
         // center the flyout within the working area of the current screen (and a little bit to the bottom)
         this.Left = workingArea.Left + (workingArea.Width - windowWidth) / 2;
         this.Top = workingArea.Top + (workingArea.Height - windowHeight) / 1.2;
+    }
+    public void PlayErrorSound()
+    {
+        SoundPlayer player = new SoundPlayer(@"assets\audio\damage.wav");
+        player.Load();
+        player.Play();
     }
 
     /// <summary>
@@ -73,5 +103,13 @@ public partial class Flyout : Window
     {
         BitmapImage bitmapImage = new BitmapImage(new Uri("pack://application:,,,/assets/icons/ic_fluent_clipboard_error_16_filled.png", UriKind.RelativeOrAbsolute));
         icon.Source = bitmapImage;
+    }
+
+    private void AddFileIcon()
+    {
+        BitmapImage bitmapImage = new BitmapImage(new Uri("pack://application:,,,/assets/icons/ic_fluent_document_copy_48_filled.png", UriKind.RelativeOrAbsolute));
+        icon2.Source = bitmapImage;
+        icon2.Visibility = Visibility.Visible;
+        icon.Margin = new Thickness(0, 0, 10, 0);
     }
 }

@@ -19,7 +19,7 @@ namespace copy_flash_wpf
     /// <summary>
     /// Handles everything to do with the Ctrl+C hotkey.
     /// </summary>
-    class HotkeyHandler
+    public class HotkeyHandler
     {
         private Window affectedWindow; // the window we register the hotkey on
 
@@ -35,7 +35,7 @@ namespace copy_flash_wpf
         private Flyout? currentFlyout = null;
         private DispatcherTimer? currentTimer = null;
 
-        private string? previousClipboard = null;
+        private ClipboardContent previousClipboard = new ClipboardContent(); // gets the last clipboard item on initialization
 
         public HotkeyHandler(Window affectedWindow)
         {
@@ -81,22 +81,14 @@ namespace copy_flash_wpf
 
             System.Threading.Thread.Sleep(100); // wait a little bit to prevent clipboard access conflict
             // gets the text from the clipboard
-            string clipboard = System.Windows.Clipboard.GetText();
-            string trimmedClipboard = Regex.Replace(clipboard, @"\s+", " ").Trim(); // replaces all whitespace with one space
-            bool copyIsEmpty = trimmedClipboard.Length == 0;
+            ClipboardContent clipboard = new ClipboardContent();
+            bool copyIsEmpty = clipboard.Text.Length == 0;
 
             // creates and show the new flyout
-            var flyout = new Flyout(trimmedClipboard);
-            if (copyIsEmpty)
+            var flyout = new Flyout(clipboard);
+            if (clipboard.Text.Length != 0 && previousClipboard != null && (previousClipboard.Equals(clipboard)))
             {
-                flyout.SetToErrorIcon();
-                PlayErrorSound();
-                flyout.text.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
-                flyout.text.Text = "Copied text is empty!";
-            }
-            else if (previousClipboard != null && (previousClipboard.Equals(clipboard)))
-            {
-                PlayErrorSound();
+                flyout.PlayErrorSound();
                 flyout.SetToErrorIcon();
             }
             flyout.Show();
@@ -135,13 +127,6 @@ namespace copy_flash_wpf
                 currentTimer.Stop();
                 currentTimer = null;
             }
-        }
-
-        private void PlayErrorSound()
-        {
-            SoundPlayer player = new SoundPlayer(@"assets\audio\damage.wav");
-            player.Load();
-            player.Play();
         }
 
         /// <summary>
