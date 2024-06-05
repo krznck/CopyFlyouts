@@ -17,6 +17,7 @@ public partial class Flyout : Window
 
     public const int GWL_EXSTYLE = -20;
     public const int WS_EX_TOOLWINDOW = 0x00000080;
+    public const int WS_EX_TRANSPARENT = 0x00000020;
 
     public Flyout(string textToShow)
     {
@@ -26,6 +27,9 @@ public partial class Flyout : Window
 
         this.ShowInTaskbar = false;
         this.Focusable = false;
+
+        // makes the flyout lose opacity on hover
+        this.Opacity = 0.8;
     }
 
     private void Flyout_Loaded(object sender, RoutedEventArgs e)
@@ -45,17 +49,17 @@ public partial class Flyout : Window
     public new void Show()
     {
         base.Show();
-        MakeToolWindow(this);
+        MakeToolWindowAndClickThrough(this);
     }
 
     /// <summary>
-    /// Makes a window (this window) a tool window, therefore not displaying it in alt-tab.
+    /// Makes a window (this window) a tool window and click-through, therefore not displaying it in alt-tab and allowing clicks to pass through.
     /// </summary>
-    public static void MakeToolWindow(Window window)
+    private static void MakeToolWindowAndClickThrough(Window window)
     {
         WindowInteropHelper helper = new WindowInteropHelper(window);
         int exStyle = GetWindowLong(helper.Handle, GWL_EXSTYLE);
-        exStyle |= WS_EX_TOOLWINDOW;
+        exStyle |= WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT; // Combine styles with bitwise OR
         SetWindowLong(helper.Handle, GWL_EXSTYLE, exStyle);
     }
 
