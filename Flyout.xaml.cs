@@ -1,4 +1,5 @@
 ﻿using copy_flash_wpf;
+using System.IO;
 using System.Media;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -48,6 +49,13 @@ public partial class Flyout : Window
             PlayErrorSound();
             text.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
             text.Text = "Copied text is empty!";
+        }
+        
+        if (clipContent.image != null)
+        {
+            AddImageIcon();
+            flyoutImage.Source = ConvertDrawingImageToWPFImage(clipContent.image);
+            flyoutImage.Visibility = Visibility.Visible;
         }
 
         this.ShowInTaskbar = false;
@@ -105,11 +113,45 @@ public partial class Flyout : Window
         icon.Source = bitmapImage;
     }
 
-    private void AddFileIcon()
+    private void AddSecondIcon(String iconName)
     {
-        BitmapImage bitmapImage = new BitmapImage(new Uri("pack://application:,,,/assets/icons/ic_fluent_document_copy_48_filled.png", UriKind.RelativeOrAbsolute));
+        string path = "pack://application:,,,/assets/icons/" + iconName + ".png";
+        BitmapImage bitmapImage = new BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute));
         icon2.Source = bitmapImage;
         icon2.Visibility = Visibility.Visible;
         icon.Margin = new Thickness(0, 0, 10, 0);
+    }
+
+    private void AddFileIcon()
+    {
+        AddSecondIcon("ic_fluent_document_copy_48_filled");
+    }
+
+    private void AddImageIcon()
+    {
+        AddSecondIcon("ic_fluent_image_copy_28_filled");
+        icon2.Width = 35;
+    }
+
+    /// <summary>
+    /// WPF-UI's ImageIcon does not accept System.Drawing.Image object, so this converts them to BitmapImage objects.
+    /// </summary>
+    private ImageSource ConvertDrawingImageToWPFImage(System.Drawing.Image drawingImage)
+    {
+        using (var ms = new MemoryStream())
+        {
+            // save to memory stream
+            drawingImage.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            ms.Seek(0, SeekOrigin.Begin);
+
+            // then create a new BitmapImage and set its properties
+            BitmapImage bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.StreamSource = ms;
+            bitmapImage.EndInit();
+
+            return bitmapImage;
+        }
     }
 }

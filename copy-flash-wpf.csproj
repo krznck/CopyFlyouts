@@ -16,6 +16,7 @@
     <None Remove="assets\icons\ic_fluent_clipboard_checkmark_16_filled.png" />
     <None Remove="assets\icons\ic_fluent_clipboard_error_16_filled.png" />
     <None Remove="assets\icons\ic_fluent_document_copy_48_filled.png" />
+    <None Remove="assets\icons\ic_fluent_image_copy_28_filled.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +37,7 @@
     <Resource Include="assets\icons\ic_fluent_clipboard_checkmark_16_filled.png" />
     <Resource Include="assets\icons\ic_fluent_clipboard_error_16_filled.png" />
     <Resource Include="assets\icons\ic_fluent_document_copy_48_filled.png" />
+    <Resource Include="assets\icons\ic_fluent_image_copy_28_filled.png" />
   </ItemGroup>
 
   <ItemGroup>

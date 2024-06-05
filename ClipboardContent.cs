@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace copy_flash_wpf
 {
@@ -11,6 +12,7 @@ namespace copy_flash_wpf
     {
         private string text { get; set; } = "";
         public int fileAmount { get; } = 0;
+        public Image? image { get; } = null;
 
         public ClipboardContent()
         {
@@ -26,6 +28,11 @@ namespace copy_flash_wpf
                     fileAmount++;
                 }
                 Text = combinedPaths.TrimEnd(new char[] { ' ', ';' }); // removes the trailing semicolon
+            }
+            
+            if (Clipboard.ContainsImage())
+            {
+                image = Clipboard.GetImage();
             }
         }
 
@@ -45,12 +52,14 @@ namespace copy_flash_wpf
             if (other == null)
                 { return false; }
 
-            return (this.text == other.text) && (this.fileAmount == other.fileAmount);
+            return (this.text == other.text) 
+                && (this.fileAmount == other.fileAmount) 
+                && ((this.image == null && other.image == null) || (this.image != null && other.image != null));
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(text, fileAmount);
+            return HashCode.Combine(text, fileAmount, image);
         }
     }
 }
