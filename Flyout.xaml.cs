@@ -125,6 +125,7 @@ public partial class Flyout : Window
     private void AddFileIcon()
     {
         AddSecondIcon("ic_fluent_document_copy_48_filled");
+        icon2.Width = 33;
     }
 
     private void AddImageIcon()
