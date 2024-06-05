@@ -5,6 +5,7 @@ using System.Linq;
 using System.Media;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -78,13 +79,14 @@ namespace copy_flash_wpf
             // closes the existing flyout and stops the timer immediately
             CloseFlyout();
 
+            System.Threading.Thread.Sleep(100); // wait a little bit to prevent clipboard access conflict
             // gets the text from the clipboard
             string clipboard = System.Windows.Clipboard.GetText();
-            bool copyIsEmpty = clipboard.Trim().Length == 0;
-            System.Threading.Thread.Sleep(100); // wait a little bit before opening the flyout to prevent clipboard access conflict
+            string trimmedClipboard = Regex.Replace(clipboard, @"\s+", " ").Trim(); // replaces all whitespace with one space
+            bool copyIsEmpty = trimmedClipboard.Length == 0;
 
             // creates and show the new flyout
-            var flyout = new Flyout(clipboard.Trim());
+            var flyout = new Flyout(trimmedClipboard);
             if (copyIsEmpty)
             {
                 flyout.SetToErrorIcon();
