@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -27,20 +28,25 @@ public partial class Flyout : Window
 
         this.ShowInTaskbar = false;
         this.Focusable = false;
-
-        // makes the flyout lose opacity on hover
-        this.Opacity = 0.8;
     }
 
+    /// <summary>
+    /// Makes the flyout appear in the center of the screen, and a little to the bottom.
+    /// Utilizes the currently focused monitor - not always the main monitor.
+    /// </summary>
     private void Flyout_Loaded(object sender, RoutedEventArgs e)
     {
-        var screenWidth = SystemParameters.PrimaryScreenWidth;
-        var screenHeight = SystemParameters.PrimaryScreenHeight;
+        // get the current active screen where the cursor is located
+        var currentScreen = Screen.FromPoint(System.Windows.Forms.Cursor.Position);
+
+        // use the working area of the current screen to place the flyout
+        var workingArea = currentScreen.WorkingArea;
         var windowWidth = this.ActualWidth;
         var windowHeight = this.ActualHeight;
 
-        this.Left = (screenWidth / 2) - (windowWidth / 2);
-        this.Top = (screenHeight / 1.2) - (windowHeight / 2);
+        // center the flyout within the working area of the current screen (and a little bit to the bottom)
+        this.Left = workingArea.Left + (workingArea.Width - windowWidth) / 2;
+        this.Top = workingArea.Top + (workingArea.Height - windowHeight) / 1.2;
     }
 
     /// <summary>
