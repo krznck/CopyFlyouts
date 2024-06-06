@@ -86,7 +86,7 @@ namespace copy_flash_wpf
 
             // creates and show the new flyout
             var flyout = new Flyout(clipboard);
-            if (clipboard.Text.Length != 0 && previousClipboard != null && (previousClipboard.Equals(clipboard)))
+            if (previousClipboard != null && (previousClipboard.Equals(clipboard)))
             {
                 flyout.PlayErrorSound();
                 flyout.SetToErrorIcon();

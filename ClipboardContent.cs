@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -54,12 +55,31 @@ namespace copy_flash_wpf
 
             return (this.text == other.text) 
                 && (this.fileAmount == other.fileAmount) 
-                && ((this.image == null && other.image == null) || (this.image != null && other.image != null));
+                && (
+                    (this.image == null && other.image == null) 
+                    || (
+                        (this.image != null && other.image != null)
+                        && (ImageToByteArray(this.image).SequenceEqual(ImageToByteArray(other.image)))
+                        )
+                    );
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(text, fileAmount, image);
+            if (image == null)
+            {
+                return HashCode.Combine(text, fileAmount);
+            }
+            return HashCode.Combine(text, fileAmount, ImageToByteArray(image));
+        }
+
+        private byte[] ImageToByteArray(System.Drawing.Image imageIn)
+        {
+            using (var ms = new MemoryStream())
+            {
+                imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                return ms.ToArray();
+            }
         }
     }
 }

@@ -21,7 +21,7 @@ namespace copy_flash_wpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        private NotifyIcon _notifyIcon;
+        private NotifyIcon notifyIcon;
         HotkeyHandler hotkeyHandler;
 
         public MainWindow()
@@ -34,20 +34,20 @@ namespace copy_flash_wpf
 
         private void CreateNotifyIcon()
         {
-            _notifyIcon = new NotifyIcon();
+            notifyIcon = new NotifyIcon();
             var iconUri = new Uri("pack://application:,,,/assets/icons/ic_fluent_clipboard_checkmark_16_filled.ico", UriKind.RelativeOrAbsolute);
             var streamResourceInfo = System.Windows.Application.GetResourceStream(iconUri);
             if (streamResourceInfo != null)
             {
                 using (var stream = streamResourceInfo.Stream)
                 {
-                    _notifyIcon.Icon = new System.Drawing.Icon(stream);
+                    notifyIcon.Icon = new System.Drawing.Icon(stream);
                 }
             }
-            _notifyIcon.DoubleClick += (s, args) => ShowWindow();
-            _notifyIcon.ContextMenuStrip = new ContextMenuStrip();
-            _notifyIcon.ContextMenuStrip.Items.Add("Exit", null, (s, args) => Close());
-            _notifyIcon.Visible = true;
+            notifyIcon.DoubleClick += (s, args) => ShowWindow();
+            notifyIcon.ContextMenuStrip = new ContextMenuStrip();
+            notifyIcon.ContextMenuStrip.Items.Add("Exit", null, (s, args) => Close());
+            notifyIcon.Visible = true;
         }
 
         protected override void OnStateChanged(EventArgs e)
@@ -55,9 +55,6 @@ namespace copy_flash_wpf
             if (WindowState == WindowState.Minimized)
             {
                 Hide();
-                _notifyIcon.BalloonTipTitle = "Application Minimized";
-                _notifyIcon.BalloonTipText = "Your application has been minimized to the system tray.";
-                _notifyIcon.ShowBalloonTip(3000);
             }
             base.OnStateChanged(e);
         }
@@ -70,7 +67,7 @@ namespace copy_flash_wpf
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            _notifyIcon.Dispose();
+            notifyIcon.Dispose();
             base.OnClosing(e);
         }
 

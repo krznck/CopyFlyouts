@@ -35,7 +35,6 @@ namespace copy_flash_wpf
 
             if (clipContent.fileAmount > 0)
             {
-                fileGrid.Visibility = Visibility.Visible;
                 AddFileIcon();
             }
             if (clipContent.fileAmount > 1)
@@ -44,8 +43,12 @@ namespace copy_flash_wpf
                 amount.Visibility = Visibility.Visible;
             }
 
-            bool copyIsEmpty = clipContent.Text.Length == 0;
-            if (copyIsEmpty)
+            bool copyHasNoText = clipContent.Text.Length == 0;
+            bool copyHasImage = clipContent.image != null;
+
+            // note: we're checking for image here, because clipboard history will only retain an image without its path.
+            // so without this check, it will show the image, but also that no text was copied, which isn't false, but misleading
+            if (copyHasNoText && !copyHasImage)
             {
                 SetToErrorIcon();
                 PlayErrorSound();
@@ -53,11 +56,16 @@ namespace copy_flash_wpf
                 text.Text = "Copied text is empty!";
             }
 
-            if (clipContent.image != null)
+            if (copyHasImage)
             {
                 AddImageIcon();
                 flyoutImage.Source = ConvertDrawingImageToWPFImage(clipContent.image);
                 flyoutImage.Visibility = Visibility.Visible;
+
+                if (copyHasNoText)
+                {
+                    Grid.SetColumnSpan(fileGrid, 2);
+                }
             }
 
             this.ShowInTaskbar = false;
@@ -122,6 +130,8 @@ namespace copy_flash_wpf
             icon2.Source = bitmapImage;
             icon2.Visibility = Visibility.Visible;
             icon.Margin = new Thickness(0, 0, 10, 0);
+
+            fileGrid.Visibility = Visibility.Visible;
         }
 
         private void AddFileIcon()
