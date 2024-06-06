@@ -47,6 +47,7 @@ namespace copy_flash_wpf
             notifyIcon.DoubleClick += (s, args) => ShowWindow();
             notifyIcon.ContextMenuStrip = new ContextMenuStrip();
             notifyIcon.ContextMenuStrip.Items.Add("Exit", null, (s, args) => Close());
+            notifyIcon.Text = "CopyFlash";
             notifyIcon.Visible = true;
         }
 
