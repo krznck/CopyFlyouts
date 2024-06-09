@@ -22,20 +22,19 @@ namespace copy_flash_wpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        private TaskbarIcon notifyIcon;
+        private SystemTrayIcon notifyIcon;
         HotkeyHandler hotkeyHandler;
 
         public MainWindow()
         {
             InitializeComponent();
-            CreateNotifyIcon();
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
         }
 
         private void CreateNotifyIcon()
         {
-            notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
+            notifyIcon = new SystemTrayIcon(hotkeyHandler);
         }
 
         protected override void OnStateChanged(EventArgs e)
@@ -55,7 +54,6 @@ namespace copy_flash_wpf
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            notifyIcon.Dispose();
             base.OnClosing(e);
         }
 
@@ -63,6 +61,7 @@ namespace copy_flash_wpf
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             hotkeyHandler = new(this);
+            CreateNotifyIcon();
         }
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

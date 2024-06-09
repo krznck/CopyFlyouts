@@ -29,6 +29,8 @@ namespace copy_flash_wpf
         [DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
+        public bool IsRegistered { get; private set; } = false;
+
         private const int HOTKEY_ID = 9000;
         private HwndSource _source;
 
@@ -40,12 +42,9 @@ namespace copy_flash_wpf
         public HotkeyHandler(Window affectedWindow)
         {
             this.affectedWindow = affectedWindow;
-            var helper = new WindowInteropHelper(affectedWindow);
-            _source = HwndSource.FromHwnd(helper.Handle);
-            _source.AddHook(WndProc);
 
             // Register Ctrl + + C as global hotkey
-            RegisterHotKey(helper.Handle, HOTKEY_ID, (uint)ModifierKeys.Control, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
+            Register();
         }
 
         /// <summary>
@@ -130,6 +129,20 @@ namespace copy_flash_wpf
         }
 
         /// <summary>
+        /// Registers the hotkey. This is public so that the user can invoke this via clicking buttons.
+        /// </summary>
+        public void Register()
+        {
+            var helper = new WindowInteropHelper(affectedWindow);
+            _source = HwndSource.FromHwnd(helper.Handle);
+            _source.AddHook(WndProc);
+
+            RegisterHotKey(helper.Handle, HOTKEY_ID, (uint)ModifierKeys.Control, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
+
+            IsRegistered = true;
+        }
+
+        /// <summary>
         /// Get rid of the hotkey. This is public to ensure that this can be invoked on closing the MainWindow.
         /// </summary>
         public void Unregister()
@@ -137,6 +150,8 @@ namespace copy_flash_wpf
             CloseFlyout();
             _source.RemoveHook(WndProc);
             UnregisterHotKey(new WindowInteropHelper(affectedWindow).Handle, HOTKEY_ID);
+
+            IsRegistered = false;
         }
 
         ~HotkeyHandler()

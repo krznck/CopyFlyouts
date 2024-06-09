@@ -1,0 +1,153 @@
+﻿<Window x:Class="copy_flash_wpf.SystemTrayIcon"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:local="clr-namespace:copy_flash_wpf"
+        mc:Ignorable="d"
+        Title="SystemTrayIcon">
+
+    <Window.Resources>
+        <Style x:Key="PopupItemStyle" TargetType="StackPanel">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="Margin" Value="0 0 0 5"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#ebebeb"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="PopupTextStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#FF1A1A1A"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="0 7 10 7"/>
+            <Setter Property="Width" Value="100"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <tb:TaskbarIcon
+                 IconSource="/assets/icons/ic_fluent_clipboard_checkmark_16_filled.ico"
+                 ToolTipText="Copy Flash"
+                 Visibility="Visible"
+                 PopupActivation="RightClick">
+
+            <tb:TaskbarIcon.TrayToolTip>
+                <Border
+                 Background="#FFF9F9F9"
+                 BorderBrush="#19000000"
+                 BorderThickness="2"
+                 Padding="10 7 10 7"
+                 CornerRadius="4"
+                 Opacity="0.95">
+                    <StackPanel 
+                        Grid.Row="1" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            Grid.Row="0"
+                            Text="CopyFlash"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="#FF1A1A1A"
+                            Margin="0 0 10 0"
+                            FontSize="12"
+                        />
+                        <ui:SymbolIcon
+                            x:Name="TooltipIcon"
+                            Symbol="Play24"
+                            Filled="True"
+                        />
+                    </StackPanel>
+                </Border>
+            </tb:TaskbarIcon.TrayToolTip>
+
+            <tb:TaskbarIcon.TrayPopup>
+                <Border
+                     Background="#FFF9F9F9"
+                     BorderBrush="#19000000"
+                     BorderThickness="2"
+                     Padding="10 7 10 7"
+                     CornerRadius="4"
+                     Opacity="0.95">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel
+                            Style="{StaticResource PopupItemStyle}"
+                            Grid.Row="0"
+                            MouseLeftButtonDown="PopupActivityClick">
+                            <ui:SymbolIcon
+                                 x:Name="PopupActivitySymbol"
+                                 Symbol="Pause24"
+                                 FontSize="20"
+                                 Margin="5 0 10 0"
+                            />
+                            <TextBlock
+                                x:Name="PopupActivityText"
+                                Text="Stop"
+                                Style="{StaticResource PopupTextStyle}"
+                            />
+                        </StackPanel>
+                        <StackPanel
+                           Style="{StaticResource PopupItemStyle}"
+                           Grid.Row="1">
+                            <ui:SymbolIcon
+                               Symbol="ArrowExpand24"
+                               FontSize="20"
+                               Margin="5 0 10 0"
+                              />
+                            <TextBlock
+                               Text="Open"
+                               Style="{StaticResource PopupTextStyle}"
+                            />
+                        </StackPanel>
+                        <StackPanel
+                            Style="{StaticResource PopupItemStyle}"
+                            Grid.Row="2">
+                            <ui:SymbolIcon
+                                Symbol="Settings24"
+                                FontSize="20"
+                                Margin="5 0 10 0"
+                            />
+                            <TextBlock
+                                Text="Settings"
+                                Style="{StaticResource PopupTextStyle}"
+                            />
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Row="3" 
+                            Style="{StaticResource PopupItemStyle}">
+                            <ui:SymbolIcon
+                                Symbol="Power24"
+                                FontSize="20"
+                                Margin="5 0 10 0"
+                            />
+                            <TextBlock
+                                Text="Exit"
+                                Style="{StaticResource PopupTextStyle}"
+                            />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </tb:TaskbarIcon.TrayPopup>
+
+        </tb:TaskbarIcon>
+    </Grid>
+</Window>
