@@ -7,7 +7,8 @@
     <tb:TaskbarIcon x:Key="NotifyIcon"
                   IconSource="/assets/icons/ic_fluent_clipboard_checkmark_16_filled.ico"
                   ToolTipText="Copy Flash"
-                  Visibility="Visible">
+                  Visibility="Visible"
+                  PopupActivation="LeftOrRightClick">
 
         <tb:TaskbarIcon.TrayToolTip>
             <Border
@@ -15,8 +16,9 @@
               BorderBrush="#19000000"
               BorderThickness="2"
               Padding="10 7 10 7"
-              CornerRadius="4">
-                <Grid x:Name="grid">
+              CornerRadius="4"
+              Opacity="0.95">
+                <Grid x:Name="tooltipGrid">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -33,6 +35,7 @@
                         VerticalAlignment="Center"
                         Foreground="#FF1A1A1A"
                         Margin="0 0 0 6"
+                        FontSize="12"
                     />
 
                     <!--Row 1-->
@@ -48,16 +51,70 @@
                         Foreground="#FF1A1A1A"
                         FontSize="12" 
                         />
-                        <ui:ImageIcon
-                        x:Name="icon"
+                        <ui:SymbolIcon
+                        x:Name="activityIcon"
                         Height="15" 
                         Width="15" 
-                        Source="pack://application:,,,/assets/icons/ic_fluent_play_48_filled.png" 
+                        Symbol="Play24"
+                        Filled="True"
                         />
                     </StackPanel>
                 </Grid>
             </Border>
         </tb:TaskbarIcon.TrayToolTip>
+
+        <tb:TaskbarIcon.TrayPopup>
+            <Border
+              Background="#FFF9F9F9"
+              BorderBrush="#19000000"
+              BorderThickness="2"
+              Padding="10 7 10 7"
+              CornerRadius="4"
+              Opacity="0.95">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel
+                        Grid.Row="0" 
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal"
+                        Margin="0 0 0 5">
+                        <ui:SymbolIcon
+                        Symbol="Settings24"
+                        Margin="0 0 5 0"
+                        />
+                        <TextBlock
+                        Text="Settings"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="#FF1A1A1A"
+                        FontSize="16" 
+                        />
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="1" 
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <ui:SymbolIcon
+                        Symbol="Power24"
+                        Margin="0 0 5 0"
+                        />
+                        <TextBlock
+                        Text="Exit"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="#FF1A1A1A"
+                        FontSize="16" 
+                        />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </tb:TaskbarIcon.TrayPopup>
 
     </tb:TaskbarIcon>
 

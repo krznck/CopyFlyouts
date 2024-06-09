@@ -22,7 +22,7 @@
                         <!-- Fade in animation -->
                         <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)"
                                          From="0" To="1" Duration="0:0:0.1"/>
-                         <!--Move up animation--> 
+                        <!--Move up animation-->
                         <DoubleAnimation Storyboard.TargetName="translate"
                                          Storyboard.TargetProperty="Y"
                                          From="60" To="0" Duration="0:0:0.07"/>
@@ -44,9 +44,9 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <ui:ImageIcon x:Name="icon" Height="30" Width="26" Grid.Column="0" Grid.Row="0" Source="pack://application:,,,/assets/icons/ic_fluent_clipboard_checkmark_16_filled.png" Margin="5,0,15,0"/>
+                <ui:SymbolIcon x:Name="icon" Grid.Column="0" Grid.Row="0" Symbol="ClipboardCheckmark16" Filled="True" Margin="5,0,15,0" FontSize="26"/>
                 <Grid x:Name="fileGrid" Grid.Column="1" Grid.Row="0" Visibility="Collapsed">
-                    <ui:ImageIcon x:Name="icon2" Visibility="Visible" Margin="0 0 15 0" Width="29" Height="39"/>
+                    <ui:SymbolIcon x:Name="icon2" Visibility="Visible" Margin="0 0 15 0" FontSize="26" Filled="True"/>
                     <ui:InfoBadge x:Name="amount" Visibility="Collapsed" Value="0" Severity="Informational" Margin="-10,-10,15,14"/>
                 </Grid>
                 <TextBlock x:Name="text" 

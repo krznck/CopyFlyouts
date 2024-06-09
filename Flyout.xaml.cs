@@ -119,15 +119,13 @@ namespace copy_flash_wpf
 
         public void SetToErrorIcon()
         {
-            BitmapImage bitmapImage = new BitmapImage(new Uri("pack://application:,,,/assets/icons/ic_fluent_clipboard_error_16_filled.png", UriKind.RelativeOrAbsolute));
-            icon.Source = bitmapImage;
+            icon.Symbol = SymbolRegular.ClipboardError16;
+            icon.Foreground = new SolidColorBrush((Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
         }
 
-        private void AddSecondIcon(String iconName)
+        private void AddSecondIcon(SymbolRegular symbol)
         {
-            string path = "pack://application:,,,/assets/icons/" + iconName + ".png";
-            BitmapImage bitmapImage = new BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute));
-            icon2.Source = bitmapImage;
+            icon2.Symbol = symbol;
             icon2.Visibility = Visibility.Visible;
             icon.Margin = new Thickness(0, 0, 10, 0);
 
@@ -136,13 +134,13 @@ namespace copy_flash_wpf
 
         private void AddFileIcon()
         {
-            AddSecondIcon("ic_fluent_document_copy_48_filled");
+            AddSecondIcon(SymbolRegular.DocumentCopy16);
             icon2.Width = 33;
         }
 
         private void AddImageIcon()
         {
-            AddSecondIcon("ic_fluent_image_copy_28_filled");
+            AddSecondIcon(SymbolRegular.ImageCopy24);
             icon2.Width = 35;
         }
 
