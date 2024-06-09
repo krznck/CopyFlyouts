@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Windows.Threading;
+using Hardcodet.Wpf.TaskbarNotification;
 
 namespace copy_flash_wpf
 {
@@ -21,7 +22,7 @@ namespace copy_flash_wpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        private NotifyIcon notifyIcon;
+        private TaskbarIcon notifyIcon;
         HotkeyHandler hotkeyHandler;
 
         public MainWindow()
@@ -34,21 +35,7 @@ namespace copy_flash_wpf
 
         private void CreateNotifyIcon()
         {
-            notifyIcon = new NotifyIcon();
-            var iconUri = new Uri("pack://application:,,,/assets/icons/ic_fluent_clipboard_checkmark_16_filled.ico", UriKind.RelativeOrAbsolute);
-            var streamResourceInfo = System.Windows.Application.GetResourceStream(iconUri);
-            if (streamResourceInfo != null)
-            {
-                using (var stream = streamResourceInfo.Stream)
-                {
-                    notifyIcon.Icon = new System.Drawing.Icon(stream);
-                }
-            }
-            notifyIcon.DoubleClick += (s, args) => ShowWindow();
-            notifyIcon.ContextMenuStrip = new ContextMenuStrip();
-            notifyIcon.ContextMenuStrip.Items.Add("Exit", null, (s, args) => Close());
-            notifyIcon.Text = "CopyFlash";
-            notifyIcon.Visible = true;
+            notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
         }
 
         protected override void OnStateChanged(EventArgs e)

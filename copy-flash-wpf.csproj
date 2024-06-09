@@ -17,9 +17,11 @@
     <None Remove="assets\icons\ic_fluent_clipboard_error_16_filled.png" />
     <None Remove="assets\icons\ic_fluent_document_copy_48_filled.png" />
     <None Remove="assets\icons\ic_fluent_image_copy_28_filled.png" />
+    <None Remove="assets\icons\ic_fluent_play_48_filled.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="WPF-UI" Version="3.0.4" />
   </ItemGroup>
 
@@ -38,6 +40,7 @@
     <Resource Include="assets\icons\ic_fluent_clipboard_error_16_filled.png" />
     <Resource Include="assets\icons\ic_fluent_document_copy_48_filled.png" />
     <Resource Include="assets\icons\ic_fluent_image_copy_28_filled.png" />
+    <Resource Include="assets\icons\ic_fluent_play_48_filled.png" />
   </ItemGroup>
 
   <ItemGroup>
