@@ -3,12 +3,33 @@
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
 
+    <Style x:Key="PopupItemStyle" TargetType="StackPanel">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Orientation" Value="Horizontal"/>
+        <Setter Property="Margin" Value="0 0 0 5"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#ebebeb"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PopupTextStyle" TargetType="TextBlock">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="#FF1A1A1A"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Padding" Value="0 7 10 7"/>
+        <Setter Property="Width" Value="100"/>
+    </Style>
+
     <!-- Globally declared notify icon -->
     <tb:TaskbarIcon x:Key="NotifyIcon"
                   IconSource="/assets/icons/ic_fluent_clipboard_checkmark_16_filled.ico"
                   ToolTipText="Copy Flash"
                   Visibility="Visible"
-                  PopupActivation="LeftOrRightClick">
+                  PopupActivation="RightClick">
 
         <tb:TaskbarIcon.TrayToolTip>
             <Border
@@ -18,48 +39,26 @@
               Padding="10 7 10 7"
               CornerRadius="4"
               Opacity="0.95">
-                <Grid x:Name="tooltipGrid">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-                    <!--Row 0-->
+                <StackPanel 
+                        Grid.Row="1" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
                     <TextBlock
                         Grid.Row="0"
                         Text="CopyFlash"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Foreground="#FF1A1A1A"
-                        Margin="0 0 0 6"
+                        Margin="0 0 10 0"
                         FontSize="12"
-                    />
-
-                    <!--Row 1-->
-                    <StackPanel 
-                        Grid.Row="1" 
-                        HorizontalAlignment="Center" 
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
-                        <TextBlock
-                        Text="active"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Foreground="#FF1A1A1A"
-                        FontSize="12" 
                         />
-                        <ui:SymbolIcon
+                    <ui:SymbolIcon
                         x:Name="activityIcon"
-                        Height="15" 
-                        Width="15" 
                         Symbol="Play24"
                         Filled="True"
                         />
-                    </StackPanel>
-                </Grid>
+                </StackPanel>
             </Border>
         </tb:TaskbarIcon.TrayToolTip>
 
@@ -75,41 +74,63 @@
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
                     <StackPanel
-                        Grid.Row="0" 
-                        HorizontalAlignment="Left" 
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal"
-                        Margin="0 0 0 5">
+                        Style="{StaticResource PopupItemStyle}"
+                        Grid.Row="0">
                         <ui:SymbolIcon
-                        Symbol="Settings24"
-                        Margin="0 0 5 0"
+                        Symbol="Pause24"
+                        FontSize="20"
+                        Margin="5 0 10 0"
                         />
                         <TextBlock
-                        Text="Settings"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Foreground="#FF1A1A1A"
-                        FontSize="16" 
+                        Text="Stop"
+                        Style="{StaticResource PopupTextStyle}"
                         />
                     </StackPanel>
                     <StackPanel
-                        Grid.Row="1" 
-                        HorizontalAlignment="Left" 
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Style="{StaticResource PopupItemStyle}"
+                        Grid.Row="1">
+                        <ui:SymbolIcon
+                        Symbol="ArrowExpand24"
+                        FontSize="20"
+                        Margin="5 0 10 0"
+                        />
+                        <TextBlock
+                        Text="Open"
+                        Style="{StaticResource PopupTextStyle}"
+                        />
+                    </StackPanel>
+                    <StackPanel
+                        Style="{StaticResource PopupItemStyle}"
+                        Grid.Row="2">
+                        <ui:SymbolIcon
+                        Symbol="Settings24"
+                        FontSize="20"
+                        Margin="5 0 10 0"
+                        />
+                        <TextBlock
+                        Text="Settings"
+                        Style="{StaticResource PopupTextStyle}"
+                        />
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="3" 
+                        Style="{StaticResource PopupItemStyle}">
                         <ui:SymbolIcon
                         Symbol="Power24"
-                        Margin="0 0 5 0"
+                        FontSize="20"
+                        Margin="5 0 10 0"
                         />
                         <TextBlock
                         Text="Exit"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Foreground="#FF1A1A1A"
-                        FontSize="16" 
+                        Style="{StaticResource PopupTextStyle}"
                         />
                     </StackPanel>
                 </Grid>
