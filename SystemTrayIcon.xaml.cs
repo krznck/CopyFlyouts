@@ -64,5 +64,10 @@ namespace copy_flash_wpf
                 VisualizeHotkeyEnabled();
             }
         }
+
+        private void PopupExitClick(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
     }
 }

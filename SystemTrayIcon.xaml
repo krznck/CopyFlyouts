@@ -132,6 +132,7 @@
                             />
                         </StackPanel>
                         <StackPanel
+                            MouseLeftButtonDown="PopupExitClick"
                             Grid.Row="3" 
                             Style="{StaticResource PopupItemStyle}">
                             <ui:SymbolIcon
