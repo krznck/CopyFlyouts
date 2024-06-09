@@ -37,7 +37,8 @@
                  IconSource="/assets/icons/ic_fluent_clipboard_checkmark_16_filled.ico"
                  ToolTipText="Copy Flash"
                  Visibility="Visible"
-                 PopupActivation="RightClick">
+                 PopupActivation="RightClick"
+                 x:Name="NotifyIcon">
 
             <tb:TaskbarIcon.TrayToolTip>
                 <Border
@@ -83,7 +84,6 @@
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
-                            <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -106,21 +106,9 @@
                             />
                         </StackPanel>
                         <StackPanel
-                           Style="{StaticResource PopupItemStyle}"
-                           Grid.Row="1">
-                            <ui:SymbolIcon
-                               Symbol="ArrowExpand24"
-                               FontSize="20"
-                               Margin="5 0 10 0"
-                              />
-                            <TextBlock
-                               Text="Open"
-                               Style="{StaticResource PopupTextStyle}"
-                            />
-                        </StackPanel>
-                        <StackPanel
                             Style="{StaticResource PopupItemStyle}"
-                            Grid.Row="2">
+                            MouseLeftButtonDown="PopupExpandClick"
+                            Grid.Row="1">
                             <ui:SymbolIcon
                                 Symbol="Settings24"
                                 FontSize="20"
@@ -133,7 +121,7 @@
                         </StackPanel>
                         <StackPanel
                             MouseLeftButtonDown="PopupExitClick"
-                            Grid.Row="3" 
+                            Grid.Row="2" 
                             Style="{StaticResource PopupItemStyle}">
                             <ui:SymbolIcon
                                 Symbol="Power24"

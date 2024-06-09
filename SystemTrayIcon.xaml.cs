@@ -20,14 +20,14 @@ namespace copy_flash_wpf
     /// </summary>
     public partial class SystemTrayIcon : Window
     {
-        public HotkeyHandler HotkeyHandler;
+        private readonly MainWindow mainWindow;
 
-        public SystemTrayIcon(HotkeyHandler hotkeyHandler)
+        public SystemTrayIcon(MainWindow mainWindow)
         {
             InitializeComponent();
-            HotkeyHandler = hotkeyHandler;
+            this.mainWindow = mainWindow;
 
-            if (hotkeyHandler.IsRegistered)
+            if (mainWindow.HotkeyHandler.IsRegistered)
             {
                 VisualizeHotkeyEnabled();
             }
@@ -53,14 +53,14 @@ namespace copy_flash_wpf
 
         private void PopupActivityClick(object sender, RoutedEventArgs e)
         {
-            if (HotkeyHandler.IsRegistered)
+            if (mainWindow.HotkeyHandler.IsRegistered)
             {
-                HotkeyHandler.Unregister();
+                mainWindow.HotkeyHandler.Unregister();
                 VisualizeHotkeyDisabled();
             }
             else
             {
-                HotkeyHandler.Register();
+                mainWindow.HotkeyHandler.Register();
                 VisualizeHotkeyEnabled();
             }
         }
@@ -68,6 +68,12 @@ namespace copy_flash_wpf
         private void PopupExitClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Application.Current.Shutdown();
+        }
+
+        private void PopupExpandClick(object sender, RoutedEventArgs e)
+        {
+            NotifyIcon.Dispose();
+            mainWindow.Show();
         }
     }
 }

@@ -23,7 +23,8 @@ namespace copy_flash_wpf
     public partial class MainWindow : Window
     {
         private SystemTrayIcon notifyIcon;
-        HotkeyHandler hotkeyHandler;
+        private HotkeyHandler hotkeyHandler;
+        public HotkeyHandler HotkeyHandler { get => hotkeyHandler; private set => hotkeyHandler = value; }
 
         public MainWindow()
         {
@@ -34,7 +35,7 @@ namespace copy_flash_wpf
 
         private void CreateNotifyIcon()
         {
-            notifyIcon = new SystemTrayIcon(hotkeyHandler);
+            notifyIcon = new SystemTrayIcon(this);
         }
 
         protected override void OnStateChanged(EventArgs e)
@@ -42,11 +43,12 @@ namespace copy_flash_wpf
             if (WindowState == WindowState.Minimized)
             {
                 Hide();
+                CreateNotifyIcon();
             }
             base.OnStateChanged(e);
         }
 
-        private void ShowWindow()
+        public void ShowWindow()
         {
             Show();
             WindowState = WindowState.Normal;
@@ -60,12 +62,12 @@ namespace copy_flash_wpf
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            hotkeyHandler = new(this);
-            CreateNotifyIcon();
+            HotkeyHandler = new(this);
         }
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            hotkeyHandler.Unregister();
+            HotkeyHandler.Unregister();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private async void myButton_Click(object sender, RoutedEventArgs e)
