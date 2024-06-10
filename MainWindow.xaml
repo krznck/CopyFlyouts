@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:copy_flash_wpf"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="copy_flash_wpf.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="370">
+        Title="MainWindow" Height="450" Width="500">
     <Grid>
         <ui:Button x:Name="myButton" Click="myButton_Click" Content="Click me" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <ui:TextBlock x:Name="copyText" HorizontalAlignment="Center" TextWrapping="Wrap" Text="copytext" VerticalAlignment="Top" Margin="0,279,0,0"/>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace copy_flash_wpf
     /// </summary>
     public partial class SystemTrayIcon : Window
     {
-        private readonly MainWindow mainWindow;
+        private readonly MainWindow mainWindow; // here so that we can bring it up, and register/unregister the hotkey
 
         public SystemTrayIcon(MainWindow mainWindow)
         {
@@ -72,8 +73,14 @@ namespace copy_flash_wpf
 
         private void PopupExpandClick(object sender, RoutedEventArgs e)
         {
+            // gets rid of the remaining notify icon, since we don't need this until the main window is minimized again
+            NotifyIcon.TrayPopupResolved.IsOpen = false;
             NotifyIcon.Dispose();
+
+            // and brings the main window up
             mainWindow.Show();
+            mainWindow.WindowState = WindowState.Normal;
+            mainWindow.Activate();
         }
     }
 }
