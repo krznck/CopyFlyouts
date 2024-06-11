@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Windows;
 
 namespace copy_flash_wpf
@@ -9,5 +10,9 @@ namespace copy_flash_wpf
     /// </summary>
     public partial class App : System.Windows.Application
     {
+        public App()
+        {
+            //
+        }
     }
 }

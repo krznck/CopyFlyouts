@@ -30,6 +30,18 @@ namespace copy_flash_wpf
 
         public MainWindow()
         {
+            // before we show the window, we make sure the program matches the system theme
+            Wpf.Ui.Appearance.ApplicationThemeManager.ApplySystemTheme();
+                // also changes the resource dictionary
+            var newTheme = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme();
+            string theme = newTheme.ToString();
+            string newThemeDictionaryPath = "Themes/" + theme + ".xaml";
+            ResourceDictionary newThemeDictionary = new ResourceDictionary
+            {
+                Source = new Uri(newThemeDictionaryPath, UriKind.Relative)
+            };
+            System.Windows.Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
+
             InitializeComponent();
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
@@ -77,11 +89,11 @@ namespace copy_flash_wpf
             Uri oldThemeUri;
             if (newTheme.Equals(Wpf.Ui.Appearance.ApplicationTheme.Light))
             {
-                oldThemeUri = new Uri("Themes/Light.xaml", UriKind.Relative);
+                oldThemeUri = new Uri("Themes/Dark.xaml", UriKind.Relative);
             }
             else
             {
-                oldThemeUri = new Uri("Themes/Dark.xaml", UriKind.Relative);
+                oldThemeUri = new Uri("Themes/Light.xaml", UriKind.Relative);
             }
 
             // find it by its uri
@@ -102,6 +114,13 @@ namespace copy_flash_wpf
                 Source = new Uri(newThemeDictionaryPath, UriKind.Relative)
             };
             System.Windows.Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
+
+            if (notifyIcon != null) // and if there's a system tray icon at this point
+            {
+                notifyIcon.NotifyIcon.Dispose(); // then we remove it
+                notifyIcon = new SystemTrayIcon(this); // and replace it with a new one
+                // which ensures that the system tray icon also gets the refreshed theme
+            }
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
