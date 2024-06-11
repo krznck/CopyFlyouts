@@ -14,13 +14,14 @@ using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using Hardcodet.Wpf.TaskbarNotification;
+using Wpf.Ui.Controls;
 
 namespace copy_flash_wpf
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : FluentWindow
     {
         private SystemTrayIcon notifyIcon;
         private HotkeyHandler hotkeyHandler;
@@ -68,11 +69,6 @@ namespace copy_flash_wpf
         {
             HotkeyHandler.Unregister();
             System.Windows.Application.Current.Shutdown();
-        }
-
-        private async void myButton_Click(object sender, RoutedEventArgs e)
-        {
-            //
         }
     }
 }
