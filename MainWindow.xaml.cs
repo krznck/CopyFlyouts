@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using System.Windows.Threading;
 using Hardcodet.Wpf.TaskbarNotification;
 using Wpf.Ui.Controls;
+using Wpf.Ui.Appearance;
 
 namespace copy_flash_wpf
 {
@@ -64,7 +65,45 @@ namespace copy_flash_wpf
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             HotkeyHandler = new(this);
+
+            Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
+            Wpf.Ui.Appearance.ApplicationThemeManager.Changed += ApplicationThemeManager_Changed;
         }
+
+        private void ApplicationThemeManager_Changed(ApplicationTheme currentApplicationTheme, System.Windows.Media.Color systemAccent)
+        {
+            var newTheme = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme();
+            // determines what the old theme was
+            Uri oldThemeUri;
+            if (newTheme.Equals(Wpf.Ui.Appearance.ApplicationTheme.Light))
+            {
+                oldThemeUri = new Uri("Themes/Light.xaml", UriKind.Relative);
+            }
+            else
+            {
+                oldThemeUri = new Uri("Themes/Dark.xaml", UriKind.Relative);
+            }
+
+            // find it by its uri
+            var oldThemeDictionary = System.Windows.Application.Current.Resources.MergedDictionaries
+                .FirstOrDefault(d => d.Source == oldThemeUri);
+
+            // removes it, if found
+            if (oldThemeDictionary != null)
+            {
+                System.Windows.Application.Current.Resources.MergedDictionaries.Remove(oldThemeDictionary);
+            }
+
+            // and adds the new one in
+            string theme = newTheme.ToString();
+            string newThemeDictionaryPath = "Themes/" + theme + ".xaml";
+            ResourceDictionary newThemeDictionary = new ResourceDictionary
+            {
+                Source = new Uri(newThemeDictionaryPath, UriKind.Relative)
+            };
+            System.Windows.Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
+        }
+
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             HotkeyHandler.Unregister();
