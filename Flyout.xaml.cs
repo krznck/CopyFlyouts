@@ -86,10 +86,21 @@ namespace copy_flash_wpf
             var windowWidth = this.ActualWidth;
             var windowHeight = this.ActualHeight;
 
-            // center the flyout within the working area of the current screen (and a little bit to the bottom)
-            this.Left = workingArea.Left + (workingArea.Width - windowWidth) / 2;
-            this.Top = workingArea.Top + (workingArea.Height - windowHeight) / 1.2;
+            // here, we use the display transformation matrix to determine the scaling factor of the system,
+            // which allows the flyout to be displayed at the correct place regardless of system scaling
+            Matrix? matrix = PresentationSource.FromVisual(this)?.CompositionTarget?.TransformToDevice;
+            if (matrix.HasValue)
+            {
+                double dpiXFactor = matrix.Value.M11; // horizontal scaling factor
+                double dpiYFactor = matrix.Value.M22; // vertical scaling factor
+
+                // center the flyout within the working area of the current screen (and a little bit to the bottom)
+                this.Left = workingArea.Left + (workingArea.Width - windowWidth * dpiXFactor) / 2 / dpiXFactor;
+                this.Top = workingArea.Top + (workingArea.Height - windowHeight * dpiYFactor) / 1.2 / dpiYFactor;
+            }
+
         }
+
         public void PlayErrorSound()
         {
             SoundPlayer player = new SoundPlayer(@"assets\audio\damage.wav");
