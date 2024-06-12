@@ -50,7 +50,7 @@
                     <ui:SymbolIcon x:Name="icon2" Visibility="Visible" Margin="0 0 15 0" FontSize="26" Filled="True"/>
                     <ui:InfoBadge x:Name="amount" Visibility="Collapsed" Value="0" Severity="Informational" Margin="-10,-10,15,14"/>
                 </Grid>
-                <emoji:TextBlock x:Name="text" 
+                <TextBlock x:Name="text" 
                            TextWrapping="Wrap" 
                            TextTrimming="CharacterEllipsis"
                            Grid.Column="2"
@@ -62,7 +62,7 @@
                            FontSize="20" 
                            LineHeight="20">
                     <Run Text="Text to display."/>
-                </emoji:TextBlock>
+                </TextBlock>
 
                 <ui:Image x:Name="flyoutImage"
                           Margin="0 10 0 0"
