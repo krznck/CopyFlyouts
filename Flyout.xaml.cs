@@ -1,4 +1,4 @@
-﻿using copy_flash_wpf;
+﻿using copy_flyouts;
 using System.IO;
 using System.Media;
 using System.Runtime.InteropServices;
@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using Wpf.Ui.Controls;
 using Color = System.Windows.Media.Color;
 
-namespace copy_flash_wpf
+namespace copy_flyouts
 {
     public partial class Flyout : Window
     {

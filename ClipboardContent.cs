@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace copy_flash_wpf
+namespace copy_flyouts
 {
     public class ClipboardContent
     {

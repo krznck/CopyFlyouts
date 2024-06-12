@@ -3,7 +3,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Windows;
 
-namespace copy_flash_wpf
+namespace copy_flyouts
 {
     /// <summary>
     /// Interaction logic for App.xaml

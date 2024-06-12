@@ -1,4 +1,4 @@
-﻿<Window x:Class="copy_flash_wpf.SystemTrayIcon"
+﻿<Window x:Class="copy_flyouts.SystemTrayIcon"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

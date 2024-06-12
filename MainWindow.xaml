@@ -3,8 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:copy_flash_wpf"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="copy_flash_wpf.MainWindow"
+    xmlns:local="clr-namespace:copy_flyouts"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" 
+    x:Class="copy_flyouts.MainWindow"
     mc:Ignorable="d"
     Title="{StaticResource ProgramName}" Height="450" Width="500" 
     d:DesignHeight="450"
@@ -18,7 +19,10 @@
     WindowStartupLocation="CenterScreen"
     WindowCornerPreference="Round">
     <Grid>
-        <ui:TextBlock x:Name="copyText" HorizontalAlignment="Center" TextWrapping="Wrap" Text="placeholder" VerticalAlignment="Center" Margin="0,0,0,0"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <ui:TitleBar
             x:Name="TitleBar"
             Title="{StaticResource ProgramName}"
@@ -28,5 +32,12 @@
                 <ui:ImageIcon Source="/assets/icons/ic_fluent_clipboard_checkmark_16_filled.ico" />
             </ui:TitleBar.Icon>
         </ui:TitleBar>
+
+        <ui:NavigationView x:Name="RootNavigation" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" IsBackButtonVisible="Collapsed" PaneDisplayMode="LeftFluent" IsPaneToggleVisible="False" PaneTitle="Options">
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="General" Icon="{ui:SymbolIcon Settings24}" TargetPageType="{x:Type local:General}"/>
+                <ui:NavigationViewItem Content="About" Icon="{ui:SymbolIcon Info24}"/>
+            </ui:NavigationView.MenuItems>
+        </ui:NavigationView>
     </Grid>
 </ui:FluentWindow>

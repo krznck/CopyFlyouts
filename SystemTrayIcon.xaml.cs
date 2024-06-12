@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Wpf.Ui.Controls;
 
-namespace copy_flash_wpf
+namespace copy_flyouts
 {
     /// <summary>
     /// Interaction logic for SystemTrayIcon.xaml

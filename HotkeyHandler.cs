@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace copy_flash_wpf
+namespace copy_flyouts
 {
     /// <summary>
     /// Handles everything to do with the Ctrl+C hotkey.

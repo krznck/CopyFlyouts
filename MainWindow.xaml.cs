@@ -17,7 +17,7 @@ using Hardcodet.Wpf.TaskbarNotification;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Appearance;
 
-namespace copy_flash_wpf
+namespace copy_flyouts
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -73,13 +73,15 @@ namespace copy_flash_wpf
             base.OnClosing(e);
         }
 
-
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            HotkeyHandler = new(this);
+            HotkeyHandler = new(this); // creates the hotkey to make the program work
 
+            // handles switching the theme when the system does
             Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
             Wpf.Ui.Appearance.ApplicationThemeManager.Changed += ApplicationThemeManager_Changed;
+
+            RootNavigation.Navigate(typeof(General)); // ensures General page is opened on load
         }
 
         private void ApplicationThemeManager_Changed(ApplicationTheme currentApplicationTheme, System.Windows.Media.Color systemAccent)
