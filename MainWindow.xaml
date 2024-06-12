@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:copy_flash_wpf"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="copy_flash_wpf.MainWindow"
     mc:Ignorable="d"
-    Title="MainWindow" Height="450" Width="500" 
+    Title="{StaticResource ProgramName}" Height="450" Width="500" 
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="{DynamicResource colorNeutralBackground1}"
@@ -21,7 +21,7 @@
         <ui:TextBlock x:Name="copyText" HorizontalAlignment="Center" TextWrapping="Wrap" Text="placeholder" VerticalAlignment="Center" Margin="0,0,0,0"/>
         <ui:TitleBar
             x:Name="TitleBar"
-            Title="CopyFlash"
+            Title="{StaticResource ProgramName}"
             Grid.Row="0"
             CloseWindowByDoubleClickOnIcon="True">
             <ui:TitleBar.Icon>

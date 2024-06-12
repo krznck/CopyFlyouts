@@ -10,26 +10,4 @@
 
     <SolidColorBrush x:Key="border" Color="#19000000"/>
 
-    <!-- notifyicon popup styling -->
-    <Style x:Key="PopupItemStyle" TargetType="StackPanel">
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Orientation" Value="Horizontal"/>
-        <Setter Property="Margin" Value="0 0 0 3"/>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource colorNeutralBackground1Hover}"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="PopupTextStyle" TargetType="TextBlock">
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Foreground" Value="{StaticResource colorNeutralForeground1}"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Padding" Value="0 7 10 7"/>
-        <Setter Property="Width" Value="100"/>
-    </Style>
-
 </ResourceDictionary>

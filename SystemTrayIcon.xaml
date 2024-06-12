@@ -11,7 +11,7 @@
     <Grid>
         <tb:TaskbarIcon
                  IconSource="/assets/icons/ic_fluent_clipboard_checkmark_16_filled.ico"
-                 ToolTipText="Copy Flash"
+                 ToolTipText="{StaticResource ProgramName}"
                  Visibility="Visible"
                  PopupActivation="RightClick"
                  x:Name="NotifyIcon">
@@ -29,7 +29,7 @@
                         Orientation="Horizontal">
                         <TextBlock
                             Grid.Row="0"
-                            Text="CopyFlash"
+                            Text="{StaticResource ProgramName}"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Foreground="{DynamicResource colorNeutralForeground1}"
