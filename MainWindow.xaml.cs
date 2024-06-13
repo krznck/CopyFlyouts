@@ -92,7 +92,7 @@ namespace copy_flyouts
             Wpf.Ui.Appearance.ApplicationThemeManager.Changed += ApplicationThemeManager_Changed;
 
             RootNavigation.DataContext = DefaultSettings;
-            RootNavigation.Navigate(typeof(General)); // ensures General page is opened on load
+            RootNavigation.Navigate(typeof(Pages.General)); // ensures General page is opened on load
         }
 
         private void ApplicationThemeManager_Changed(ApplicationTheme currentApplicationTheme, System.Windows.Media.Color systemAccent)

@@ -1,4 +1,4 @@
-﻿<Page x:Class="copy_flyouts.Pages.General"
+﻿<Page x:Class="copy_flyouts.Pages.About"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -15,16 +15,15 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
-        <ui:TextBlock Text="General" Grid.Row="0" Appearance="Primary" FontSize="36" FontTypography="BodyStrong" Margin="0 0 0 10"/>
-        <ui:CardControl Icon="{ui:SymbolIcon ClipboardSettings24}" Grid.Row="1">
+
+        <ui:TextBlock Text="About" Grid.Row="0" Appearance="Primary" FontSize="36" FontTypography="BodyStrong" Margin="0 0 0 10"/>
+        <ui:CardControl Icon="{ui:SymbolIcon Link24}" Grid.Row="1">
             <ui:CardControl.Header>
                 <StackPanel>
-                    <ui:TextBlock Text="Enable copy flyouts" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
-                    <ui:TextBlock Text="Pressing Ctrl+C will display flyouts showing the most recent item in your clipboard" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Text="Website" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding FlyoutsEnabled}"/>
+            <ui:HyperlinkButton Content="GitHub" NavigateUri="https://github.com/krznck/copy-flyouts"/>
         </ui:CardControl>
     </Grid>
 </Page>

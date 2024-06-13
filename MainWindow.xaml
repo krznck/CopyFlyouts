@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:copy_flyouts"
+    xmlns:pages="clr-namespace:copy_flyouts.Pages"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" 
     x:Class="copy_flyouts.MainWindow"
     mc:Ignorable="d"
@@ -35,10 +36,10 @@
 
         <ui:NavigationView x:Name="RootNavigation" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" IsBackButtonVisible="Collapsed" PaneDisplayMode="LeftFluent" IsPaneToggleVisible="False" PaneTitle="Options">
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Content="General" Icon="{ui:SymbolIcon Settings24}" TargetPageType="{x:Type local:General}"/>
+                <ui:NavigationViewItem Content="General" Icon="{ui:SymbolIcon Settings24}" TargetPageType="{x:Type pages:General}"/>
             </ui:NavigationView.MenuItems>
             <ui:NavigationView.FooterMenuItems>
-                <ui:NavigationViewItem Content="About" Icon="{ui:SymbolIcon Info24}"/>
+                <ui:NavigationViewItem Content="About" Icon="{ui:SymbolIcon Info24}" TargetPageType="{x:Type pages:About}"/>
             </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
     </Grid>

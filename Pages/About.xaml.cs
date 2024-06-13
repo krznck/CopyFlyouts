@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,11 +16,11 @@ using System.Windows.Shapes;
 namespace copy_flyouts.Pages
 {
     /// <summary>
-    /// Interaction logic for General.xaml
+    /// Interaction logic for About.xaml
     /// </summary>
-    public partial class General : Page
+    public partial class About : Page
     {
-        public General()
+        public About()
         {
             InitializeComponent();
         }
