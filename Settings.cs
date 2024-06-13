@@ -17,6 +17,7 @@ namespace copy_flyouts
         private readonly string _filePath;
         private bool _flyoutsEnabled = true;
         private bool _startMinimized = false;
+        private bool _minimizeToTray = true;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool FlyoutsEnabled 
@@ -39,6 +40,16 @@ namespace copy_flyouts
             }
         }
 
+        public bool MinimizeToTray
+        {
+            get => _minimizeToTray;
+            set
+            {
+                _minimizeToTray = value;
+                OnPropertyChanged(nameof(MinimizeToTray));
+            }
+        }
+
         public Settings() 
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -53,7 +64,7 @@ namespace copy_flyouts
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var commonResources = new ResourceDictionary();
@@ -63,6 +74,7 @@ namespace copy_flyouts
 
             _flyoutsEnabled = flyoutsEnabled;
             _startMinimized = startMinimized;
+            _minimizeToTray = minimizeToTray;
         }
 
         private void CopySettings(Settings settings)
@@ -71,6 +83,7 @@ namespace copy_flyouts
             {
                 _flyoutsEnabled = settings.FlyoutsEnabled;
                 _startMinimized = settings.StartMinimized;
+                _minimizeToTray = settings.MinimizeToTray;
             }
         }
 
