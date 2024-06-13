@@ -54,7 +54,7 @@ namespace copy_flyouts
 
         private void InitializeDefaultSettings()
         {
-            DefaultSettings = new Settings(true);
+            DefaultSettings = new Settings(true, true);
         }
 
         private void CreateNotifyIcon()
@@ -93,6 +93,11 @@ namespace copy_flyouts
 
             RootNavigation.DataContext = DefaultSettings;
             RootNavigation.Navigate(typeof(Pages.General)); // ensures General page is opened on load
+
+            if (UserSettings.StartMinimized)
+            {
+                WindowState = WindowState.Minimized;
+            }
         }
 
         private void ApplicationThemeManager_Changed(ApplicationTheme currentApplicationTheme, System.Windows.Media.Color systemAccent)
