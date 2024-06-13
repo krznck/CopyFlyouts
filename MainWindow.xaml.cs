@@ -27,6 +27,8 @@ namespace copy_flyouts
         private SystemTrayIcon notifyIcon;
         private HotkeyHandler hotkeyHandler;
         public HotkeyHandler HotkeyHandler { get => hotkeyHandler; private set => hotkeyHandler = value; }
+        public Settings DefaultSettings { get; private set; }
+        public Settings UserSettings { get; set; }
 
         public MainWindow()
         {
@@ -42,9 +44,17 @@ namespace copy_flyouts
             };
             System.Windows.Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
 
+            InitializeDefaultSettings();
+            UserSettings = DefaultSettings;
+
             InitializeComponent();
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
+        }
+
+        private void InitializeDefaultSettings()
+        {
+            DefaultSettings = new Settings(true);
         }
 
         private void CreateNotifyIcon()
@@ -75,12 +85,13 @@ namespace copy_flyouts
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            HotkeyHandler = new(this); // creates the hotkey to make the program work
+            HotkeyHandler = new(this, UserSettings); // creates the hotkey to make the program work
 
             // handles switching the theme when the system does
             Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
             Wpf.Ui.Appearance.ApplicationThemeManager.Changed += ApplicationThemeManager_Changed;
 
+            RootNavigation.DataContext = DefaultSettings;
             RootNavigation.Navigate(typeof(General)); // ensures General page is opened on load
         }
 

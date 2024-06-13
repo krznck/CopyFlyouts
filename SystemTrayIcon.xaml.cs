@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -21,14 +22,17 @@ namespace copy_flyouts
     /// </summary>
     public partial class SystemTrayIcon : Window
     {
-        private readonly MainWindow mainWindow; // here so that we can bring it up, and register/unregister the hotkey
+        private readonly MainWindow mainWindow; // here so that we can bring it up
+        private Settings userSettings;
 
         public SystemTrayIcon(MainWindow mainWindow)
         {
             InitializeComponent();
             this.mainWindow = mainWindow;
+            DataContext = mainWindow.UserSettings;
+            userSettings = mainWindow.UserSettings;
 
-            if (mainWindow.HotkeyHandler.IsRegistered)
+            if (userSettings.FlyoutsEnabled)
             {
                 VisualizeHotkeyEnabled();
             }
@@ -54,14 +58,14 @@ namespace copy_flyouts
 
         private void PopupActivityClick(object sender, RoutedEventArgs e)
         {
-            if (mainWindow.HotkeyHandler.IsRegistered)
+            if (userSettings.FlyoutsEnabled)
             {
-                mainWindow.HotkeyHandler.Unregister();
+                userSettings.FlyoutsEnabled = false;
                 VisualizeHotkeyDisabled();
             }
             else
             {
-                mainWindow.HotkeyHandler.Register();
+                userSettings.FlyoutsEnabled = true;
                 VisualizeHotkeyEnabled();
             }
         }

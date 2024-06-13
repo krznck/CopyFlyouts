@@ -7,14 +7,18 @@
       xmlns:local="clr-namespace:copy_flyouts"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="General">
+      Title="General"
+      d:DataContext="{d:DesignInstance local:Settings}">
 
     <Grid Margin="15" VerticalAlignment="Top">
         <ui:CardControl Icon="{ui:SymbolIcon ClipboardSettings24}">
             <ui:CardControl.Header>
-                <ui:TextBlock Text="Enable copy flyouts"/>
+                <StackPanel>
+                    <ui:TextBlock Text="Enable copy flyouts" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Text="Pressing Ctrl+C will display flyouts showing the most recent item in your clipboard" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
+                </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="True" MouseLeftButtonUp="ToggleSwitch_MouseLeftButtonUp"/>
+            <ui:ToggleSwitch IsChecked="{Binding FlyoutsEnabled}"/>
         </ui:CardControl>
     </Grid>
 </Page>

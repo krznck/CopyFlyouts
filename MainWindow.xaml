@@ -36,8 +36,10 @@
         <ui:NavigationView x:Name="RootNavigation" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" IsBackButtonVisible="Collapsed" PaneDisplayMode="LeftFluent" IsPaneToggleVisible="False" PaneTitle="Options">
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="General" Icon="{ui:SymbolIcon Settings24}" TargetPageType="{x:Type local:General}"/>
-                <ui:NavigationViewItem Content="About" Icon="{ui:SymbolIcon Info24}"/>
             </ui:NavigationView.MenuItems>
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem Content="About" Icon="{ui:SymbolIcon Info24}"/>
+            </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
     </Grid>
 </ui:FluentWindow>

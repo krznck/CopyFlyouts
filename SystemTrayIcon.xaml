@@ -5,7 +5,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:local="clr-namespace:copy_flyouts"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:Settings}"
         Title="SystemTrayIcon" Foreground="{DynamicResource colorNeutralForeground1}" Background="{DynamicResource colorNeutralBackground1}">
 
     <Grid>

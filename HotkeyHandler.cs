@@ -22,6 +22,7 @@ namespace copy_flyouts
     public class HotkeyHandler
     {
         private Window affectedWindow; // the window we register the hotkey on
+        private Settings userSettings;
 
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
@@ -39,12 +40,35 @@ namespace copy_flyouts
 
         private ClipboardContent previousClipboard = new ClipboardContent(); // gets the last clipboard item on initialization
 
-        public HotkeyHandler(Window affectedWindow)
+        public HotkeyHandler(Window affectedWindow, Settings userSettings)
         {
-            this.affectedWindow = affectedWindow;
 
-            // Register Ctrl + + C as global hotkey
-            Register();
+            this.affectedWindow = affectedWindow;
+            this.userSettings = userSettings;
+
+            // register Ctrl + + C as global hotkey
+            if (userSettings.FlyoutsEnabled)
+            {
+                Register();
+            }
+
+            // subscribe to UserSettings changes
+            userSettings.PropertyChanged += UserSettings_PropertyChanged;
+        }
+
+        private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.FlyoutsEnabled))
+            {
+                if (userSettings.FlyoutsEnabled)
+                {
+                    Register();
+                }
+                else
+                {
+                    Unregister();
+                }
+            }
         }
 
         /// <summary>
