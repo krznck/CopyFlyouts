@@ -14,10 +14,12 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         
         <ui:TextBlock Text="General" Grid.Row="0" Appearance="Primary" FontSize="36" FontTypography="BodyStrong" Margin="0 0 0 10"/>
-        <ui:CardControl Icon="{ui:SymbolIcon ClipboardSettings24}" Grid.Row="1">
+        
+        <ui:CardControl Icon="{ui:SymbolIcon ClipboardSettings24}" Grid.Row="1" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Enable copy flyouts" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -26,5 +28,7 @@
             </ui:CardControl.Header>
             <ui:ToggleSwitch IsChecked="{Binding FlyoutsEnabled}"/>
         </ui:CardControl>
+
+        <ui:TextBox Grid.Row="2" Text="Some dummy text to copy and test the flyouts out :)" IsReadOnly="True" TextWrapping="WrapWithOverflow"/>
     </Grid>
 </Page>
