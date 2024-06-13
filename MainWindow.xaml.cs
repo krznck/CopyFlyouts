@@ -35,7 +35,7 @@ namespace copy_flyouts
                 // also changes the resource dictionary
             var newTheme = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme();
             string theme = newTheme.ToString();
-            string newThemeDictionaryPath = "Themes/" + theme + ".xaml";
+            string newThemeDictionaryPath = "Resources/" + theme + ".xaml";
             ResourceDictionary newThemeDictionary = new ResourceDictionary
             {
                 Source = new Uri(newThemeDictionaryPath, UriKind.Relative)
@@ -91,11 +91,11 @@ namespace copy_flyouts
             Uri oldThemeUri;
             if (newTheme.Equals(Wpf.Ui.Appearance.ApplicationTheme.Light))
             {
-                oldThemeUri = new Uri("Themes/Dark.xaml", UriKind.Relative);
+                oldThemeUri = new Uri("Resources/Dark.xaml", UriKind.Relative);
             }
             else
             {
-                oldThemeUri = new Uri("Themes/Light.xaml", UriKind.Relative);
+                oldThemeUri = new Uri("Resources/Light.xaml", UriKind.Relative);
             }
 
             // find it by its uri
@@ -110,7 +110,7 @@ namespace copy_flyouts
 
             // and adds the new one in
             string theme = newTheme.ToString();
-            string newThemeDictionaryPath = "Themes/" + theme + ".xaml";
+            string newThemeDictionaryPath = "Resources/" + theme + ".xaml";
             ResourceDictionary newThemeDictionary = new ResourceDictionary
             {
                 Source = new Uri(newThemeDictionaryPath, UriKind.Relative)
