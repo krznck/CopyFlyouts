@@ -10,7 +10,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Light"/>
                 <ResourceDictionary Source="Resources/Light.xaml" x:Name="ThemeResourceDictionary"/>
-                <ResourceDictionary Source="CommonResources.xaml"/>
+                <ResourceDictionary Source="Resources/CommonResources.xaml"/>
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

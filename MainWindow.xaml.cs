@@ -44,17 +44,11 @@ namespace copy_flyouts
             };
             System.Windows.Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
 
-            InitializeDefaultSettings();
-            UserSettings = DefaultSettings;
+            UserSettings = new Settings();
 
             InitializeComponent();
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
-        }
-
-        private void InitializeDefaultSettings()
-        {
-            DefaultSettings = new Settings(true, true);
         }
 
         private void CreateNotifyIcon()
@@ -91,7 +85,7 @@ namespace copy_flyouts
             Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
             Wpf.Ui.Appearance.ApplicationThemeManager.Changed += ApplicationThemeManager_Changed;
 
-            RootNavigation.DataContext = DefaultSettings;
+            RootNavigation.DataContext = UserSettings;
             RootNavigation.Navigate(typeof(Pages.General)); // ensures General page is opened on load
 
             if (UserSettings.StartMinimized)
