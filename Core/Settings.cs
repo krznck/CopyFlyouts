@@ -18,6 +18,7 @@ namespace copy_flyouts.Core
         private bool _flyoutsEnabled = true;
         private bool _startMinimized = false;
         private bool _minimizeToTray = true;
+        private double _flyoutOpacity = 1.0;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool FlyoutsEnabled
@@ -50,6 +51,16 @@ namespace copy_flyouts.Core
             }
         }
 
+        public double FlyoutOpacity
+        {
+            get => _flyoutOpacity;
+            set
+            {
+                _flyoutOpacity = Math.Truncate(value * 100) / 100; // truncates ridiculous values like 0.50000000000002 into 0.5
+                OnPropertyChanged(nameof(FlyoutOpacity));
+            }
+        }
+
         public Settings()
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -64,7 +75,7 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var commonResources = new ResourceDictionary();
@@ -75,6 +86,7 @@ namespace copy_flyouts.Core
             _flyoutsEnabled = flyoutsEnabled;
             _startMinimized = startMinimized;
             _minimizeToTray = minimizeToTray;
+            _flyoutOpacity = flyoutOpacity;
         }
 
         private void CopySettings(Settings settings)
@@ -84,6 +96,7 @@ namespace copy_flyouts.Core
                 _flyoutsEnabled = settings.FlyoutsEnabled;
                 _startMinimized = settings.StartMinimized;
                 _minimizeToTray = settings.MinimizeToTray;
+                _flyoutOpacity = settings.FlyoutOpacity;
             }
         }
 

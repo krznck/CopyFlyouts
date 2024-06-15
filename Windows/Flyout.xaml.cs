@@ -27,7 +27,9 @@ namespace copy_flyouts
         public const int WS_EX_TOOLWINDOW = 0x00000080;
         public const int WS_EX_TRANSPARENT = 0x00000020;
 
-        public Flyout(ClipboardContent clipContent)
+        private readonly Settings userSettings;
+
+        public Flyout(ClipboardContent clipContent, Settings userSettings)
         {
             InitializeComponent();
             this.Loaded += Flyout_Loaded;
@@ -70,6 +72,9 @@ namespace copy_flyouts
 
             this.ShowInTaskbar = false;
             this.Focusable = false;
+            this.userSettings = userSettings;
+
+            DataContext = userSettings;
         }
 
         /// <summary>
