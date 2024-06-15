@@ -16,6 +16,7 @@ using System.Windows.Threading;
 using Hardcodet.Wpf.TaskbarNotification;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Appearance;
+using copy_flyouts.Core;
 
 namespace copy_flyouts
 {

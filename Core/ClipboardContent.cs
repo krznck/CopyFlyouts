@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace copy_flyouts
+namespace copy_flyouts.Core
 {
     public class ClipboardContent
     {
@@ -20,7 +20,8 @@ namespace copy_flyouts
             if (Clipboard.ContainsText())
             {
                 Text = Clipboard.GetText();
-            } else if (Clipboard.ContainsFileDropList())
+            }
+            else if (Clipboard.ContainsFileDropList())
             {
                 string combinedPaths = "";
                 foreach (string filePath in Clipboard.GetFileDropList())
@@ -30,7 +31,7 @@ namespace copy_flyouts
                 }
                 Text = combinedPaths.TrimEnd(new char[] { ' ', ';' }); // removes the trailing semicolon
             }
-            
+
             if (Clipboard.ContainsImage())
             {
                 image = Clipboard.GetImage();
@@ -39,11 +40,11 @@ namespace copy_flyouts
 
         public string Text
         {
-            get { return text;  }
+            get { return text; }
             set
             {
                 value = Regex.Replace(value, @"\s+", " "); // replaces all whitespace with one space
-                this.text = value.Trim();
+                text = value.Trim();
             }
         }
 
@@ -51,16 +52,16 @@ namespace copy_flyouts
         {
             var other = obj as ClipboardContent;
             if (other == null)
-                { return false; }
+            { return false; }
 
-            return (this.text == other.text) 
-                && (this.fileAmount == other.fileAmount) 
+            return text == other.text
+                && fileAmount == other.fileAmount
                 && (
-                    (this.image == null && other.image == null) 
-                    || (
-                        (this.image != null && other.image != null)
-                        && (ImageToByteArray(this.image).SequenceEqual(ImageToByteArray(other.image)))
-                        )
+                    image == null && other.image == null
+                    || 
+                        image != null && other.image != null
+                        && ImageToByteArray(image).SequenceEqual(ImageToByteArray(other.image))
+                        
                     );
         }
 
@@ -73,7 +74,7 @@ namespace copy_flyouts
             return HashCode.Combine(text, fileAmount, ImageToByteArray(image));
         }
 
-        private byte[] ImageToByteArray(System.Drawing.Image imageIn)
+        private byte[] ImageToByteArray(Image imageIn)
         {
             using (var ms = new MemoryStream())
             {

@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace copy_flyouts
+namespace copy_flyouts.Core
 {
     /// <summary>
     /// Handles everything to do with the Ctrl+C hotkey.
@@ -25,10 +25,10 @@ namespace copy_flyouts
         private Settings userSettings;
 
         [DllImport("user32.dll")]
-        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+        private static extern bool RegisterHotKey(nint hWnd, int id, uint fsModifiers, uint vk);
 
         [DllImport("user32.dll")]
-        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+        private static extern bool UnregisterHotKey(nint hWnd, int id);
 
         public bool IsRegistered { get; private set; } = false;
 
@@ -74,7 +74,7 @@ namespace copy_flyouts
         /// <summary>
         /// Processes the message.
         /// </summary>
-        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        private nint WndProc(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
         {
             if (msg == 0x0312 && wParam.ToInt32() == HOTKEY_ID) // if the message matches the hotkey
             {
@@ -82,7 +82,7 @@ namespace copy_flyouts
                 handled = true;
                 HandleHotkey();
             }
-            return IntPtr.Zero;
+            return nint.Zero;
         }
 
         /// <summary>
@@ -102,14 +102,14 @@ namespace copy_flyouts
             // closes the existing flyout and stops the timer immediately
             CloseFlyout();
 
-            System.Threading.Thread.Sleep(100); // wait a little bit to prevent clipboard access conflict
+            Thread.Sleep(100); // wait a little bit to prevent clipboard access conflict
             // gets the text from the clipboard
             ClipboardContent clipboard = new ClipboardContent();
             bool copyIsEmpty = clipboard.Text.Length == 0;
 
             // creates and show the new flyout
             var flyout = new Flyout(clipboard);
-            if (previousClipboard != null && (previousClipboard.Equals(clipboard)))
+            if (previousClipboard != null && previousClipboard.Equals(clipboard))
             {
                 flyout.PlayErrorSound();
                 flyout.SetToErrorIcon();

@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace copy_flyouts
+namespace copy_flyouts.Core
 {
     public class Settings : INotifyPropertyChanged
     {
@@ -20,9 +20,9 @@ namespace copy_flyouts
         private bool _minimizeToTray = true;
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public bool FlyoutsEnabled 
-        { 
-            get => _flyoutsEnabled; 
+        public bool FlyoutsEnabled
+        {
+            get => _flyoutsEnabled;
             set
             {
                 _flyoutsEnabled = value;
@@ -50,7 +50,7 @@ namespace copy_flyouts
             }
         }
 
-        public Settings() 
+        public Settings()
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var commonResources = new ResourceDictionary();
@@ -95,7 +95,8 @@ namespace copy_flyouts
                 {
                     var json = File.ReadAllText(_filePath);
                     CopySettings(JsonSerializer.Deserialize<Settings>(json));
-                } catch (System.Text.Json.JsonException)
+                }
+                catch (JsonException)
                 {
                     Debug.WriteLine("Invalid settings. Settings have been reset.");
                     SaveSettingsFile();
