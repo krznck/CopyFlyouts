@@ -1,4 +1,5 @@
-﻿using System;
+﻿using copy_flyouts.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -24,6 +25,20 @@ namespace copy_flyouts.Pages
         public General()
         {
             InitializeComponent();
+        }
+
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            var userSettings = DataContext as Settings;
+
+            if (userSettings != null)
+            {
+                // to be honest, I couldn't easily think of a good way to get the default values of those attributes somehow
+                // so screw it, just hardcode them in
+                userSettings.FlyoutsEnabled = true;
+                userSettings.StartMinimized = false;
+                userSettings.MinimizeToTray = true;
+            }
         }
     }
 }

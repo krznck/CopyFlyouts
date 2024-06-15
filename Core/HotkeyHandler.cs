@@ -30,8 +30,6 @@ namespace copy_flyouts.Core
         [DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(nint hWnd, int id);
 
-        public bool IsRegistered { get; private set; } = false;
-
         private const int HOTKEY_ID = 9000;
         private HwndSource _source;
 
@@ -162,8 +160,6 @@ namespace copy_flyouts.Core
             _source.AddHook(WndProc);
 
             RegisterHotKey(helper.Handle, HOTKEY_ID, (uint)ModifierKeys.Control, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
-
-            IsRegistered = true;
         }
 
         /// <summary>
@@ -172,10 +168,8 @@ namespace copy_flyouts.Core
         public void Unregister()
         {
             CloseFlyout();
-            _source.RemoveHook(WndProc);
+            _source?.RemoveHook(WndProc);
             UnregisterHotKey(new WindowInteropHelper(affectedWindow).Handle, HOTKEY_ID);
-
-            IsRegistered = false;
         }
 
         ~HotkeyHandler()

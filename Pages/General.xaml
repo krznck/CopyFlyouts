@@ -18,9 +18,11 @@
             <RowDefinition Height="30"/> 
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        
-        <ui:TextBlock Text="General" Grid.Row="0" Appearance="Primary" FontSize="36" FontTypography="BodyStrong" Margin="0 0 0 10"/>
+
+        <ui:TextBlock Text="General" Grid.Row="0" Appearance="Primary" FontSize="36" FontTypography="BodyStrong" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
         
         <ui:CardControl Icon="{ui:SymbolIcon ClipboardSettings24}" Grid.Row="1" Margin="0 0 0 10">
             <ui:CardControl.Header>
@@ -61,5 +63,7 @@
             </ui:CardControl.Header>
             <ui:ToggleSwitch IsChecked="{Binding MinimizeToTray}"/>
         </ui:CardControl>
+
+        <ui:Button Grid.Row="7" Content="Reset general settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
     </Grid>
 </Page>

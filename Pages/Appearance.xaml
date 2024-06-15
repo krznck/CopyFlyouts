@@ -15,9 +15,11 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <ui:TextBlock Text="Appearance" Grid.Row="0" Appearance="Primary" FontSize="36" FontTypography="BodyStrong" Margin="0 0 0 10"/>
+        <ui:TextBlock Text="Appearance" Grid.Row="0" Appearance="Primary" FontSize="36" FontTypography="BodyStrong" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
 
         <ui:TextBox Grid.Row="1" Text="Some dummy text to copy and see the flyouts" IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 0 10"/>
 
@@ -33,5 +35,7 @@
                 <Slider Value="{Binding FlyoutOpacity}" Margin="15 0 0 0" Maximum="1" Minimum="0.3" TickFrequency="0.05" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
             </StackPanel>
         </ui:CardControl>
+
+        <ui:Button Grid.Row="4" Content="Reset appearance settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
     </Grid>
 </Page>
