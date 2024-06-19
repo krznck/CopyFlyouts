@@ -32,8 +32,13 @@ namespace copy_flyouts
         public Flyout(ClipboardContent clipContent, Settings userSettings)
         {
             InitializeComponent();
-            this.Loaded += Flyout_Loaded;
             text.Text = clipContent.Text;
+            DataContext = userSettings;
+
+            // note:
+            // this line is crucial for having the flyouts appear at the right place,
+            // despite it being bounded in the XAML. Unsure why
+            MaxWidth = userSettings.FlyoutWidth;
 
             if (clipContent.fileAmount > 0)
             {
@@ -70,11 +75,11 @@ namespace copy_flyouts
                 }
             }
 
+            this.Loaded += Flyout_Loaded;
+
             this.ShowInTaskbar = false;
             this.Focusable = false;
             this.userSettings = userSettings;
-
-            DataContext = userSettings;
         }
 
         /// <summary>

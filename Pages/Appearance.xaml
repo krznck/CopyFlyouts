@@ -7,11 +7,11 @@
       xmlns:local="clr-namespace:copy_flyouts"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Appearance"
-      d:DataContext="{d:DesignInstance local:Settings}">
+      Title="Appearance">
 
     <Grid Margin="30" VerticalAlignment="Top">
         <Grid.RowDefinitions>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -21,7 +21,9 @@
 
         <ui:TextBlock Text="Appearance" Grid.Row="0" Appearance="Primary" FontSize="36" FontTypography="BodyStrong" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
 
-        <ui:TextBox Grid.Row="1" Text="Some dummy text to copy and see the flyouts" IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 0 10"/>
+        <ui:TextBox Grid.Row="1" 
+                    Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nibh quam, suscipit vitae ullamcorper quis, eleifend eu dolor. Morbi dictum nunc sit amet vehicula pretium. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam commodo tellus lectus, quis finibus nisl dapibus sodales. Morbi consectetur hendrerit nibh id consectetur. In sollicitudin magna at magna iaculis lacinia. Nunc libero risus, feugiat quis consectetur ac, accumsan id leo." 
+                    IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 0 10"/>
 
         <ui:CardControl Icon="{ui:SymbolIcon EyeLines24}" Grid.Row="2" Margin="0 0 0 10">
             <ui:CardControl.Header>
@@ -36,6 +38,19 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="4" Content="Reset appearance settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
+        <ui:CardControl Icon="{ui:SymbolIcon AutoFitWidth24}" Grid.Row="3" Margin="0 0 0 10">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Flyout maximum width" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <!--<ui:TextBlock Text="" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>-->
+                </StackPanel>
+            </ui:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Margin="0 0 0 0" Text="{Binding FlyoutWidthScale}" HorizontalAlignment="Center"/>
+                <Slider Value="{Binding FlyoutWidthScale}" Margin="15 0 0 0" Maximum="3" Minimum="0.5" TickFrequency="0.10" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
+            </StackPanel>
+        </ui:CardControl>
+
+        <ui:Button Grid.Row="5" Content="Reset appearance settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
     </Grid>
 </Page>

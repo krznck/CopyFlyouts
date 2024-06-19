@@ -19,8 +19,11 @@ namespace copy_flyouts.Core
         private bool _startMinimized = false;
         private bool _minimizeToTray = true;
         private double _flyoutOpacity = 1.0;
+        private double _flyoutWidthScale = 1.0;
+        private double _flyoutWidth = 600;
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        #region PublicProperties
         public bool FlyoutsEnabled
         {
             get => _flyoutsEnabled;
@@ -61,6 +64,29 @@ namespace copy_flyouts.Core
             }
         }
 
+        public double FlyoutWidthScale
+        {
+            get => _flyoutWidthScale;
+            set
+            {
+                _flyoutWidthScale = Math.Truncate(value * 100) / 100; // truncates ridiculous values like 0.50000000000002 into 0.5
+                FlyoutWidth = 600 * _flyoutWidthScale;
+                OnPropertyChanged(nameof(FlyoutWidthScale));
+            }
+        }
+
+        [JsonIgnore]
+        public double FlyoutWidth
+        {
+            get => _flyoutWidth;
+            set
+            {
+                _flyoutWidth = value;
+                OnPropertyChanged(nameof(FlyoutWidth));
+            }
+        }
+        #endregion
+
         public Settings()
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -75,7 +101,7 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var commonResources = new ResourceDictionary();
@@ -83,20 +109,22 @@ namespace copy_flyouts.Core
             var appName = commonResources["ProgramName"] as string;
             _filePath = Path.Combine(appDataFolder, appName, "settings.json");
 
-            _flyoutsEnabled = flyoutsEnabled;
-            _startMinimized = startMinimized;
-            _minimizeToTray = minimizeToTray;
-            _flyoutOpacity = flyoutOpacity;
+            FlyoutsEnabled = flyoutsEnabled;
+            StartMinimized = startMinimized;
+            MinimizeToTray = minimizeToTray;
+            FlyoutOpacity = flyoutOpacity;
+            FlyoutWidthScale = flyoutWidthScale;
         }
 
         private void CopySettings(Settings settings)
         {
             if (settings != null)
             {
-                _flyoutsEnabled = settings.FlyoutsEnabled;
-                _startMinimized = settings.StartMinimized;
-                _minimizeToTray = settings.MinimizeToTray;
-                _flyoutOpacity = settings.FlyoutOpacity;
+                FlyoutsEnabled = settings.FlyoutsEnabled;
+                StartMinimized = settings.StartMinimized;
+                MinimizeToTray = settings.MinimizeToTray;
+                FlyoutOpacity = settings.FlyoutOpacity;
+                FlyoutWidthScale = settings.FlyoutWidthScale;
             }
         }
 

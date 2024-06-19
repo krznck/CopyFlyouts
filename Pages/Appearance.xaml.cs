@@ -1,6 +1,8 @@
 ﻿using copy_flyouts.Core;
+using copy_flyouts.Properties;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,13 +30,14 @@ namespace copy_flyouts.Pages
 
         private void Reset_Click(object sender, RoutedEventArgs e)
         {
-            var userSettings = DataContext as Settings;
+            var userSettings = DataContext as Core.Settings;
 
             if (userSettings != null)
             {
                 // to be honest, I couldn't easily think of a good way to get the default values of those attributes somehow
                 // so screw it, just hardcode them in
                 userSettings.FlyoutOpacity = 1.0;
+                userSettings.FlyoutWidthScale = 1.0;
             }
         }
     }

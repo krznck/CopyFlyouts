@@ -2,9 +2,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:core="clr-namespace:copy_flyouts.Core"
     x:Class="copy_flyouts.Flyout"
-    Title="Flyout" SizeToContent="WidthAndHeight" MaxWidth="600"
+    Title="Flyout" SizeToContent="WidthAndHeight" MaxWidth="{Binding FlyoutWidth}"  MaxHeight="180"
     WindowStyle="None" AllowsTransparency="True" Background="Transparent"
     Topmost="True" Foreground="{DynamicResource colorNeutralForeground1}">
 
@@ -33,10 +34,10 @@
         </Grid.Triggers>
 
         <!-- Notification area -->
-        <Border BorderThickness="1" CornerRadius="5" Padding="10" MaxHeight="300" BorderBrush="{DynamicResource border}" Background="{DynamicResource colorNeutralBackground1}" Opacity="{Binding FlyoutOpacity}">
+        <Border BorderThickness="1" CornerRadius="5" Padding="10" BorderBrush="{DynamicResource border}" Background="{DynamicResource colorNeutralBackground1}" Opacity="{Binding FlyoutOpacity}">
             <Grid x:Name="grid">
                 <Grid.RowDefinitions>
-                    <RowDefinition MaxHeight="60"/>
+                    <RowDefinition/>
                     <RowDefinition MaxHeight="120"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -56,7 +57,6 @@
                            Grid.Column="2"
                            Grid.Row="0"
                            VerticalAlignment="Center" 
-                           MaxHeight="60" 
                            Padding="0" 
                            TextAlignment="Left" 
                            FontSize="20" 
