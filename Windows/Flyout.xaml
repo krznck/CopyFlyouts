@@ -42,13 +42,13 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <ui:SymbolIcon x:Name="icon" Grid.Column="0" Grid.Row="0" Symbol="ClipboardCheckmark16" Filled="True" Margin="5,0,15,0" FontSize="26"/>
+                <ui:SymbolIcon x:Name="icon" Grid.Column="0" Grid.Row="0" Symbol="ClipboardCheckmark16" Filled="True" Margin="5,0,15,0" FontSize="{Binding FlyoutIconSize}"/>
                 <Grid x:Name="fileGrid" Grid.Column="1" Grid.Row="0" Visibility="Collapsed">
-                    <ui:SymbolIcon x:Name="icon2" Visibility="Visible" Margin="0 0 15 0" FontSize="26" Filled="True"/>
+                    <ui:SymbolIcon x:Name="icon2" Visibility="Visible" Margin="0 0 15 0" FontSize="{Binding FlyoutIconSize}" Filled="True"/>
                     <ui:InfoBadge x:Name="amount" Visibility="Collapsed" Value="0" Severity="Informational" Margin="-10,-10,15,14"/>
                 </Grid>
                 <TextBlock x:Name="text" 
@@ -59,8 +59,9 @@
                            VerticalAlignment="Center" 
                            Padding="0" 
                            TextAlignment="Left" 
-                           FontSize="20" 
-                           LineHeight="20">
+                           FontSize="{Binding FlyoutFontSize}" 
+                           LineHeight="20"
+                           MinWidth="0">
                     <Run Text="Text to display."/>
                 </TextBlock>
 

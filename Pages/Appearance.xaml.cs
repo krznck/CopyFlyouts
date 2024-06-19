@@ -39,6 +39,7 @@ namespace copy_flyouts.Pages
                 userSettings.FlyoutOpacity = 1.0;
                 userSettings.FlyoutWidthScale = 1.0;
                 userSettings.FlyoutHeightScale = 1.0;
+                userSettings.FlyoutFontSizeScale = 1.0;
             }
         }
     }

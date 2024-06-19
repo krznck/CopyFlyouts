@@ -16,7 +16,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition Height="30"/>
+            <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -65,6 +65,19 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="6" Content="Reset appearance settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
+        <ui:CardControl Icon="{ui:SymbolIcon TextFontSize24}" Grid.Row="5" Margin="0 0 0 10">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Flyout font size" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <!--<ui:TextBlock Text="" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>-->
+                </StackPanel>
+            </ui:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Margin="0 0 0 0" Text="{Binding FlyoutFontSizeScale}" HorizontalAlignment="Center"/>
+                <Slider Value="{Binding FlyoutFontSizeScale}" Margin="15 0 0 0" Maximum="3" Minimum="0.5" TickFrequency="0.10" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
+            </StackPanel>
+        </ui:CardControl>
+
+        <ui:Button Grid.Row="6" Content="Reset appearance settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 30 0 0"/>
     </Grid>
 </Page>

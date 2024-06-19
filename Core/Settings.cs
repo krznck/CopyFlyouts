@@ -23,6 +23,9 @@ namespace copy_flyouts.Core
         private double _flyoutWidth = 600;
         private double _flyoutHeightScale = 1.0;
         private double _flyoutHeight = 180;
+        private double _flyoutFontSizeScale = 1.0;
+        private double _flyoutFontSize = 20;
+        private double _flyoutIconSize = 26;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -109,6 +112,40 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(FlyoutHeight));
             }
         }
+
+        public double FlyoutFontSizeScale
+        {
+            get => _flyoutFontSizeScale;
+            set
+            {
+                _flyoutFontSizeScale = Math.Truncate(value * 100) / 100; // truncates ridiculous values like 0.50000000000002 into 0.5
+                FlyoutFontSize = 20 * _flyoutFontSizeScale;
+                FlyoutIconSize = 26 * _flyoutFontSizeScale;
+                OnPropertyChanged(nameof(FlyoutFontSizeScale));
+            }
+        }
+
+        [JsonIgnore]
+        public double FlyoutFontSize
+        {
+            get => _flyoutFontSize;
+            set
+            {
+                _flyoutFontSize = value;
+                OnPropertyChanged(nameof(FlyoutFontSize));
+            }
+        }
+
+        [JsonIgnore]
+        public double FlyoutIconSize
+        {
+            get => _flyoutIconSize;
+            set
+            {
+                _flyoutIconSize = value;
+                OnPropertyChanged(nameof(FlyoutIconSize));
+            }
+        }
         #endregion
 
         public Settings()
@@ -125,7 +162,7 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var commonResources = new ResourceDictionary();
@@ -139,6 +176,7 @@ namespace copy_flyouts.Core
             FlyoutOpacity = flyoutOpacity;
             FlyoutWidthScale = flyoutWidthScale;
             FlyoutHeightScale = flyoutHeightScale;
+            FlyoutFontSizeScale = flyoutFontSizeScale;
         }
 
         private void CopySettings(Settings settings)
@@ -151,6 +189,7 @@ namespace copy_flyouts.Core
                 FlyoutOpacity = settings.FlyoutOpacity;
                 FlyoutWidthScale = settings.FlyoutWidthScale;
                 FlyoutHeightScale = settings.FlyoutHeightScale;
+                FlyoutFontSizeScale = settings.FlyoutFontSizeScale;
             }
         }
 

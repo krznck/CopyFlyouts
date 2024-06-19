@@ -35,12 +35,6 @@ namespace copy_flyouts
             text.Text = clipContent.Text;
             DataContext = userSettings;
 
-            // note:
-            // this line is crucial for having the flyouts appear at the right place,
-            // despite it being bounded in the XAML. Unsure why
-            MaxWidth = userSettings.FlyoutWidth;
-            MaxHeight = userSettings.FlyoutHeight;
-
             if (clipContent.fileAmount > 0)
             {
                 AddFileIcon();
@@ -76,6 +70,12 @@ namespace copy_flyouts
                 }
             }
 
+            // note:
+            // this line is crucial for having the flyouts appear at the right place,
+            // despite it being bounded in the XAML. Unsure why
+            MaxWidth = userSettings.FlyoutWidth;
+            MaxHeight = userSettings.FlyoutHeight;
+
             this.Loaded += Flyout_Loaded;
 
             this.ShowInTaskbar = false;
@@ -83,33 +83,51 @@ namespace copy_flyouts
             this.userSettings = userSettings;
         }
 
+        private void Flyout_Loaded(object sender, RoutedEventArgs e)
+        {
+            // subscribes to the SizeChanged event to ensure window size is correctly initialized
+            this.SizeChanged += Flyout_SizeChanged;
+            PositionWindow();
+        }
+
+        private void Flyout_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // unsubscribes after the first size change to avoid repeated repositioning
+            this.SizeChanged -= Flyout_SizeChanged;
+            PositionWindow();
+        }
+
         /// <summary>
         /// Makes the flyout appear in the center of the screen, and a little to the bottom.
         /// Utilizes the currently focused monitor - not always the main monitor.
         /// </summary>
-        private void Flyout_Loaded(object sender, RoutedEventArgs e)
+        private void PositionWindow()
         {
-            // get the current active screen where the cursor is located
-            var currentScreen = Screen.FromPoint(System.Windows.Forms.Cursor.Position);
+            // gets the current active screen where the cursor is located
+            var currentScreen = System.Windows.Forms.Screen.FromPoint(System.Windows.Forms.Cursor.Position);
 
-            // use the working area of the current screen to place the flyout
+            // uses the working area of the current screen to place the flyout
             var workingArea = currentScreen.WorkingArea;
             var windowWidth = this.ActualWidth;
             var windowHeight = this.ActualHeight;
 
             // here, we use the display transformation matrix to determine the scaling factor of the system,
             // which allows the flyout to be displayed at the correct place regardless of system scaling
-            Matrix? matrix = PresentationSource.FromVisual(this)?.CompositionTarget?.TransformToDevice;
+            // (on laptops, very commonly 125% scaling is used instead of 100%)
+            var matrix = PresentationSource.FromVisual(this)?.CompositionTarget?.TransformToDevice;
             if (matrix.HasValue)
             {
                 double dpiXFactor = matrix.Value.M11; // horizontal scaling factor
                 double dpiYFactor = matrix.Value.M22; // vertical scaling factor
 
-                // center the flyout within the working area of the current screen (and a little bit to the bottom)
-                this.Left = workingArea.Left + (workingArea.Width - windowWidth * dpiXFactor) / 2 / dpiXFactor;
-                this.Top = workingArea.Top + (workingArea.Height - windowHeight * dpiYFactor) / 1.2 / dpiYFactor;
-            }
+                // converts the working area to device-independent units
+                double workingAreaWidthDiu = workingArea.Width / dpiXFactor;
+                double workingAreaHeightDiu = workingArea.Height / dpiYFactor;
 
+                // centers the flyout within the working area of the current screen (and a little bit to the bottom)
+                this.Left = workingArea.Left / dpiXFactor + (workingAreaWidthDiu - windowWidth) / 2;
+                this.Top = workingArea.Top / dpiYFactor + (workingAreaHeightDiu - windowHeight) * 0.85;
+            }
         }
 
         public void PlayErrorSound()
