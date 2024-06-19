@@ -39,6 +39,7 @@ namespace copy_flyouts
             // this line is crucial for having the flyouts appear at the right place,
             // despite it being bounded in the XAML. Unsure why
             MaxWidth = userSettings.FlyoutWidth;
+            MaxHeight = userSettings.FlyoutHeight;
 
             if (clipContent.fileAmount > 0)
             {

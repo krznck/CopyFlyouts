@@ -38,6 +38,7 @@ namespace copy_flyouts.Pages
                 // so screw it, just hardcode them in
                 userSettings.FlyoutOpacity = 1.0;
                 userSettings.FlyoutWidthScale = 1.0;
+                userSettings.FlyoutHeightScale = 1.0;
             }
         }
     }

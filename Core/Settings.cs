@@ -21,6 +21,8 @@ namespace copy_flyouts.Core
         private double _flyoutOpacity = 1.0;
         private double _flyoutWidthScale = 1.0;
         private double _flyoutWidth = 600;
+        private double _flyoutHeightScale = 1.0;
+        private double _flyoutHeight = 180;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -85,6 +87,28 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(FlyoutWidth));
             }
         }
+
+        public double FlyoutHeightScale
+        {
+            get => _flyoutHeightScale;
+            set
+            {
+                _flyoutHeightScale = Math.Truncate(value * 100) / 100; // truncates ridiculous values like 0.50000000000002 into 0.5
+                FlyoutHeight = 180 * _flyoutHeightScale;
+                OnPropertyChanged(nameof(FlyoutHeightScale));
+            }
+        }
+
+        [JsonIgnore]
+        public double FlyoutHeight
+        {
+            get => _flyoutHeight;
+            set
+            {
+                _flyoutHeight = value;
+                OnPropertyChanged(nameof(FlyoutHeight));
+            }
+        }
         #endregion
 
         public Settings()
@@ -101,7 +125,7 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var commonResources = new ResourceDictionary();
@@ -114,6 +138,7 @@ namespace copy_flyouts.Core
             MinimizeToTray = minimizeToTray;
             FlyoutOpacity = flyoutOpacity;
             FlyoutWidthScale = flyoutWidthScale;
+            FlyoutHeightScale = flyoutHeightScale;
         }
 
         private void CopySettings(Settings settings)
@@ -125,6 +150,7 @@ namespace copy_flyouts.Core
                 MinimizeToTray = settings.MinimizeToTray;
                 FlyoutOpacity = settings.FlyoutOpacity;
                 FlyoutWidthScale = settings.FlyoutWidthScale;
+                FlyoutHeightScale = settings.FlyoutHeightScale;
             }
         }
 

@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:core="clr-namespace:copy_flyouts.Core"
     x:Class="copy_flyouts.Flyout"
-    Title="Flyout" SizeToContent="WidthAndHeight" MaxWidth="{Binding FlyoutWidth}"  MaxHeight="180"
+    Title="Flyout" SizeToContent="WidthAndHeight" MaxWidth="{Binding FlyoutWidth}"  MaxHeight="{Binding FlyoutHeight}"
     WindowStyle="None" AllowsTransparency="True" Background="Transparent"
     Topmost="True" Foreground="{DynamicResource colorNeutralForeground1}">
 
