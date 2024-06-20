@@ -47,9 +47,19 @@
                 </Grid.ColumnDefinitions>
 
                 <ui:SymbolIcon x:Name="icon" Grid.Column="0" Grid.Row="0" Symbol="ClipboardCheckmark16" Filled="True" Margin="5,0,15,0" FontSize="{Binding FlyoutIconSize}"/>
-                <Grid x:Name="fileGrid" Grid.Column="1" Grid.Row="0" Visibility="Collapsed">
-                    <ui:SymbolIcon x:Name="icon2" Visibility="Visible" Margin="0 0 15 0" FontSize="{Binding FlyoutIconSize}" Filled="True"/>
-                    <ui:InfoBadge x:Name="amount" Visibility="Collapsed" Value="0" Severity="Informational" Margin="-10,-10,15,14"/>
+                <Grid x:Name="fileGrid" Grid.Column="1" Grid.Row="0" Visibility="Collapsed" Margin="0 0 15 0">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ui:SymbolIcon x:Name="icon2" Visibility="Visible" FontSize="{Binding FlyoutIconSize}" Filled="True" Symbol="DocumentCopy24"/>
+                        <ui:InfoBadge x:Name="amount" Visibility="Collapsed" Value="0" Severity="Informational" HorizontalAlignment="Right" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+                            <ui:InfoBadge.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="{Binding FlyoutFontSizeScale}" ScaleY="{Binding FlyoutFontSizeScale}"/>
+                                    <SkewTransform/>
+                                    <TranslateTransform X="3" Y="1"/>
+                                </TransformGroup>
+                            </ui:InfoBadge.RenderTransform>
+                        </ui:InfoBadge>
+                    </Grid>
                 </Grid>
                 <TextBlock x:Name="text" 
                            TextWrapping="Wrap" 
