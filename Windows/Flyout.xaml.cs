@@ -175,13 +175,11 @@ namespace copy_flyouts
         private void AddFileIcon()
         {
             AddSecondIcon(SymbolRegular.DocumentCopy16);
-            icon2.Width = 33;
         }
 
         private void AddImageIcon()
         {
             AddSecondIcon(SymbolRegular.ImageCopy24);
-            icon2.Width = 35;
         }
 
         /// <summary>
