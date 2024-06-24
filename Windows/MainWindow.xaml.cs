@@ -28,7 +28,6 @@ namespace copy_flyouts
         private SystemTrayIcon notifyIcon;
         private HotkeyHandler hotkeyHandler;
         public HotkeyHandler HotkeyHandler { get => hotkeyHandler; private set => hotkeyHandler = value; }
-        public Settings DefaultSettings { get; private set; }
         public Settings UserSettings { get; set; }
 
         public MainWindow()
@@ -50,6 +49,26 @@ namespace copy_flyouts
             InitializeComponent();
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
+            UserSettings.PropertyChanged += UserSettings_PropertyChanged;
+        }
+
+        private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(UserSettings.Theme))
+            {
+                if (UserSettings.Theme.Equals("Light"))
+                {
+                    ApplicationThemeManager.Apply(ApplicationTheme.Light);
+                }
+                else if (UserSettings.Theme.Equals("Dark"))
+                {
+                    ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+                }
+                else if (UserSettings.Theme.Equals("System"))
+                {
+                    ApplicationThemeManager.ApplySystemTheme();
+                }
+            }
         }
 
         private void CreateNotifyIcon()
