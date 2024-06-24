@@ -26,6 +26,13 @@ namespace copy_flyouts.Pages
         public Appearance()
         {
             InitializeComponent();
+
+            ThemeComboBox.ItemsSource = new List<string>
+            {
+                "System",
+                "Light",
+                "Dark"
+            };
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)

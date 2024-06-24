@@ -26,6 +26,7 @@ namespace copy_flyouts.Core
         private double _flyoutFontSizeScale = 1.0;
         private double _flyoutFontSize = 20;
         private double _flyoutIconSize = 26;
+        private string _theme = "System";
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -146,6 +147,16 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(FlyoutIconSize));
             }
         }
+
+        public string Theme
+        {
+            get => _theme;
+            set
+            {
+                _theme = value;
+                OnPropertyChanged(nameof(Theme));
+            }
+        }
         #endregion
 
         public Settings()
@@ -162,7 +173,7 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var commonResources = new ResourceDictionary();
@@ -177,6 +188,7 @@ namespace copy_flyouts.Core
             FlyoutWidthScale = flyoutWidthScale;
             FlyoutHeightScale = flyoutHeightScale;
             FlyoutFontSizeScale = flyoutFontSizeScale;
+            Theme = theme;
         }
 
         private void CopySettings(Settings settings)
@@ -190,6 +202,7 @@ namespace copy_flyouts.Core
                 FlyoutWidthScale = settings.FlyoutWidthScale;
                 FlyoutHeightScale = settings.FlyoutHeightScale;
                 FlyoutFontSizeScale = settings.FlyoutFontSizeScale;
+                Theme = settings.Theme;
             }
         }
 
