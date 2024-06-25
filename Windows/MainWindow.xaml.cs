@@ -59,14 +59,17 @@ namespace copy_flyouts
                 if (UserSettings.Theme.Equals("Light"))
                 {
                     ApplicationThemeManager.Apply(ApplicationTheme.Light);
+                    Wpf.Ui.Appearance.SystemThemeWatcher.UnWatch(this);
                 }
                 else if (UserSettings.Theme.Equals("Dark"))
                 {
                     ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+                    Wpf.Ui.Appearance.SystemThemeWatcher.UnWatch(this);
                 }
                 else if (UserSettings.Theme.Equals("System"))
                 {
                     ApplicationThemeManager.ApplySystemTheme();
+                    Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
                 }
             }
         }
@@ -102,8 +105,22 @@ namespace copy_flyouts
             HotkeyHandler = new(this, UserSettings); // creates the hotkey to make the program work
 
             // handles switching the theme when the system does
-            Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
             Wpf.Ui.Appearance.ApplicationThemeManager.Changed += ApplicationThemeManager_Changed;
+
+            // and ensures that the correct theme is applied on load
+            if (UserSettings.Theme.Equals("Dark"))
+            {
+                ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+            }
+            else if (UserSettings.Theme.Equals("Light"))
+            {
+                ApplicationThemeManager.Apply(ApplicationTheme.Light);
+            }
+            else if (UserSettings.Theme.Equals("System"))
+            {
+                ApplicationThemeManager.ApplySystemTheme();
+                Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
+            }
 
             RootNavigation.DataContext = UserSettings;
             RootNavigation.Navigate(typeof(Pages.General)); // ensures General page is opened on load
