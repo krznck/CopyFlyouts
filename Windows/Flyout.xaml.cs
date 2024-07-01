@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Wpf.Ui;
+using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 using Color = System.Windows.Media.Color;
 
@@ -81,6 +83,11 @@ namespace copy_flyouts
             this.ShowInTaskbar = false;
             this.Focusable = false;
             this.userSettings = userSettings;
+
+            if (userSettings.InvertedTheme)
+            {
+                ApplyInverseTheme();
+            }
         }
 
         private void Flyout_Loaded(object sender, RoutedEventArgs e)
@@ -201,6 +208,20 @@ namespace copy_flyouts
                 bitmapImage.EndInit();
 
                 return bitmapImage;
+            }
+        }
+
+        private void ApplyInverseTheme()
+        {
+            if (ApplicationThemeManager.GetAppTheme().Equals(ApplicationTheme.Dark))
+            {
+                this.Resources.MergedDictionaries.Clear();
+                this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("/Resources/Light.xaml", UriKind.Relative) });
+            }
+            else
+            {
+                this.Resources.MergedDictionaries.Clear();
+                this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("/Resources/Dark.xaml", UriKind.Relative) });
             }
         }
     }
