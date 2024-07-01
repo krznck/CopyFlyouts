@@ -47,6 +47,8 @@ namespace copy_flyouts.Pages
                 userSettings.FlyoutWidthScale = 1.0;
                 userSettings.FlyoutHeightScale = 1.0;
                 userSettings.FlyoutFontSizeScale = 1.0;
+                userSettings.Theme = "System";
+                userSettings.InvertedTheme = false;
             }
         }
     }

@@ -6,11 +6,12 @@
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" 
       xmlns:local="clr-namespace:copy_flyouts"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignWidth="1200"
       Title="Appearance">
 
     <Grid Margin="30" VerticalAlignment="Top">
         <Grid.RowDefinitions>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -27,7 +28,7 @@
                     Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nibh quam, suscipit vitae ullamcorper quis, eleifend eu dolor. Morbi dictum nunc sit amet vehicula pretium. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam commodo tellus lectus, quis finibus nisl dapibus sodales. Morbi consectetur hendrerit nibh id consectetur. In sollicitudin magna at magna iaculis lacinia. Nunc libero risus, feugiat quis consectetur ac, accumsan id leo." 
                     IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 0 10"/>
 
-        <ui:CardControl Icon="{ui:SymbolIcon DarkTheme24}" Grid.Row="2" Margin="0 0 0 40">
+        <ui:CardControl Icon="{ui:SymbolIcon DarkTheme24}" Grid.Row="2" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Theme" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -37,7 +38,17 @@
             <ComboBox x:Name="ThemeComboBox" SelectedItem="{Binding Theme}"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon EyeLines24}" Grid.Row="3" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon ArrowSwap24}" Grid.Row="3" Margin="0 0 0 40">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Invert flyout theme" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Text="When the theme is dark, the flyout will be in light theme, and the opposite. This might help with visibility." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch IsChecked="{Binding InvertedTheme}"/>
+        </ui:CardControl>
+        
+        <ui:CardControl Icon="{ui:SymbolIcon EyeLines24}" Grid.Row="4" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout opacity" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -50,7 +61,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon AutoFitWidth24}" Grid.Row="4" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon AutoFitWidth24}" Grid.Row="5" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout maximum width" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -63,7 +74,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon AutoFitHeight24}" Grid.Row="5" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon AutoFitHeight24}" Grid.Row="6" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout maximum height" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -76,7 +87,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon TextFontSize24}" Grid.Row="6" Margin="0 0 0 40">
+        <ui:CardControl Icon="{ui:SymbolIcon TextFontSize24}" Grid.Row="7" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout font size" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -89,6 +100,6 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="7" Content="Reset appearance settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
+        <ui:Button Grid.Row="8" Content="Reset appearance settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
     </Grid>
 </Page>

@@ -27,6 +27,7 @@ namespace copy_flyouts.Core
         private double _flyoutFontSize = 20;
         private double _flyoutIconSize = 26;
         private string _theme = "System";
+        private bool _invertedTheme = false;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -157,6 +158,16 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(Theme));
             }
         }
+
+        public bool InvertedTheme
+        {
+            get => _invertedTheme;
+            set
+            {
+                _invertedTheme = value;
+                OnPropertyChanged(nameof(InvertedTheme));
+            }
+        }
         #endregion
 
         public Settings()
@@ -173,7 +184,7 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var commonResources = new ResourceDictionary();
@@ -189,6 +200,7 @@ namespace copy_flyouts.Core
             FlyoutHeightScale = flyoutHeightScale;
             FlyoutFontSizeScale = flyoutFontSizeScale;
             Theme = theme;
+            InvertedTheme = invertedTheme;
         }
 
         private void CopySettings(Settings settings)
@@ -203,6 +215,7 @@ namespace copy_flyouts.Core
                 FlyoutHeightScale = settings.FlyoutHeightScale;
                 FlyoutFontSizeScale = settings.FlyoutFontSizeScale;
                 Theme = settings.Theme;
+                InvertedTheme = settings.InvertedTheme;
             }
         }
 
