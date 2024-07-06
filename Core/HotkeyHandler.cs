@@ -8,11 +8,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-using static System.Net.Mime.MediaTypeNames;
+using WK.Libraries.SharpClipboardNS;
 
 namespace copy_flyouts.Core
 {
@@ -38,20 +39,42 @@ namespace copy_flyouts.Core
 
         private ClipboardContent previousClipboard = new ClipboardContent(); // gets the last clipboard item on initialization
 
+        // will be used to monitor mouse-clicked copies and copies not started by the user
+        private SharpClipboard sharpClipboard = new();
+
+        private bool isInitialSubscription = true; // this ensures the above does not show the flyout of what's in the clipboard on opening the program
+
         public HotkeyHandler(Window affectedWindow, Settings userSettings)
         {
 
             this.affectedWindow = affectedWindow;
             this.userSettings = userSettings;
 
+            // subscribe to UserSettings changes
+            userSettings.PropertyChanged += UserSettings_PropertyChanged;
+
+            // ensures the mouse-click listener monitors all formats
+            sharpClipboard.ObservableFormats.Texts = true;
+            sharpClipboard.ObservableFormats.Files = true;
+            sharpClipboard.ObservableFormats.Images = true;
+            sharpClipboard.ObservableFormats.Others = true;
+
             // register Ctrl + + C as global hotkey
             if (userSettings.FlyoutsEnabled)
             {
                 Register();
             }
+        }
 
-            // subscribe to UserSettings changes
-            userSettings.PropertyChanged += UserSettings_PropertyChanged;
+        private void SharpClipboard_ClipboardChanged(object? sender, SharpClipboard.ClipboardChangedEventArgs e)
+        {
+            if (isInitialSubscription)
+            {
+                isInitialSubscription = false;
+                return;
+            }
+
+            ShowNewFlyout();
         }
 
         private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -78,7 +101,9 @@ namespace copy_flyouts.Core
             {
                 Debug.WriteLine("Hotkey pressed");
                 handled = true;
+                sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged; // we stop listening to other copies here, since we know this is a keyboard copy attempt
                 HandleHotkey();
+                sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged;
             }
             return nint.Zero;
         }
@@ -97,6 +122,11 @@ namespace copy_flyouts.Core
             var helper = new WindowInteropHelper(affectedWindow);
             RegisterHotKey(helper.Handle, HOTKEY_ID, (uint)ModifierKeys.Control, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
 
+            ShowNewFlyout();
+        }
+
+        private void ShowNewFlyout()
+        {
             // closes the existing flyout and stops the timer immediately
             CloseFlyout();
 
@@ -105,7 +135,7 @@ namespace copy_flyouts.Core
             ClipboardContent clipboard = new ClipboardContent();
             bool copyIsEmpty = clipboard.Text.Length == 0;
 
-            // creates and show the new flyout
+            // creates and shows the new flyout
             var flyout = new Flyout(clipboard, userSettings);
             if (previousClipboard != null && previousClipboard.Equals(clipboard))
             {
@@ -160,6 +190,8 @@ namespace copy_flyouts.Core
             _source.AddHook(WndProc);
 
             RegisterHotKey(helper.Handle, HOTKEY_ID, (uint)ModifierKeys.Control, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
+
+            sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; // this is for non-keyboard copies
         }
 
         /// <summary>
@@ -170,6 +202,8 @@ namespace copy_flyouts.Core
             CloseFlyout();
             _source?.RemoveHook(WndProc);
             UnregisterHotKey(new WindowInteropHelper(affectedWindow).Handle, HOTKEY_ID);
+
+            sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged; // this is for non-keyboard copies
         }
 
         ~HotkeyHandler()
