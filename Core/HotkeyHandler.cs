@@ -76,22 +76,18 @@ namespace copy_flyouts.Core
 
             ShowNewFlyout();
 
-            // we remove and return the clipboard change listener on a short timer to prevent the bug of a copy being shown twice on the main window.
+            // we remove and return the clipboard change listener on a short timer to prevent the bug of a copy being shown twice on the main window, or when screenshotting anything
             // this is ultimately a workaround, but should not significantly mess anything up (hopefully)
-            if (affectedWindow.IsMouseOver) // note that we only need to do this when we're working with the main window, since that's when the bug happens
+            //Debug.WriteLine("Prevented double-mouse-copy bug in MainWindow.");
+            sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged;
+            var timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(1);
+            timer.Start();
+            timer.Tick += (sender, args) =>
             {
-                //Debug.WriteLine("Prevented double-mouse-copy bug in MainWindow.");
-                sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged;
-                var timer = new DispatcherTimer();
-                timer.Interval = TimeSpan.FromMilliseconds(1);
-                timer.Start();
-                timer.Tick += (sender, args) =>
-                {
-                    timer.Stop();
-                    sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged;
-                };
-            }
-
+                timer.Stop();
+                sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged;
+            };
         }
 
         private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
