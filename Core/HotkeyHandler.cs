@@ -57,7 +57,7 @@ namespace copy_flyouts.Core
             sharpClipboard.ObservableFormats.Texts = true;
             sharpClipboard.ObservableFormats.Files = true;
             sharpClipboard.ObservableFormats.Images = true;
-            sharpClipboard.ObservableFormats.Others = true;
+            sharpClipboard.ObservableFormats.Others = false; // setting this to true creates unexpected behavior - see issue #37
 
             // register Ctrl + + C as global hotkey
             if (userSettings.FlyoutsEnabled)
