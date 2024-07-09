@@ -13,7 +13,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Windows.Threading;
-using Hardcodet.Wpf.TaskbarNotification;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Appearance;
 using copy_flyouts.Core;
@@ -25,7 +24,6 @@ namespace copy_flyouts
     /// </summary>
     public partial class MainWindow : FluentWindow
     {
-        private SystemTrayIcon notifyIcon;
         private HotkeyHandler hotkeyHandler;
         public HotkeyHandler HotkeyHandler { get => hotkeyHandler; private set => hotkeyHandler = value; }
         public Settings UserSettings { get; set; }
@@ -72,11 +70,20 @@ namespace copy_flyouts
                     Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
                 }
             }
-        }
 
-        private void CreateNotifyIcon()
-        {
-            notifyIcon = new SystemTrayIcon(this);
+            if (e.PropertyName == nameof(UserSettings.FlyoutsEnabled))
+            {
+                if (UserSettings.FlyoutsEnabled)
+                {
+                    ProgramStateMenuItem.Header = "Disable";
+                    ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Play24 };
+                }
+                else
+                {
+                    ProgramStateMenuItem.Header = "Enable";
+                    ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Pause24 };
+                }
+            }
         }
 
         protected override void OnStateChanged(EventArgs e)
@@ -84,7 +91,11 @@ namespace copy_flyouts
             if (WindowState == WindowState.Minimized && UserSettings.MinimizeToTray)
             {
                 Hide();
-                CreateNotifyIcon();
+                notifyIcon.Visibility = Visibility.Visible;
+                if (!notifyIcon.IsRegistered)
+                {
+                    notifyIcon.Register();
+                }
             }
             base.OnStateChanged(e);
         }
@@ -93,6 +104,8 @@ namespace copy_flyouts
         {
             Show();
             WindowState = WindowState.Normal;
+            notifyIcon.Unregister();
+            notifyIcon.Visibility = Visibility.Collapsed;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -125,9 +138,14 @@ namespace copy_flyouts
             RootNavigation.DataContext = UserSettings;
             RootNavigation.Navigate(typeof(Pages.General)); // ensures General page is opened on load
 
+            notifyIcon.Unregister(); // note: we can't just set the initial Visibility to Collapsed, otherwise the tooltip will always be invisible
+            notifyIcon.Visibility = Visibility.Collapsed;
+
             if (UserSettings.StartMinimized)
             {
                 WindowState = WindowState.Minimized;
+                notifyIcon.Register();
+                notifyIcon.Visibility = Visibility.Visible;
             }
         }
 
@@ -163,19 +181,39 @@ namespace copy_flyouts
                 Source = new Uri(newThemeDictionaryPath, UriKind.Relative)
             };
             System.Windows.Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
-
-            if (notifyIcon != null) // and if there's a system tray icon at this point
-            {
-                notifyIcon.NotifyIcon.Dispose(); // then we remove it
-                notifyIcon = new SystemTrayIcon(this); // and replace it with a new one
-                // which ensures that the system tray icon also gets the refreshed theme
-            }
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             HotkeyHandler.Unregister();
             System.Windows.Application.Current.Shutdown();
+        }
+
+        private void notifyIcon_LeftClick(Wpf.Ui.Tray.Controls.NotifyIcon sender, RoutedEventArgs e)
+        {
+            ShowWindow();
+        }
+
+        private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowWindow();
+        }
+
+        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
+
+        private void ProgramStateMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (UserSettings.FlyoutsEnabled)
+            {
+                UserSettings.FlyoutsEnabled = false;
+            }
+            else
+            {
+                UserSettings.FlyoutsEnabled = true;
+            }
         }
     }
 }

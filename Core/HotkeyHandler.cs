@@ -78,7 +78,6 @@ namespace copy_flyouts.Core
 
             // we remove and return the clipboard change listener on a short timer to prevent the bug of a copy being shown twice on the main window, or when screenshotting anything
             // this is ultimately a workaround, but should not significantly mess anything up (hopefully)
-            //Debug.WriteLine("Prevented double-mouse-copy bug in MainWindow.");
             sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged;
             var timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(1);
