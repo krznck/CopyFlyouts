@@ -16,6 +16,7 @@ using System.Windows.Threading;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Appearance;
 using copy_flyouts.Core;
+using Microsoft.Win32;
 
 namespace copy_flyouts
 {
@@ -84,6 +85,18 @@ namespace copy_flyouts
                     ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Pause24 };
                 }
             }
+
+            if (e.PropertyName == nameof(UserSettings.RunOnStartup))
+            {
+                if (UserSettings.RunOnStartup)
+                {
+                    AddToStartup();
+                }
+                else
+                {
+                    RemoveFromStartup();
+                }
+            }
         }
 
         protected override void OnStateChanged(EventArgs e)
@@ -146,6 +159,40 @@ namespace copy_flyouts
                 WindowState = WindowState.Minimized;
                 notifyIcon.Register();
                 notifyIcon.Visibility = Visibility.Visible;
+            }
+
+            if (UserSettings.RunOnStartup)
+            {
+                AddToStartup();
+            }
+            else
+            {
+                RemoveFromStartup();
+            }
+        }
+
+        private void AddToStartup()
+        {
+            var commonResources = new ResourceDictionary();
+            commonResources.Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative);
+            var appName = commonResources["ProgramName"] as string;
+            var appFileName = appName + ".exe";
+
+            string executablePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, appFileName);
+            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            registryKey.SetValue(appName, executablePath);
+        }
+
+        private void RemoveFromStartup()
+        {
+            var commonResources = new ResourceDictionary();
+            commonResources.Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative);
+            var appName = commonResources["ProgramName"] as string;
+
+            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            if (registryKey.GetValue(appName) != null)
+            {
+                registryKey.DeleteValue(appName, false);
             }
         }
 

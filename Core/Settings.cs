@@ -28,6 +28,7 @@ namespace copy_flyouts.Core
         private double _flyoutIconSize = 26;
         private string _theme = "System";
         private bool _invertedTheme = false;
+        private bool _runOnStartup = false;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -168,6 +169,16 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(InvertedTheme));
             }
         }
+
+        public bool RunOnStartup
+        {
+            get => _runOnStartup;
+            set
+            {
+                _runOnStartup = value;
+                OnPropertyChanged(nameof(RunOnStartup));
+            }
+        }
         #endregion
 
         public Settings()
@@ -184,7 +195,7 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme, bool runOnStartup)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var commonResources = new ResourceDictionary();
@@ -201,6 +212,7 @@ namespace copy_flyouts.Core
             FlyoutFontSizeScale = flyoutFontSizeScale;
             Theme = theme;
             InvertedTheme = invertedTheme;
+            RunOnStartup = runOnStartup;
         }
 
         private void CopySettings(Settings settings)
@@ -216,6 +228,7 @@ namespace copy_flyouts.Core
                 FlyoutFontSizeScale = settings.FlyoutFontSizeScale;
                 Theme = settings.Theme;
                 InvertedTheme = settings.InvertedTheme;
+                RunOnStartup = settings.RunOnStartup;
             }
         }
 

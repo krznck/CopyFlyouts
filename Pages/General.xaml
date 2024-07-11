@@ -17,6 +17,7 @@
             <RowDefinition Height="30"/> 
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
             <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -35,7 +36,25 @@
 
         <ui:TextBox Grid.Row="2" Text="Some dummy text to copy and test the flyouts out :)" IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 0 10"/>
 
-        <ui:CardControl Icon="{ui:SymbolIcon ArrowMinimize24}" Grid.Row="4" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon WindowPlay20}" Grid.Row="4" Margin="0 0 0 10">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock TextWrapping="WrapWithOverflow" FontTypography="BodyStrong">
+                        <Run Text="Run"/>
+                        <Run Text="{StaticResource ProgramName}"/>
+                        <Run Text="on startup"/>
+                    </ui:TextBlock>
+                    <ui:TextBlock Appearance="Secondary" TextWrapping="WrapWithOverflow">
+                        <Run Text="Starts"/>
+                        <Run Text="{StaticResource ProgramName}"/>
+                        <Run Text="when the system is turned on."/>
+                    </ui:TextBlock>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch IsChecked="{Binding RunOnStartup}"/>
+        </ui:CardControl>
+
+        <ui:CardControl Icon="{ui:SymbolIcon ArrowMinimize24}" Grid.Row="5" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock FontTypography="BodyStrong" TextWrapping="WrapWithOverflow">
@@ -49,7 +68,7 @@
             <ui:ToggleSwitch IsChecked="{Binding StartMinimized}"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon EyeOff24}" Grid.Row="5" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon EyeOff24}" Grid.Row="6" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Minimize to system tray" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -63,6 +82,6 @@
             <ui:ToggleSwitch IsChecked="{Binding MinimizeToTray}"/>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="7" Content="Reset general settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
+        <ui:Button Grid.Row="8" Content="Reset general settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
     </Grid>
 </Page>
