@@ -84,6 +84,8 @@ namespace copy_flyouts
                     ProgramStateMenuItem.Header = "Enable";
                     ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Pause24 };
                 }
+
+                RefreshNotifyIconAppearance();
             }
 
             if (e.PropertyName == nameof(UserSettings.RunOnStartup))
@@ -126,12 +128,51 @@ namespace copy_flyouts
             base.OnClosing(e);
         }
 
+        private void RefreshNotifyIconAppearance()
+        {
+            Uri iconUri;
+            string filePath = "pack://application:,,,/Assets/icons/";
+
+            // without this update, the program will think the old theme is still up
+            SystemThemeManager.UpdateSystemThemeCache();
+
+            if (ApplicationThemeManager.GetSystemTheme() == SystemTheme.Dark)
+            {
+                if (UserSettings.FlyoutsEnabled)
+                {
+                    filePath += "logo-slim-darkmode";
+                }
+                else
+                {
+                    filePath += "logo-slim-darkmode-disabled";
+                }
+            }
+            else
+            {
+                if (UserSettings.FlyoutsEnabled)
+                {
+                    filePath += "logo-slim";
+                }
+                else
+                {
+                    filePath += "logo-slim-disabled";
+                }
+            }
+
+            filePath += ".ico";
+            Debug.WriteLine(filePath);
+            iconUri = new Uri(filePath, UriKind.RelativeOrAbsolute);
+            ImageSource icon = new BitmapImage(iconUri);
+            notifyIcon.Icon = icon;
+        }
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             HotkeyHandler = new(this, UserSettings); // creates the hotkey to make the program work
 
             // handles switching the theme when the system does
             Wpf.Ui.Appearance.ApplicationThemeManager.Changed += ApplicationThemeManager_Changed;
+            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged; // this is to changing the notifyicon when the system theme changes
 
             // and ensures that the correct theme is applied on load
             if (UserSettings.Theme.Equals("Dark"))
@@ -151,6 +192,8 @@ namespace copy_flyouts
             RootNavigation.DataContext = UserSettings;
             RootNavigation.Navigate(typeof(Pages.General)); // ensures General page is opened on load
 
+            RefreshNotifyIconAppearance();
+
             notifyIcon.Unregister(); // note: we can't just set the initial Visibility to Collapsed, otherwise the tooltip will always be invisible
             notifyIcon.Visibility = Visibility.Collapsed;
 
@@ -168,6 +211,16 @@ namespace copy_flyouts
             else
             {
                 RemoveFromStartup();
+            }
+        }
+
+        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        {
+            // Category is Desktop when we force theme via Auto Dark Mode app, and General if we do it via the settings
+            // beats me as to why--
+            if (e.Category == UserPreferenceCategory.Desktop || e.Category == UserPreferenceCategory.General)
+            {
+                RefreshNotifyIconAppearance();
             }
         }
 

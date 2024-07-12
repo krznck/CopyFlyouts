@@ -8,11 +8,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
 	  <UseWindowsForms>true</UseWindowsForms>
+	  <ApplicationIcon>Assets\icons\logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="assets\audio\damage.wav" />
-    <None Remove="assets\icons\ic_fluent_clipboard_checkmark_16_filled.ico" />
+    <None Remove="Assets\icons\logo-slim-darkmode-disabled.ico" />
+    <None Remove="Assets\icons\logo-slim-darkmode.ico" />
+    <None Remove="Assets\icons\logo-slim-disabled.ico" />
+    <None Remove="Assets\icons\logo-slim.ico" />
+    <None Remove="Assets\icons\logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,7 +54,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="assets\icons\ic_fluent_clipboard_checkmark_16_filled.ico" />
+    <Resource Include="Assets\icons\logo-slim-darkmode-disabled.ico" />
+    <Resource Include="Assets\icons\logo-slim-darkmode.ico" />
+    <Resource Include="Assets\icons\logo-slim-disabled.ico" />
+    <Resource Include="Assets\icons\logo-slim.ico" />
+    <Resource Include="Assets\icons\logo.ico" />
   </ItemGroup>
 
 </Project>
