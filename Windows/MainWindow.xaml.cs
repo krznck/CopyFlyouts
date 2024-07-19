@@ -17,6 +17,7 @@ using Wpf.Ui.Controls;
 using Wpf.Ui.Appearance;
 using copy_flyouts.Core;
 using Microsoft.Win32;
+using copy_flyouts.UpdateInfrastructure;
 
 namespace copy_flyouts
 {

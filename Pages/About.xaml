@@ -13,11 +13,21 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <ui:TextBlock Text="About" Grid.Row="0" Appearance="Primary" FontSize="36" FontTypography="BodyStrong" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
-        
-        <ui:CardControl Icon="{ui:SymbolIcon Link24}" Grid.Row="1">
+
+        <ui:CardControl Icon="{ui:SymbolIcon NumberSymbolSquare24}" Grid.Row="1" Margin="0 0 0 10">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Version" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow" x:Name="VersionLabel"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:Button Content="Check for updates" Icon="{ui:SymbolIcon ArrowDownload24}" Click="Button_Click"/>
+        </ui:CardControl>
+
+        <ui:CardControl Icon="{ui:SymbolIcon Link24}" Grid.Row="2">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Website" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
