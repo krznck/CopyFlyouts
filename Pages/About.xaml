@@ -14,6 +14,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <ui:TextBlock Text="About" Grid.Row="0" Appearance="Primary" FontSize="36" FontTypography="BodyStrong" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
@@ -21,10 +22,16 @@
         <ui:CardControl Icon="{ui:SymbolIcon NumberSymbolSquare24}" Grid.Row="1" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
-                    <ui:TextBlock Text="Version" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow" x:Name="VersionLabel"/>
+                    <ui:TextBlock FontTypography="BodyStrong" TextWrapping="WrapWithOverflow">
+                        <Run Text="Version "/>
+                        <Run Text="{StaticResource Version}"/>
+                    </ui:TextBlock>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:Button Content="Check for updates" Icon="{ui:SymbolIcon ArrowDownload24}" Click="Button_Click"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:Button Content="Open update page" Icon="{ui:SymbolIcon ArrowDownload24}" Margin="0,0,10,0" Appearance="Primary" IsEnabled="False" x:Name="OpenUpdatePageButton" Click="OpenUpdatePageButton_Click"/>
+                <ui:Button Content="Check for updates now" Icon="{ui:SymbolIcon Server24}" Click="Button_Click"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon Link24}" Grid.Row="2">
@@ -35,5 +42,6 @@
             </ui:CardControl.Header>
             <ui:HyperlinkButton Content="GitHub" NavigateUri="https://github.com/krznck/copy-flyouts"/>
         </ui:CardControl>
+
     </Grid>
 </Page>

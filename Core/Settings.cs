@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -29,6 +30,7 @@ namespace copy_flyouts.Core
         private string _theme = "System";
         private bool _invertedTheme = false;
         private bool _runOnStartup = false;
+        private string? _updatePageUrl = null;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -179,6 +181,16 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(RunOnStartup));
             }
         }
+
+        public string? UpdatePageUrl
+        {
+            get => _updatePageUrl;
+            set
+            {
+                _updatePageUrl = value;
+                OnPropertyChanged(nameof(UpdatePageUrl));
+            }
+        }
         #endregion
 
         public Settings()
@@ -195,7 +207,7 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme, bool runOnStartup)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme, bool runOnStartup, string updatePageUrl)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var commonResources = new ResourceDictionary();
@@ -213,6 +225,7 @@ namespace copy_flyouts.Core
             Theme = theme;
             InvertedTheme = invertedTheme;
             RunOnStartup = runOnStartup;
+            UpdatePageUrl = updatePageUrl;
         }
 
         private void CopySettings(Settings settings)
@@ -229,6 +242,32 @@ namespace copy_flyouts.Core
                 Theme = settings.Theme;
                 InvertedTheme = settings.InvertedTheme;
                 RunOnStartup = settings.RunOnStartup;
+                UpdatePageUrl = settings.UpdatePageUrl;
+
+                // note: this little block checks that the saved upate url (which indicates that there is an update)
+                // is not pointing to a program version that is lower than the current program.
+                // this is to ensure that when the user UPDATES the program, it removes the update url as it is now outdates
+                var commonResources = new ResourceDictionary();
+                commonResources.Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative);
+                string version = commonResources["Version"] as string;
+                version = version.Substring(1);
+
+                if (UpdatePageUrl != null)
+                {
+                    string pattern = @"\d+\.\d+\.\d+";
+                    Match match = Regex.Match(UpdatePageUrl, pattern);
+                    {
+                        if (match.Success)
+                        {
+                            Version urlVersion = new Version(match.Value);
+                            Version programVersion = new Version(version);
+                            if (urlVersion.CompareTo(programVersion) < 0)
+                            {
+                                UpdatePageUrl = null;
+                            }
+                        }
+                    }
+                }
             }
         }
 

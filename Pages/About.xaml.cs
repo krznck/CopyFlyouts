@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Linq.Expressions;
 using Wpf.Ui.Controls;
 using System.Windows.Threading;
+using copy_flyouts.Core;
 
 namespace copy_flyouts.Pages
 {
@@ -24,17 +25,50 @@ namespace copy_flyouts.Pages
     /// </summary>
     public partial class About : Page
     {
-        private UpdateChecker updateChecker = new UpdateChecker();
+        private UpdateChecker updateChecker;
+        private Settings userSettings;
 
         public About()
         {
             InitializeComponent();
-            VersionLabel.Text = "Version " + updateChecker.currentVersion;
+            this.Loaded += About_Loaded;
+        }
+
+        private void About_Loaded(object sender, RoutedEventArgs e)
+        {
+            // note: doing this logic in a Loaded event rather than construction is necessary, as the DataContext is not yet set on construction
+            userSettings = DataContext as Settings;
+            updateChecker = new UpdateChecker(userSettings);
+            if (userSettings.UpdatePageUrl != null)
+            {
+                OpenUpdatePageButton.IsEnabled = true;
+            }
+            userSettings.PropertyChanged += UserSettings_PropertyChanged;
+        }
+
+        private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.UpdatePageUrl))
+            {
+                if (userSettings.UpdatePageUrl != null)
+                {
+                    OpenUpdatePageButton.IsEnabled = true;
+                }
+                else
+                {
+                    OpenUpdatePageButton.IsEnabled = false;
+                }
+            }
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             await updateChecker.CheckForUpdatesManually();
+        }
+
+        private void OpenUpdatePageButton_Click(object sender, RoutedEventArgs e)
+        {
+            updateChecker.OpenUpdatePage();
         }
     }
 }

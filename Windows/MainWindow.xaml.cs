@@ -30,7 +30,7 @@ namespace copy_flyouts
         private HotkeyHandler hotkeyHandler;
         public HotkeyHandler HotkeyHandler { get => hotkeyHandler; private set => hotkeyHandler = value; }
         public Settings UserSettings { get; set; }
-        private UpdateChecker updateChecker = new UpdateChecker();
+        private UpdateChecker updateChecker;
 
         public MainWindow()
         {
@@ -47,6 +47,7 @@ namespace copy_flyouts
             System.Windows.Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
 
             UserSettings = new Settings();
+            updateChecker = new UpdateChecker(UserSettings);
 
             InitializeComponent();
             Loaded += MainWindow_Loaded;

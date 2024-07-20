@@ -10,17 +10,46 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using Microsoft.Toolkit.Uwp.Notifications;
 using System.Diagnostics;
+using System.Windows;
 
 namespace copy_flyouts.UpdateInfrastructure
 {
     public class UpdateChecker
     {
+        private Settings userSettings;
         private readonly HttpClient client = new HttpClient();
         // note - adding a token like this straight into source code is bad, but it will be fine so long as the repo is private.
         // by the time this repo is publicized, the token will be expired or deleted
         private readonly string personalAccessToken = "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";
-        public readonly string currentVersion = "0.2.0";
+        public readonly string currentVersion;
         private readonly DispatcherTimer updateCheckTimer = new DispatcherTimer();
+
+        public UpdateChecker(Settings userSettings)
+        {
+            this.userSettings = userSettings;
+
+            var commonResources = new ResourceDictionary();
+            commonResources.Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative);
+            currentVersion = commonResources["Version"] as string;
+            currentVersion = currentVersion.Substring(1);
+
+            userSettings.PropertyChanged += UserSettings_PropertyChanged;
+        }
+
+        private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(userSettings.UpdatePageUrl))
+            {
+                if (userSettings.UpdatePageUrl != null)
+                {
+                    StopUpdateCheckTimer();
+                }
+                else
+                {
+                    InitializeUpdateCheckTimer();
+                }
+            }
+        }
 
         public async Task<GitHubRelease> GetLatestReleaseAsync()
         {
@@ -42,9 +71,7 @@ namespace copy_flyouts.UpdateInfrastructure
 
         public async Task CheckForUpdatesManually()
         {
-            UpdateChecker updateChecker = new UpdateChecker();
-
-            var latestRelease = await updateChecker.GetLatestReleaseAsync();
+            var latestRelease = await GetLatestReleaseAsync();
 
             if (latestRelease != null)
             {
@@ -55,9 +82,10 @@ namespace copy_flyouts.UpdateInfrastructure
                     messageBox.Content = $"A new version - {latestRelease.TagName} - is available on GitHub!";
                     messageBox.IsPrimaryButtonEnabled = true;
                     messageBox.PrimaryButtonText = "Open update page";
+                    userSettings.UpdatePageUrl = latestRelease.HtmlUrl;
                     if (await messageBox.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary)
                     {
-                        Process.Start(new ProcessStartInfo(latestRelease.HtmlUrl) { UseShellExecute = true });
+                        OpenUpdatePage();
                     }
                 }
                 else
@@ -79,20 +107,27 @@ namespace copy_flyouts.UpdateInfrastructure
 
         public async Task CheckForUpdatesAutomatically()
         {
-            UpdateChecker updateChecker = new UpdateChecker();
-
-            var latestRelease = await updateChecker.GetLatestReleaseAsync();
+            var latestRelease = await GetLatestReleaseAsync();
 
             if ((latestRelease != null) && IsNewVersionAvailable(currentVersion, latestRelease.TagName))
-            {                    
+            {
+                userSettings.UpdatePageUrl = latestRelease.HtmlUrl;
                 new ToastContentBuilder()
                     .AddText("New update avaiable")
                     .AddText($"A new version is available!")
                     .AddButton(new ToastButton()
                         .SetContent("Open update page")
-                        .SetProtocolActivation(new Uri(latestRelease.HtmlUrl)))
+                        .SetProtocolActivation(new Uri(userSettings.UpdatePageUrl)))
                     .Show();
 
+            }
+        }
+
+        public void OpenUpdatePage()
+        {
+            if (userSettings.UpdatePageUrl != null)
+            {
+                Process.Start(new ProcessStartInfo(userSettings.UpdatePageUrl) { UseShellExecute = true });
             }
         }
 
@@ -110,9 +145,17 @@ namespace copy_flyouts.UpdateInfrastructure
 
         public void InitializeUpdateCheckTimer()
         {
-            updateCheckTimer.Interval = TimeSpan.FromSeconds(15);
-            updateCheckTimer.Tick += UpdateCheckTimer_Tick;
-            updateCheckTimer.Start();
+            if (userSettings.UpdatePageUrl == null)
+            {
+                updateCheckTimer.Interval = TimeSpan.FromSeconds(15);
+                updateCheckTimer.Tick += UpdateCheckTimer_Tick;
+                updateCheckTimer.Start();
+            }
+        }
+
+        private void StopUpdateCheckTimer()
+        {
+            updateCheckTimer.Stop();
         }
 
         private async void UpdateCheckTimer_Tick(object sender, EventArgs e)
