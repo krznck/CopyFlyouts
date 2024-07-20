@@ -29,7 +29,7 @@ namespace copy_flyouts
             DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
-        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private async void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             var commonResources = new ResourceDictionary();
             commonResources.Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative);
@@ -38,7 +38,10 @@ namespace copy_flyouts
             log.Error("Unhandled UI Exception", e.Exception);
             string message = "An unexpected error occurred. " + appName + " will close." +
                 "\nLog file can be located at " + logFilePath;
-            System.Windows.MessageBox.Show(message, appName + " Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            Wpf.Ui.Controls.MessageBox messageBox = new Wpf.Ui.Controls.MessageBox();
+            messageBox.Title = "Error";
+            messageBox.Content = message;
+            await messageBox.ShowDialogAsync();
             e.Handled = true;
             Current.Shutdown();
         }

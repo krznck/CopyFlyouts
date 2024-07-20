@@ -18,6 +18,7 @@ using Wpf.Ui.Appearance;
 using copy_flyouts.Core;
 using Microsoft.Win32;
 using copy_flyouts.UpdateInfrastructure;
+using copy_flyouts.Pages;
 
 namespace copy_flyouts
 {
@@ -29,6 +30,7 @@ namespace copy_flyouts
         private HotkeyHandler hotkeyHandler;
         public HotkeyHandler HotkeyHandler { get => hotkeyHandler; private set => hotkeyHandler = value; }
         public Settings UserSettings { get; set; }
+        private UpdateChecker updateChecker = new UpdateChecker();
 
         public MainWindow()
         {
@@ -50,6 +52,7 @@ namespace copy_flyouts
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
             UserSettings.PropertyChanged += UserSettings_PropertyChanged;
+            updateChecker.InitializeUpdateCheckTimer();
         }
 
         private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
