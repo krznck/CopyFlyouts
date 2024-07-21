@@ -20,6 +20,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <ui:TextBlock Text="Appearance" Grid.Row="0" Appearance="Primary" FontTypography="TitleLarge" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
@@ -90,7 +91,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon TextFontSize24}" Grid.Row="7" Margin="0 0 0 40">
+        <ui:CardControl Icon="{ui:SymbolIcon TextFontSize24}" Grid.Row="7" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout font size" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -103,6 +104,19 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="8" Content="Reset appearance settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
+        <ui:CardControl Icon="{ui:SymbolIcon RectangleLandscape24}" Grid.Row="8" Margin="0 0 0 40">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Flyout corner radius" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <!--<ui:TextBlock Text="" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>-->
+                </StackPanel>
+            </ui:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Margin="0 0 0 0" Text="{Binding FlyoutCorners}" HorizontalAlignment="Center"/>
+                <Slider Value="{Binding FlyoutCorners}" Margin="15 0 0 0" Maximum="20" Minimum="0" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
+            </StackPanel>
+        </ui:CardControl>
+
+        <ui:Button Grid.Row="9" Content="Reset appearance settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
     </Grid>
 </Page>

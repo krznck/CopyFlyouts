@@ -34,7 +34,7 @@
         </Grid.Triggers>
 
         <!-- Flyout area -->
-        <Border BorderThickness="1" CornerRadius="5" Padding="10" BorderBrush="{DynamicResource border}" Background="{DynamicResource colorNeutralBackground1}" Opacity="{Binding FlyoutOpacity}">
+        <Border BorderThickness="1" CornerRadius="{Binding FlyoutCorners}" Padding="10" BorderBrush="{DynamicResource border}" Background="{DynamicResource colorNeutralBackground1}" Opacity="{Binding FlyoutOpacity}">
             <Grid x:Name="grid">
                 <Grid.RowDefinitions>
                     <RowDefinition/>

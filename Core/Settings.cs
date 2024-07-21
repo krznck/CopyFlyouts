@@ -33,6 +33,7 @@ namespace copy_flyouts.Core
         private string? _updatePageUrl = null;
         private bool _autoUpdate = true;
         private double _flyoutLifetime = 1.5;
+        private int _flyoutCorners = 5;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -213,6 +214,16 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(FlyoutLifetime));
             }
         }
+
+        public int FlyoutCorners
+        {
+            get => _flyoutCorners;
+            set
+            {
+                _flyoutCorners = value;
+                OnPropertyChanged(nameof(FlyoutCorners));
+            }
+        }
         #endregion
 
         private double RoundToNearestTenth(double number)
@@ -232,7 +243,7 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme, bool runOnStartup, string updatePageUrl, bool autoUpdate, double flyoutLifetime)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme, bool runOnStartup, string updatePageUrl, bool autoUpdate, double flyoutLifetime, int flyoutCorners)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -251,6 +262,7 @@ namespace copy_flyouts.Core
             UpdatePageUrl = updatePageUrl;
             AutoUpdate = autoUpdate;
             FlyoutLifetime = flyoutLifetime;
+            FlyoutCorners = flyoutCorners;
         }
 
         private void CopySettings(Settings settings)
@@ -270,6 +282,7 @@ namespace copy_flyouts.Core
                 UpdatePageUrl = settings.UpdatePageUrl;
                 AutoUpdate = settings.AutoUpdate;
                 FlyoutLifetime = settings.FlyoutLifetime;
+                FlyoutCorners = settings.FlyoutCorners;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.
