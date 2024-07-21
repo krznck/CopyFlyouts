@@ -3,14 +3,15 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:copy_flyouts"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" 
+      xmlns:local="clr-namespace:copy_flyouts"
       mc:Ignorable="d" 
       d:DesignWidth="1200"
       Title="Behavior">
 
     <Grid Margin="30" VerticalAlignment="Top">
         <Grid.RowDefinitions>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -29,5 +30,7 @@
                 <Slider Value="{Binding FlyoutLifetime}" Margin="15 0 0 0" Maximum="5" Minimum="0.3" TickFrequency="0.1" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
             </StackPanel>
         </ui:CardControl>
+
+        <ui:Button Grid.Row="2" Content="Reset behavior settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
     </Grid>
 </Page>
