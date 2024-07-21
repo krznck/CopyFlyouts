@@ -72,7 +72,7 @@ namespace copy_flyouts.Core
             get => _flyoutOpacity;
             set
             {
-                _flyoutOpacity = RoundToNearestTenth(value);
+                _flyoutOpacity = RestrictDouble(0.3, 1, RoundToNearestTenth(value));
                 OnPropertyChanged(nameof(FlyoutOpacity));
             }
         }
@@ -82,7 +82,7 @@ namespace copy_flyouts.Core
             get => _flyoutWidthScale;
             set
             {
-                _flyoutWidthScale = RoundToNearestTenth(value);
+                _flyoutWidthScale = RestrictDouble(0.5, 3.0, RoundToNearestTenth(value));
                 FlyoutWidth = 600 * _flyoutWidthScale;
                 OnPropertyChanged(nameof(FlyoutWidthScale));
             }
@@ -104,7 +104,7 @@ namespace copy_flyouts.Core
             get => _flyoutHeightScale;
             set
             {
-                _flyoutHeightScale = RoundToNearestTenth(value);
+                _flyoutHeightScale = RestrictDouble(0.5, 3.0, RoundToNearestTenth(value));
                 FlyoutHeight = 180 * _flyoutHeightScale;
                 OnPropertyChanged(nameof(FlyoutHeightScale));
             }
@@ -126,7 +126,7 @@ namespace copy_flyouts.Core
             get => _flyoutFontSizeScale;
             set
             {
-                _flyoutFontSizeScale = RoundToNearestTenth(value);
+                _flyoutFontSizeScale = RestrictDouble(0.5, 3.0, RoundToNearestTenth(value));
                 FlyoutFontSize = 20 * _flyoutFontSizeScale;
                 FlyoutIconSize = 26 * _flyoutFontSizeScale;
                 OnPropertyChanged(nameof(FlyoutFontSizeScale));
@@ -210,7 +210,7 @@ namespace copy_flyouts.Core
             get => _flyoutLifetime;
             set
             {
-                _flyoutLifetime = RoundToNearestTenth(value);
+                _flyoutLifetime = RestrictDouble(0.3, 5.0, RoundToNearestTenth(value));
                 OnPropertyChanged(nameof(FlyoutLifetime));
             }
         }
@@ -220,6 +220,8 @@ namespace copy_flyouts.Core
             get => _flyoutCorners;
             set
             {
+                if (value < 0) value = 0;
+                if (value > 20) value = 20;
                 _flyoutCorners = value;
                 OnPropertyChanged(nameof(FlyoutCorners));
             }
@@ -229,6 +231,20 @@ namespace copy_flyouts.Core
         private double RoundToNearestTenth(double number)
         {
             return Math.Round(number * 10, MidpointRounding.AwayFromZero) / 10;
+        }
+
+        private double RestrictDouble(double minimum, double maximum, double value)
+        {
+            if (value < minimum)
+            {
+                value = minimum;
+            }
+            else if (value > maximum)
+            {
+                value = maximum;
+            }
+
+            return value;
         }
 
         public Settings()
