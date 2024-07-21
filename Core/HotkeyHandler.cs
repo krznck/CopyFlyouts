@@ -162,7 +162,7 @@ namespace copy_flyouts.Core
             currentFlyout = flyout;
 
             // creates a DispatcherTimer to close the flyout after 1.5 seconds
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1500) };
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(userSettings.FlyoutLifetime) };
             timer.Tick += (sender, args) =>
             {
                 timer.Stop();

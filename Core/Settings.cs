@@ -32,6 +32,7 @@ namespace copy_flyouts.Core
         private bool _runOnStartup = false;
         private string? _updatePageUrl = null;
         private bool _autoUpdate = true;
+        private double _flyoutLifetime = 1.5;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -70,7 +71,7 @@ namespace copy_flyouts.Core
             get => _flyoutOpacity;
             set
             {
-                _flyoutOpacity = Math.Truncate(value * 100) / 100; // truncates ridiculous values like 0.50000000000002 into 0.5
+                _flyoutOpacity = RoundToNearestTenth(value);
                 OnPropertyChanged(nameof(FlyoutOpacity));
             }
         }
@@ -80,7 +81,7 @@ namespace copy_flyouts.Core
             get => _flyoutWidthScale;
             set
             {
-                _flyoutWidthScale = Math.Truncate(value * 100) / 100; // truncates ridiculous values like 0.50000000000002 into 0.5
+                _flyoutWidthScale = RoundToNearestTenth(value);
                 FlyoutWidth = 600 * _flyoutWidthScale;
                 OnPropertyChanged(nameof(FlyoutWidthScale));
             }
@@ -102,7 +103,7 @@ namespace copy_flyouts.Core
             get => _flyoutHeightScale;
             set
             {
-                _flyoutHeightScale = Math.Truncate(value * 100) / 100; // truncates ridiculous values like 0.50000000000002 into 0.5
+                _flyoutHeightScale = RoundToNearestTenth(value);
                 FlyoutHeight = 180 * _flyoutHeightScale;
                 OnPropertyChanged(nameof(FlyoutHeightScale));
             }
@@ -124,7 +125,7 @@ namespace copy_flyouts.Core
             get => _flyoutFontSizeScale;
             set
             {
-                _flyoutFontSizeScale = Math.Truncate(value * 100) / 100; // truncates ridiculous values like 0.50000000000002 into 0.5
+                _flyoutFontSizeScale = RoundToNearestTenth(value);
                 FlyoutFontSize = 20 * _flyoutFontSizeScale;
                 FlyoutIconSize = 26 * _flyoutFontSizeScale;
                 OnPropertyChanged(nameof(FlyoutFontSizeScale));
@@ -202,7 +203,22 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(AutoUpdate));
             }
         }
+
+        public double FlyoutLifetime
+        {
+            get => _flyoutLifetime;
+            set
+            {
+                _flyoutLifetime = RoundToNearestTenth(value);
+                OnPropertyChanged(nameof(FlyoutLifetime));
+            }
+        }
         #endregion
+
+        private double RoundToNearestTenth(double number)
+        {
+            return Math.Round(number * 10, MidpointRounding.AwayFromZero) / 10;
+        }
 
         public Settings()
         {
@@ -216,7 +232,7 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme, bool runOnStartup, string updatePageUrl, bool autoUpdate)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme, bool runOnStartup, string updatePageUrl, bool autoUpdate, double flyoutLifetime)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -234,6 +250,7 @@ namespace copy_flyouts.Core
             RunOnStartup = runOnStartup;
             UpdatePageUrl = updatePageUrl;
             AutoUpdate = autoUpdate;
+            FlyoutLifetime = flyoutLifetime;
         }
 
         private void CopySettings(Settings settings)
@@ -252,6 +269,7 @@ namespace copy_flyouts.Core
                 RunOnStartup = settings.RunOnStartup;
                 UpdatePageUrl = settings.UpdatePageUrl;
                 AutoUpdate = settings.AutoUpdate;
+                FlyoutLifetime = settings.FlyoutLifetime;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.

@@ -42,6 +42,7 @@
         <ui:NavigationView x:Name="RootNavigation" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" IsBackButtonVisible="Collapsed" PaneTitle="Options" IsPaneToggleVisible="False" OpenPaneLength="130" OverridesDefaultStyle="False" CompactPaneLength="48">
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="General" Icon="{ui:SymbolIcon Settings24}" TargetPageType="{x:Type pages:General}"/>
+                <ui:NavigationViewItem Content="Behavior" Icon="{ui:SymbolIcon Wrench24}" TargetPageType="{x:Type pages:Behavior}"/>
                 <ui:NavigationViewItem Content="Appearance" Icon="{ui:SymbolIcon PaintBrush24}" TargetPageType="{x:Type pages:Appearance}"/>
             </ui:NavigationView.MenuItems>
             <ui:NavigationView.FooterMenuItems>
