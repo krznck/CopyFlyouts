@@ -6,22 +6,42 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace copy_flyouts.Core
 {
     public class ClipboardContent
     {
         private string text { get; set; } = "";
-        public int fileAmount { get; } = 0;
-        public Image? image { get; } = null;
+        public int fileAmount { get; set; } = 0;
+        public Image? image { get; set; } = null;
 
         public ClipboardContent()
+        {
+            CheckSystemClipboard();
+
+            // this while loop is here to *hopefully* prevent a bug where sometimes a copy will be successful,
+            // but ClipBboardContent is unable to retrieve it.
+            // That the program cannot access the system clipboard at the time is my guess to why this happens,
+            // so a retry might fix that.
+            int failure = 0;
+            while (text.Equals("") && fileAmount == 0 && image is null && failure < 5)
+            {
+                Thread.Sleep(1);
+                CheckSystemClipboard();
+                failure++;
+            }
+
+        }
+
+        private void CheckSystemClipboard()
         {
             if (Clipboard.ContainsText())
             {
                 Text = Clipboard.GetText();
             }
-            else if (Clipboard.ContainsFileDropList())
+
+            if (Clipboard.ContainsFileDropList())
             {
                 string combinedPaths = "";
                 foreach (string filePath in Clipboard.GetFileDropList())
@@ -34,7 +54,7 @@ namespace copy_flyouts.Core
 
             if (Clipboard.ContainsImage())
             {
-                image = Clipboard.GetImage();
+                this.image = Clipboard.GetImage();
             }
         }
 
