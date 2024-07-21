@@ -9,10 +9,12 @@
     x:Class="copy_flyouts.MainWindow"
     mc:Ignorable="d"
     Title="{StaticResource ProgramName}" 
-    Height="600" 
-    Width="700" 
-    d:DesignHeight="600"
-    d:DesignWidth="700"
+    Height="660"
+    Width="750"
+    MinHeight="450"
+    MinWidth="665"
+    d:DesignHeight="650"
+    d:DesignWidth="821"
     Background="{DynamicResource colorNeutralBackground1}"
     Foreground="{DynamicResource colorNeutralForeground1}"
     ui:Design.Background="{DynamicResource colorNeutralBackground1}"
@@ -43,7 +45,11 @@
                 <ui:NavigationViewItem Content="Appearance" Icon="{ui:SymbolIcon PaintBrush24}" TargetPageType="{x:Type pages:Appearance}"/>
             </ui:NavigationView.MenuItems>
             <ui:NavigationView.FooterMenuItems>
-                <ui:NavigationViewItem Content="About" Icon="{ui:SymbolIcon Info24}" TargetPageType="{x:Type pages:About}"/>
+                <ui:NavigationViewItem Content="About" TargetPageType="{x:Type pages:About}">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:SymbolIcon Symbol="Info24" x:Name="AboutSymbol"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
             </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
 

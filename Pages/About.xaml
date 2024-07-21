@@ -26,11 +26,12 @@
                         <Run Text="Version "/>
                         <Run Text="{StaticResource Version}"/>
                     </ui:TextBlock>
+                    <ui:TextBlock Text="A new update is available!" Appearance="Secondary" TextWrapping="WrapWithOverflow" Foreground="{DynamicResource AttentionForegroundColor}" Opacity="0.7" Visibility="Collapsed" x:Name="VersionSecondaryText"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
-                <ui:Button Content="Open update page" Icon="{ui:SymbolIcon ArrowDownload24}" Margin="0,0,10,0" Appearance="Primary" IsEnabled="False" x:Name="OpenUpdatePageButton" Click="OpenUpdatePageButton_Click"/>
-                <ui:Button Content="Check for updates now" Icon="{ui:SymbolIcon Server24}" Click="Button_Click"/>
+                <ui:Button Content="Open update page" Margin="0,0,10,0" Appearance="Primary" IsEnabled="False" x:Name="OpenUpdatePageButton" Click="OpenUpdatePageButton_Click"/>
+                <ui:Button Content="Check for updates" Click="Button_Click"/>
             </StackPanel>
         </ui:CardControl>
 

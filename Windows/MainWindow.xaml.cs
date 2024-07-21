@@ -104,6 +104,11 @@ namespace copy_flyouts
                     RemoveFromStartup();
                 }
             }
+
+            if (e.PropertyName == nameof(UserSettings.UpdatePageUrl))
+            {
+                RefreshAboutPageAttentionStatus();
+            }
         }
 
         protected override void OnStateChanged(EventArgs e)
@@ -217,6 +222,8 @@ namespace copy_flyouts
             {
                 RemoveFromStartup();
             }
+
+            RefreshAboutPageAttentionStatus();
         }
 
         private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
@@ -231,9 +238,7 @@ namespace copy_flyouts
 
         private void AddToStartup()
         {
-            var commonResources = new ResourceDictionary();
-            commonResources.Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative);
-            var appName = commonResources["ProgramName"] as string;
+            var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
             var appFileName = appName + ".exe";
 
             string executablePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, appFileName);
@@ -243,9 +248,7 @@ namespace copy_flyouts
 
         private void RemoveFromStartup()
         {
-            var commonResources = new ResourceDictionary();
-            commonResources.Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative);
-            var appName = commonResources["ProgramName"] as string;
+            var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
 
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             if (registryKey.GetValue(appName) != null)
@@ -318,6 +321,21 @@ namespace copy_flyouts
             else
             {
                 UserSettings.FlyoutsEnabled = true;
+            }
+        }
+
+        private void RefreshAboutPageAttentionStatus()
+        {
+            if (UserSettings.UpdatePageUrl != null)
+            {
+                AboutSymbol.Filled = true;
+                SolidColorBrush attentionForegroundColor = (SolidColorBrush)System.Windows.Application.Current.Resources["AttentionForegroundColor"];
+                AboutSymbol.Foreground = attentionForegroundColor;
+            }
+            else
+            {
+                AboutSymbol.Filled = false;
+                AboutSymbol.ClearValue(System.Windows.Controls.Control.ForegroundProperty);
             }
         }
     }

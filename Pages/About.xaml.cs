@@ -39,10 +39,7 @@ namespace copy_flyouts.Pages
             // note: doing this logic in a Loaded event rather than construction is necessary, as the DataContext is not yet set on construction
             userSettings = DataContext as Settings;
             updateChecker = new UpdateChecker(userSettings);
-            if (userSettings.UpdatePageUrl != null)
-            {
-                OpenUpdatePageButton.IsEnabled = true;
-            }
+            RefreshUpdateStatusIndicators();
             userSettings.PropertyChanged += UserSettings_PropertyChanged;
         }
 
@@ -50,14 +47,20 @@ namespace copy_flyouts.Pages
         {
             if (e.PropertyName == nameof(Settings.UpdatePageUrl))
             {
-                if (userSettings.UpdatePageUrl != null)
-                {
-                    OpenUpdatePageButton.IsEnabled = true;
-                }
-                else
-                {
-                    OpenUpdatePageButton.IsEnabled = false;
-                }
+                RefreshUpdateStatusIndicators();
+            }
+        }
+
+        private void RefreshUpdateStatusIndicators()
+        {
+            if (userSettings.UpdatePageUrl != null)
+            {
+                OpenUpdatePageButton.IsEnabled = true;
+                VersionSecondaryText.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                OpenUpdatePageButton.IsEnabled = false;
             }
         }
 

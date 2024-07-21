@@ -196,9 +196,7 @@ namespace copy_flyouts.Core
         public Settings()
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var commonResources = new ResourceDictionary();
-            commonResources.Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative);
-            var appName = commonResources["ProgramName"] as string;
+            var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
             _filePath = Path.Combine(appDataFolder, appName, "settings.json");
 
             Directory.CreateDirectory(Path.GetDirectoryName(_filePath));
@@ -210,9 +208,7 @@ namespace copy_flyouts.Core
         public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme, bool runOnStartup, string updatePageUrl)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var commonResources = new ResourceDictionary();
-            commonResources.Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative);
-            var appName = commonResources["ProgramName"] as string;
+            var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
             _filePath = Path.Combine(appDataFolder, appName, "settings.json");
 
             FlyoutsEnabled = flyoutsEnabled;

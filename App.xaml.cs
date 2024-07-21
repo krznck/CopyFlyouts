@@ -31,9 +31,7 @@ namespace copy_flyouts
 
         private async void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            var commonResources = new ResourceDictionary();
-            commonResources.Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative);
-            var appName = commonResources["ProgramName"] as string;
+            var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
 
             log.Error("Unhandled UI Exception", e.Exception);
             string message = "An unexpected error occurred. " + appName + " will close." +
