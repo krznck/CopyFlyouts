@@ -25,7 +25,7 @@
         <ui:TextBlock Text="Appearance" Grid.Row="0" Appearance="Primary" FontTypography="TitleLarge" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
 
         <StackPanel Grid.Row="1" Margin="0 0 0 10" Orientation="Vertical">
-            <ui:TextBlock Text="Dummy text to copy" Appearance="Secondary" FontTypography="Subtitle" Foreground="{DynamicResource colorNeutralForeground1}"/>
+            <ui:TextBlock Text="Dummy text to copy" FontTypography="Subtitle" Foreground="{DynamicResource colorNeutralForeground1}" Opacity="0.7"/>
             <ui:TextBox 
                     Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nibh quam, suscipit vitae ullamcorper quis, eleifend eu dolor. Morbi dictum nunc sit amet vehicula pretium. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam commodo tellus lectus, quis finibus nisl dapibus sodales. Morbi consectetur hendrerit nibh id consectetur. In sollicitudin magna at magna iaculis lacinia. Nunc libero risus, feugiat quis consectetur ac, accumsan id leo." 
                     IsReadOnly="True" TextWrapping="WrapWithOverflow"/>

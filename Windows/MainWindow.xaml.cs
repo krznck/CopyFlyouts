@@ -75,6 +75,8 @@ namespace copy_flyouts
                     ApplicationThemeManager.ApplySystemTheme();
                     Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
                 }
+
+                RefreshAboutPageAttentionStatus(); // this is here to ensure the color is correct to the theme
             }
 
             if (e.PropertyName == nameof(UserSettings.FlyoutsEnabled))
@@ -233,6 +235,7 @@ namespace copy_flyouts
             if (e.Category == UserPreferenceCategory.Desktop || e.Category == UserPreferenceCategory.General)
             {
                 RefreshNotifyIconAppearance();
+                RefreshAboutPageAttentionStatus();
             }
         }
 
