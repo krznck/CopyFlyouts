@@ -14,11 +14,10 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition Height="30"/> 
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition Height="30"/>
+            <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -34,9 +33,9 @@
             <ui:ToggleSwitch IsChecked="{Binding FlyoutsEnabled}"/>
         </ui:CardControl>
 
-        <ui:TextBox Grid.Row="2" Text="Some dummy text to copy and test the flyouts out :)" IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 0 10"/>
+        <ui:TextBox Grid.Row="2" Text="Some dummy text to copy and test the flyouts out :)" IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 0 40"/>
 
-        <ui:CardControl Icon="{ui:SymbolIcon WindowPlay20}" Grid.Row="4" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon WindowPlay20}" Grid.Row="3" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock TextWrapping="WrapWithOverflow" FontTypography="BodyStrong">
@@ -54,7 +53,7 @@
             <ui:ToggleSwitch IsChecked="{Binding RunOnStartup}"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon ArrowMinimize24}" Grid.Row="5" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon ArrowMinimize24}" Grid.Row="4" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock FontTypography="BodyStrong" TextWrapping="WrapWithOverflow">
@@ -68,20 +67,34 @@
             <ui:ToggleSwitch IsChecked="{Binding StartMinimized}"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon EyeOff24}" Grid.Row="6" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon EyeOff24}" Grid.Row="5" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Minimize to system tray" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
                     <ui:TextBlock Appearance="Secondary" TextWrapping="WrapWithOverflow">
-                        <Run Text="Lets"/>
+                        <Run Text="(Recommended) Lets"/>
                         <Run Text="{StaticResource ProgramName}"/>
-                        <Run Text="run in the background when minimized, without appearing on the taskbar (Recommended)"/>
+                        <Run Text="run in the background when minimized, without appearing on the taskbar."/>
                     </ui:TextBlock>
                 </StackPanel>
             </ui:CardControl.Header>
             <ui:ToggleSwitch IsChecked="{Binding MinimizeToTray}"/>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="8" Content="Reset general settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
+        <ui:CardControl Icon="{ui:SymbolIcon ArrowSyncCircle24}" Grid.Row="6" Margin="0 0 0 40">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Check for updates automatically" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Appearance="Secondary" TextWrapping="WrapWithOverflow">
+                        <Run Text="When"/>
+                        <Run Text="{StaticResource ProgramName}"/>
+                        <Run Text="is running, periodically checks for new updates."/>
+                    </ui:TextBlock>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch IsChecked="{Binding AutoUpdate}"/>
+        </ui:CardControl>
+
+        <ui:Button Grid.Row="7" Content="Reset general settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
     </Grid>
 </Page>

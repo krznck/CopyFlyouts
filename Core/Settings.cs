@@ -31,6 +31,7 @@ namespace copy_flyouts.Core
         private bool _invertedTheme = false;
         private bool _runOnStartup = false;
         private string? _updatePageUrl = null;
+        private bool _autoUpdate = true;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -191,6 +192,16 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(UpdatePageUrl));
             }
         }
+
+        public bool AutoUpdate
+        {
+            get => _autoUpdate;
+            set
+            {
+                _autoUpdate = value;    
+                OnPropertyChanged(nameof(AutoUpdate));
+            }
+        }
         #endregion
 
         public Settings()
@@ -205,7 +216,7 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme, bool runOnStartup, string updatePageUrl)
+        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme, bool runOnStartup, string updatePageUrl, bool autoUpdate)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -222,6 +233,7 @@ namespace copy_flyouts.Core
             InvertedTheme = invertedTheme;
             RunOnStartup = runOnStartup;
             UpdatePageUrl = updatePageUrl;
+            AutoUpdate = autoUpdate;
         }
 
         private void CopySettings(Settings settings)
@@ -239,6 +251,7 @@ namespace copy_flyouts.Core
                 InvertedTheme = settings.InvertedTheme;
                 RunOnStartup = settings.RunOnStartup;
                 UpdatePageUrl = settings.UpdatePageUrl;
+                AutoUpdate = settings.AutoUpdate;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.

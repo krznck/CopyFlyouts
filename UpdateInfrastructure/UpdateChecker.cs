@@ -49,6 +49,18 @@ namespace copy_flyouts.UpdateInfrastructure
                     InitializeUpdateCheckTimer();
                 }
             }
+
+            if (e.PropertyName == nameof(userSettings.AutoUpdate))
+            {
+                if (userSettings.AutoUpdate == true)
+                {
+                    InitializeUpdateCheckTimer();
+                }
+                else
+                {
+                    StopUpdateCheckTimer();
+                }
+            }
         }
 
         public async Task<GitHubRelease> GetLatestReleaseAsync()
@@ -117,7 +129,7 @@ namespace copy_flyouts.UpdateInfrastructure
                     .AddText($"A new version is available!")
                     .AddButton(new ToastButton()
                         .SetContent("Open update page")
-                        .SetProtocolActivation(new Uri(userSettings.UpdatePageUrl)))
+                        .SetProtocolActivation(new Uri("https://github.com/krznck/copy-flyouts/releases/latest")))
                     .Show();
 
             }
@@ -127,7 +139,7 @@ namespace copy_flyouts.UpdateInfrastructure
         {
             if (userSettings.UpdatePageUrl != null)
             {
-                Process.Start(new ProcessStartInfo(userSettings.UpdatePageUrl) { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo("https://github.com/krznck/copy-flyouts/releases/latest") { UseShellExecute = true });
             }
         }
 
@@ -145,9 +157,9 @@ namespace copy_flyouts.UpdateInfrastructure
 
         public void InitializeUpdateCheckTimer()
         {
-            if (userSettings.UpdatePageUrl == null)
+            if (userSettings.UpdatePageUrl == null && userSettings.AutoUpdate == true)
             {
-                updateCheckTimer.Interval = TimeSpan.FromSeconds(15);
+                updateCheckTimer.Interval = TimeSpan.FromHours(2);
                 updateCheckTimer.Tick += UpdateCheckTimer_Tick;
                 updateCheckTimer.Start();
             }

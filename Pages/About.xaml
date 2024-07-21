@@ -35,13 +35,27 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon Link24}" Grid.Row="2">
+        <ui:CardControl Icon="{ui:SymbolIcon Link24}" Grid.Row="3" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Website" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <ui:HyperlinkButton Content="GitHub" NavigateUri="https://github.com/krznck/copy-flyouts"/>
+        </ui:CardControl>
+
+        <ui:CardControl Icon="{ui:SymbolIcon ArrowSyncCircle24}" Grid.Row="2" Margin="0 0 0 10">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Check for updates automatically" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Appearance="Secondary" TextWrapping="WrapWithOverflow">
+                        <Run Text="When"/>
+                        <Run Text="{StaticResource ProgramName}"/>
+                        <Run Text="is running, periodically checks for new updates."/>
+                    </ui:TextBlock>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch IsChecked="{Binding AutoUpdate}"/>
         </ui:CardControl>
 
     </Grid>
