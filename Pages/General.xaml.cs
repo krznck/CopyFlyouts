@@ -39,6 +39,7 @@ namespace copy_flyouts.Pages
                 userSettings.StartMinimized = false;
                 userSettings.MinimizeToTray = true;
                 userSettings.RunOnStartup = false;
+                userSettings.AutoUpdate = true;
             }
         }
     }
