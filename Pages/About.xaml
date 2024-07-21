@@ -17,7 +17,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <ui:TextBlock Text="About" Grid.Row="0" Appearance="Primary" FontSize="36" FontTypography="BodyStrong" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
+        <ui:TextBlock Text="About" Grid.Row="0" Appearance="Primary" FontTypography="TitleLarge" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
 
         <ui:CardControl Icon="{ui:SymbolIcon NumberSymbolSquare24}" Grid.Row="1" Margin="0 0 0 10">
             <ui:CardControl.Header>
