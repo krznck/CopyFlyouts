@@ -1,6 +1,7 @@
 ﻿using copy_flyouts.Core;
 using System.IO;
 using System.Media;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Windows.Media.PlayTo;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
@@ -143,9 +145,18 @@ namespace copy_flyouts
 
         public void PlayErrorSound()
         {
-            SoundPlayer player = new SoundPlayer(@"assets\audio\damage.wav");
-            player.Load();
-            player.Play();
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string resourceName = "copy_flyouts.assets.audio.damage.wav";
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream != null)
+                {
+                    SoundPlayer player = new SoundPlayer(stream);
+                    player.Load();
+                    player.Play();
+                }
+            }
         }
 
         /// <summary>
