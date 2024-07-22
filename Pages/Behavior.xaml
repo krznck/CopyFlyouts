@@ -14,11 +14,22 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <ui:TextBlock Text="Behavior" Grid.Row="0" Appearance="Primary" FontTypography="TitleLarge" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
 
-        <ui:CardControl Icon="{ui:SymbolIcon ClipboardClock24}" Grid.Row="1" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon ClipboardImage24}" Grid.Row="1" Margin="0 0 0 40">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Show copied images" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Text="Displaying a flyout may be delayed if the copied image is too big." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch IsChecked="{Binding AllowImages}"/>
+        </ui:CardControl>
+
+        <ui:CardControl Icon="{ui:SymbolIcon ClipboardClock24}" Grid.Row="2" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout lifetime" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -31,6 +42,6 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="2" Content="Reset behavior settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
+        <ui:Button Grid.Row="3" Content="Reset behavior settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
     </Grid>
 </Page>

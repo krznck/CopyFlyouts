@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -15,9 +17,11 @@ namespace copy_flyouts.Core
         private string text { get; set; } = "";
         public int fileAmount { get; set; } = 0;
         public Image? image { get; set; } = null;
+        private Settings userSettings { get; set; }
 
-        public ClipboardContent()
+        public ClipboardContent(Settings userSettings)
         {
+            this.userSettings = userSettings;
             CheckSystemClipboard();
 
             // this while loop is here to *hopefully* prevent a bug where sometimes a copy will be successful,
@@ -52,9 +56,16 @@ namespace copy_flyouts.Core
                 Text = combinedPaths.TrimEnd(new char[] { ' ', ';' }); // removes the trailing semicolon
             }
 
-            if (Clipboard.ContainsImage())
+            // this is done both here and in Flyout, so that we never call GetImage on the system clipboard if it's not needed
+            // as that turns out to be heavy for the machine when the image is large enough
+            bool hasImage = Clipboard.ContainsImage();
+            if (hasImage && userSettings.AllowImages)
             {
                 this.image = Clipboard.GetImage();
+            }
+            else if (hasImage && !userSettings.AllowImages)
+            {
+                this.image = new Bitmap(1, 1); // creates a fake image that can be passed on and easily detected
             }
         }
 

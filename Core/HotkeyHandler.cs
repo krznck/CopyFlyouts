@@ -37,7 +37,7 @@ namespace copy_flyouts.Core
         private Flyout? currentFlyout = null;
         private DispatcherTimer? currentTimer = null;
 
-        private ClipboardContent previousClipboard = new ClipboardContent(); // gets the last clipboard item on initialization
+        private ClipboardContent previousClipboard; // gets the last clipboard item on initialization
 
         // will be used to monitor mouse-clicked copies and copies not started by the user
         private SharpClipboard sharpClipboard = new();
@@ -49,6 +49,7 @@ namespace copy_flyouts.Core
 
             this.affectedWindow = affectedWindow;
             this.userSettings = userSettings;
+            previousClipboard = new ClipboardContent(userSettings);
 
             // subscribe to UserSettings changes
             userSettings.PropertyChanged += UserSettings_PropertyChanged;
@@ -144,7 +145,7 @@ namespace copy_flyouts.Core
 
             Thread.Sleep(100); // wait a little bit to prevent clipboard access conflict
             // gets the text from the clipboard
-            ClipboardContent clipboard = new ClipboardContent();
+            ClipboardContent clipboard = new ClipboardContent(userSettings);
             bool copyIsEmpty = clipboard.Text.Length == 0;
 
             // creates and shows the new flyout

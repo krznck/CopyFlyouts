@@ -34,6 +34,7 @@ namespace copy_flyouts.Pages
                 // to be honest, I couldn't easily think of a good way to get the default values of those attributes somehow
                 // so screw it, just hardcode them in
                 userSettings.FlyoutLifetime = 1.5;
+                userSettings.AllowImages = true;
             }
         }
     }

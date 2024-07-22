@@ -63,12 +63,16 @@ namespace copy_flyouts
             if (copyHasImage)
             {
                 AddImageIcon();
-                flyoutImage.Source = ConvertDrawingImageToWPFImage(clipContent.image);
-                flyoutImage.Visibility = Visibility.Visible;
 
-                if (copyHasNoText)
+                if (!(clipContent.image.Height == 1 && clipContent.image.Width == 1 && !userSettings.AllowImages))
                 {
-                    Grid.SetColumnSpan(fileGrid, 2);
+                    flyoutImage.Source = ConvertDrawingImageToWPFImage(clipContent.image);
+                    flyoutImage.Visibility = Visibility.Visible;
+
+                    if (copyHasNoText)
+                    {
+                        Grid.SetColumnSpan(fileGrid, 2);
+                    }
                 }
             }
 
