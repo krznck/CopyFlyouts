@@ -34,6 +34,7 @@ namespace copy_flyouts.Core
         private bool _autoUpdate = true;
         private double _flyoutLifetime = 1.5;
         private int _flyoutCorners = 5;
+        private bool _allowImages = true;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -226,6 +227,17 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(FlyoutCorners));
             }
         }
+
+        public bool AllowImages
+        {
+            get => _allowImages;
+            set
+            {
+                _allowImages = value;
+                OnPropertyChanged(nameof(AllowImages));
+            }
+        }
+        
         #endregion
 
         private double RoundToNearestTenth(double number)
@@ -259,7 +271,22 @@ namespace copy_flyouts.Core
         }
 
         [JsonConstructor]
-        public Settings(bool flyoutsEnabled, bool startMinimized, bool minimizeToTray, double flyoutOpacity, double flyoutWidthScale, double flyoutHeightScale, double flyoutFontSizeScale, string theme, bool invertedTheme, bool runOnStartup, string updatePageUrl, bool autoUpdate, double flyoutLifetime, int flyoutCorners)
+        public Settings(
+            bool flyoutsEnabled = true, 
+            bool startMinimized = false, 
+            bool minimizeToTray = true, 
+            double flyoutOpacity = 1.0, 
+            double flyoutWidthScale = 1.0, 
+            double flyoutHeightScale = 1.0, 
+            double flyoutFontSizeScale = 1.0, 
+            string theme = "System", 
+            bool invertedTheme = false, 
+            bool runOnStartup = false, 
+            string? updatePageUrl = null, 
+            bool autoUpdate = true, 
+            double flyoutLifetime = 0.3, 
+            int flyoutCorners = 5, 
+            bool allowImages = true)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -279,6 +306,7 @@ namespace copy_flyouts.Core
             AutoUpdate = autoUpdate;
             FlyoutLifetime = flyoutLifetime;
             FlyoutCorners = flyoutCorners;
+            AllowImages = allowImages;
         }
 
         private void CopySettings(Settings settings)
@@ -299,6 +327,7 @@ namespace copy_flyouts.Core
                 AutoUpdate = settings.AutoUpdate;
                 FlyoutLifetime = settings.FlyoutLifetime;
                 FlyoutCorners = settings.FlyoutCorners;
+                AllowImages = settings.AllowImages;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.
