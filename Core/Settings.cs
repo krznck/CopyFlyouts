@@ -1,4 +1,5 @@
-﻿using System;
+﻿using copy_flyouts.Resources;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -35,6 +36,8 @@ namespace copy_flyouts.Core
         private double _flyoutLifetime = 1.5;
         private int _flyoutCorners = 5;
         private bool _allowImages = true;
+        private bool _enableErrorSound = true;
+        private string _chosenErrorSound = FailureSounds.Damage.Name;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -237,6 +240,33 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(AllowImages));
             }
         }
+
+        public bool EnableErrorSound
+        {
+            get => _enableErrorSound;
+            set
+            {
+                _enableErrorSound = value;
+                OnPropertyChanged(nameof(EnableErrorSound));
+            }
+        }
+
+        public string ChosenErrorSound
+        {
+            get => _chosenErrorSound;
+            set
+            {
+                if (FailureSounds.Find(value) is null)
+                {
+                    _chosenErrorSound = FailureSounds.Damage.Name;
+                }
+                else
+                {
+                    _chosenErrorSound = value;
+                }
+                OnPropertyChanged(nameof(ChosenErrorSound));
+            }
+        }
         
         #endregion
 
@@ -284,9 +314,11 @@ namespace copy_flyouts.Core
             bool runOnStartup = false, 
             string? updatePageUrl = null, 
             bool autoUpdate = true, 
-            double flyoutLifetime = 0.3, 
+            double flyoutLifetime = 1, 
             int flyoutCorners = 5, 
-            bool allowImages = true)
+            bool allowImages = true,
+            bool enableErrorSound = true,
+            string? chosenErrorSound = null)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -307,6 +339,13 @@ namespace copy_flyouts.Core
             FlyoutLifetime = flyoutLifetime;
             FlyoutCorners = flyoutCorners;
             AllowImages = allowImages;
+            EnableErrorSound = enableErrorSound;
+
+            if (chosenErrorSound is null)
+            {
+                chosenErrorSound = FailureSounds.Damage.Name;
+            }
+            ChosenErrorSound = chosenErrorSound;
         }
 
         private void CopySettings(Settings settings)
@@ -328,6 +367,8 @@ namespace copy_flyouts.Core
                 FlyoutLifetime = settings.FlyoutLifetime;
                 FlyoutCorners = settings.FlyoutCorners;
                 AllowImages = settings.AllowImages;
+                EnableErrorSound = settings.EnableErrorSound;
+                ChosenErrorSound = settings.ChosenErrorSound;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.

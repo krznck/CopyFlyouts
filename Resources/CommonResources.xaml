@@ -3,6 +3,6 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <sys:String x:Key="ProgramName">CopyFlyouts</sys:String>
-    <sys:String x:Key="Version">v0.2.0</sys:String>
+    <sys:String x:Key="Version">v0.3.0</sys:String>
 
 </ResourceDictionary>

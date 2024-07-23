@@ -1,4 +1,6 @@
 ﻿using copy_flyouts.Core;
+using copy_flyouts.Resources;
+using System.Diagnostics;
 using System.IO;
 using System.Media;
 using System.Reflection;
@@ -145,16 +147,27 @@ namespace copy_flyouts
 
         public void PlayErrorSound()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string resourceName = "copy_flyouts.assets.audio.damage.wav";
+            Assembly assembly1 = Assembly.GetExecutingAssembly();
+            string[] resourceNames = assembly1.GetManifestResourceNames();
 
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            foreach (string resourceName in resourceNames)
             {
-                if (stream != null)
+                Debug.WriteLine(resourceName);
+            }
+
+            if (userSettings.EnableErrorSound)
+            {
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                string resourceName = FailureSounds.Find(userSettings.ChosenErrorSound).ResourcePath;
+
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
                 {
-                    SoundPlayer player = new SoundPlayer(stream);
-                    player.Load();
-                    player.Play();
+                    if (stream != null)
+                    {
+                        SoundPlayer player = new SoundPlayer(stream);
+                        player.Load();
+                        player.Play();
+                    }
                 }
             }
         }

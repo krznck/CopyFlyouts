@@ -1,4 +1,5 @@
-﻿using System;
+﻿using copy_flyouts.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,14 @@ namespace copy_flyouts.Pages
         public Behavior()
         {
             InitializeComponent();
+
+            var soundNames = new List<string>();
+            foreach (Sound sound in FailureSounds.Sounds)
+            {
+                soundNames.Add(sound.Name);
+            }
+            SoundComboBox.ItemsSource = soundNames;
+
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)

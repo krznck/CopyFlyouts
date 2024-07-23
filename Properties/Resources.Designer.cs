@@ -68,5 +68,14 @@ namespace copy_flyouts.Properties {
                 return ResourceManager.GetStream("damage", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream triangle {
+            get {
+                return ResourceManager.GetStream("triangle", resourceCulture);
+            }
+        }
     }
 }
