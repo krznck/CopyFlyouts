@@ -26,7 +26,7 @@
                         <Run Text="Version "/>
                         <Run Text="{StaticResource Version}"/>
                     </ui:TextBlock>
-                    <ui:TextBlock Text="A new update is available!" Appearance="Secondary" TextWrapping="WrapWithOverflow" Foreground="{DynamicResource AttentionForegroundColor}" Opacity="0.7" Visibility="Collapsed" x:Name="VersionSecondaryText"/>
+                    <ui:TextBlock Text="A new update is available!" Appearance="Secondary" TextWrapping="WrapWithOverflow" Foreground="{DynamicResource colorStatusDangerForeground1}" Opacity="0.7" Visibility="Collapsed" x:Name="VersionSecondaryText"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">

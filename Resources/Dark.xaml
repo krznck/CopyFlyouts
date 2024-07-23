@@ -8,7 +8,8 @@
     <SolidColorBrush x:Key="colorNeutralForeground1" Color="#ffffff"/>
     <SolidColorBrush x:Key="colorNeutralForeground2" Color="#d6d6d6"/>
 
-    <SolidColorBrush x:Key="AttentionForegroundColor" Color="#dc626d"/>
+    <SolidColorBrush x:Key="colorStatusDangerForeground1" Color="#dc626d"/>
+    <SolidColorBrush x:Key="colorStatusWarningForeground1" Color="#faa06b"/>
 
     <SolidColorBrush x:Key="border" Color="#19FFFFFF"/>
 

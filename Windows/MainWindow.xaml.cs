@@ -86,11 +86,13 @@ namespace copy_flyouts
                 {
                     ProgramStateMenuItem.Header = "Disable";
                     ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Play24 };
+                    WarningFooter.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
                     ProgramStateMenuItem.Header = "Enable";
                     ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Pause24 };
+                    WarningFooter.Visibility = Visibility.Visible;
                 }
 
                 RefreshNotifyIconAppearance();
@@ -242,6 +244,11 @@ namespace copy_flyouts
                 RemoveFromStartup();
             }
 
+            if (!UserSettings.FlyoutsEnabled)
+            {
+                WarningFooter.Visibility = Visibility.Visible;
+            }
+
             RefreshAboutPageAttentionStatus();
         }
 
@@ -349,8 +356,8 @@ namespace copy_flyouts
             if (UserSettings.UpdatePageUrl != null)
             {
                 AboutSymbol.Filled = true;
-                SolidColorBrush attentionForegroundColor = (SolidColorBrush)System.Windows.Application.Current.Resources["AttentionForegroundColor"];
-                AboutSymbol.Foreground = attentionForegroundColor;
+                SolidColorBrush colorStatusDangerForeground1 = (SolidColorBrush)System.Windows.Application.Current.Resources["colorStatusDangerForeground1"];
+                AboutSymbol.Foreground = colorStatusDangerForeground1;
             }
             else
             {

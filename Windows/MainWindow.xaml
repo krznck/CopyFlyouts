@@ -28,6 +28,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ui:TitleBar
             x:Name="TitleBar"
@@ -45,6 +46,7 @@
                 <ui:NavigationViewItem Content="Behavior" Icon="{ui:SymbolIcon Wrench24}" TargetPageType="{x:Type pages:Behavior}"/>
                 <ui:NavigationViewItem Content="Appearance" Icon="{ui:SymbolIcon PaintBrush24}" TargetPageType="{x:Type pages:Appearance}"/>
             </ui:NavigationView.MenuItems>
+
             <ui:NavigationView.FooterMenuItems>
                 <ui:NavigationViewItem Content="About" TargetPageType="{x:Type pages:About}">
                     <ui:NavigationViewItem.Icon>
@@ -52,6 +54,7 @@
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
             </ui:NavigationView.FooterMenuItems>
+
         </ui:NavigationView>
 
         <tray:NotifyIcon 
@@ -71,5 +74,10 @@
             </tray:NotifyIcon.Menu>
             
         </tray:NotifyIcon>
+
+        <StackPanel x:Name="WarningFooter" VerticalAlignment="Bottom" Grid.Row="3" HorizontalAlignment="Left" Margin="20 8 0 8" Orientation="Horizontal" Visibility="Collapsed">
+            <ui:SymbolIcon Symbol="Warning24" Margin="0 0 10 0" Foreground="{DynamicResource colorStatusWarningForeground1}"/>
+            <ui:TextBlock Text="Flyouts are disabled! Your changes will be saved, but no flyouts will be shown." Foreground="{DynamicResource colorStatusWarningForeground1}"/>
+        </StackPanel>
     </Grid>
 </ui:FluentWindow>
