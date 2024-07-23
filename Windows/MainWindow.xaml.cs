@@ -19,6 +19,7 @@ using copy_flyouts.Core;
 using Microsoft.Win32;
 using copy_flyouts.UpdateInfrastructure;
 using copy_flyouts.Pages;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace copy_flyouts
 {
@@ -123,8 +124,24 @@ namespace copy_flyouts
                 {
                     notifyIcon.Register();
                 }
+
+                NotifyAboutMinimization();
             }
             base.OnStateChanged(e);
+        }
+
+        private void NotifyAboutMinimization()
+        {
+            if (UserSettings.NotifyAboutMinimization)
+            {
+                var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
+
+                new ToastContentBuilder()
+                    .AddText($"Minimized to system tray")
+                    .AddText($"{appName} will run in the background, and can still be accessed from the system tray!")
+                    .Show();
+            }
+
         }
 
         public void ShowWindow()

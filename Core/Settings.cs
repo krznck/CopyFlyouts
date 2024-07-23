@@ -37,6 +37,7 @@ namespace copy_flyouts.Core
         private int _flyoutCorners = 5;
         private bool _allowImages = true;
         private bool _enableErrorSound = true;
+        private bool _notifyAboutMinimization = true;
         private string _chosenErrorSound = FailureSounds.Damage.Name;
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -267,6 +268,16 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(ChosenErrorSound));
             }
         }
+
+        public bool NotifyAboutMinimization
+        {
+            get => _notifyAboutMinimization;
+            set
+            {
+                _notifyAboutMinimization = value;
+                OnPropertyChanged(nameof(NotifyAboutMinimization));
+            }
+        }
         
         #endregion
 
@@ -318,7 +329,8 @@ namespace copy_flyouts.Core
             int flyoutCorners = 5, 
             bool allowImages = true,
             bool enableErrorSound = true,
-            string? chosenErrorSound = null)
+            string? chosenErrorSound = null,
+            bool notifyAboutMinimization = true)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -346,6 +358,8 @@ namespace copy_flyouts.Core
                 chosenErrorSound = FailureSounds.Damage.Name;
             }
             ChosenErrorSound = chosenErrorSound;
+
+            NotifyAboutMinimization = notifyAboutMinimization;
         }
 
         private void CopySettings(Settings settings)
@@ -369,6 +383,7 @@ namespace copy_flyouts.Core
                 AllowImages = settings.AllowImages;
                 EnableErrorSound = settings.EnableErrorSound;
                 ChosenErrorSound = settings.ChosenErrorSound;
+                NotifyAboutMinimization = settings.NotifyAboutMinimization;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.
