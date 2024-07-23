@@ -61,7 +61,10 @@
                     <!--<ui:TextBlock Text="" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>-->
                 </StackPanel>
             </ui:CardControl.Header>
-            <ComboBox x:Name="SoundComboBox" SelectedItem="{Binding ChosenErrorSound}"/>
+            <StackPanel Orientation="Horizontal">
+                <ComboBox x:Name="SoundComboBox" SelectedItem="{Binding ChosenErrorSound}"/>
+                <ui:Button Icon="{ui:SymbolIcon Play24, Filled=True}" Margin="10 0 0 0" x:Name="FailurePlayButton" Click="FailurePlayButton_Click"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:Button Grid.Row="5" Content="Reset behavior settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>

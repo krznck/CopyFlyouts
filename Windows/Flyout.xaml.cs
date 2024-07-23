@@ -147,14 +147,6 @@ namespace copy_flyouts
 
         public void PlayErrorSound()
         {
-            Assembly assembly1 = Assembly.GetExecutingAssembly();
-            string[] resourceNames = assembly1.GetManifestResourceNames();
-
-            foreach (string resourceName in resourceNames)
-            {
-                Debug.WriteLine(resourceName);
-            }
-
             if (userSettings.EnableErrorSound)
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();

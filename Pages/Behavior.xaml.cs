@@ -1,7 +1,11 @@
-﻿using copy_flyouts.Resources;
+﻿using copy_flyouts.Core;
+using copy_flyouts.Resources;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Media;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -44,6 +48,24 @@ namespace copy_flyouts.Pages
                 // so screw it, just hardcode them in
                 userSettings.FlyoutLifetime = 1.5;
                 userSettings.AllowImages = true;
+            }
+        }
+
+        private void FailurePlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            var userSettings = DataContext as Settings;
+
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string resourceName = FailureSounds.Find(userSettings.ChosenErrorSound).ResourcePath;
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream != null)
+                {
+                    SoundPlayer player = new SoundPlayer(stream);
+                    player.Load();
+                    player.Play();
+                }
             }
         }
     }
