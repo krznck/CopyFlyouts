@@ -28,7 +28,7 @@
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Enable copy flyouts" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
-                    <ui:TextBlock Text="Pressing Ctrl+C will display flyouts showing the most recent item in your clipboard" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
+                    <!--<ui:TextBlock Text="" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>-->
                 </StackPanel>
             </ui:CardControl.Header>
             <ui:ToggleSwitch IsChecked="{Binding FlyoutsEnabled}"/>

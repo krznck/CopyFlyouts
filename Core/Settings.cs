@@ -40,6 +40,7 @@ namespace copy_flyouts.Core
         private bool _notifyAboutMinimization = true;
         private string _chosenErrorSound = FailureSounds.Damage.Name;
         private bool _enableNonKeyboardFlyouts = true;
+        private bool _enableKeyboardFlyouts = true;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -289,6 +290,16 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(EnableNonKeyboardFlyouts));
             }
         }
+
+        public bool EnableKeyboardFlyouts
+        {
+            get => _enableKeyboardFlyouts;
+            set
+            {
+                _enableKeyboardFlyouts = value;
+                OnPropertyChanged(nameof(EnableKeyboardFlyouts));
+            }
+        }
         
         #endregion
 
@@ -324,25 +335,26 @@ namespace copy_flyouts.Core
 
         [JsonConstructor]
         public Settings(
-            bool flyoutsEnabled = true, 
-            bool startMinimized = false, 
-            bool minimizeToTray = true, 
-            double flyoutOpacity = 1.0, 
-            double flyoutWidthScale = 1.0, 
-            double flyoutHeightScale = 1.0, 
-            double flyoutFontSizeScale = 1.0, 
-            string theme = "System", 
-            bool invertedTheme = false, 
-            bool runOnStartup = false, 
-            string? updatePageUrl = null, 
-            bool autoUpdate = true, 
-            double flyoutLifetime = 1, 
-            int flyoutCorners = 5, 
+            bool flyoutsEnabled = true,
+            bool startMinimized = false,
+            bool minimizeToTray = true,
+            double flyoutOpacity = 1.0,
+            double flyoutWidthScale = 1.0,
+            double flyoutHeightScale = 1.0,
+            double flyoutFontSizeScale = 1.0,
+            string theme = "System",
+            bool invertedTheme = false,
+            bool runOnStartup = false,
+            string? updatePageUrl = null,
+            bool autoUpdate = true,
+            double flyoutLifetime = 1,
+            int flyoutCorners = 5,
             bool allowImages = true,
             bool enableErrorSound = true,
             string? chosenErrorSound = null,
             bool notifyAboutMinimization = true,
-            bool enableNonKeyboardFlyouts = true)
+            bool enableNonKeyboardFlyouts = true,
+            bool enableKeyboardFlyouts = true)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -373,6 +385,7 @@ namespace copy_flyouts.Core
 
             NotifyAboutMinimization = notifyAboutMinimization;
             EnableNonKeyboardFlyouts = enableNonKeyboardFlyouts;
+            EnableKeyboardFlyouts = enableKeyboardFlyouts;
         }
 
         private void CopySettings(Settings settings)
@@ -398,6 +411,7 @@ namespace copy_flyouts.Core
                 ChosenErrorSound = settings.ChosenErrorSound;
                 NotifyAboutMinimization = settings.NotifyAboutMinimization;
                 EnableNonKeyboardFlyouts = settings.EnableNonKeyboardFlyouts;
+                EnableKeyboardFlyouts = settings.EnableKeyboardFlyouts;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.

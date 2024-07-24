@@ -46,13 +46,12 @@ namespace copy_flyouts.Core
 
         public HotkeyHandler(Window affectedWindow, Settings userSettings)
         {
-
             this.affectedWindow = affectedWindow;
             this.userSettings = userSettings;
             previousClipboard = new ClipboardContent(userSettings);
 
             // subscribe to UserSettings changes
-            if (userSettings.EnableNonKeyboardFlyouts) { userSettings.PropertyChanged += UserSettings_PropertyChanged; }
+            userSettings.PropertyChanged += UserSettings_PropertyChanged;
 
             // ensures the mouse-click listener monitors all formats
             sharpClipboard.ObservableFormats.Texts = true;
@@ -61,10 +60,9 @@ namespace copy_flyouts.Core
             sharpClipboard.ObservableFormats.Others = false; // setting this to true creates unexpected behavior - see issue #37
 
             // register Ctrl + + C as global hotkey
-            if (userSettings.FlyoutsEnabled)
-            {
-                Register();
-            }
+            Register();
+            // listens to non-keyboard copies
+            if (userSettings.EnableNonKeyboardFlyouts && userSettings.FlyoutsEnabled) { sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; }
         }
 
         private void SharpClipboard_ClipboardChanged(object? sender, SharpClipboard.ClipboardChangedEventArgs e)
@@ -94,20 +92,14 @@ namespace copy_flyouts.Core
         {
             if (e.PropertyName == nameof(Settings.FlyoutsEnabled))
             {
-                if (userSettings.FlyoutsEnabled)
-                {
-                    Register();
-                }
-                else
-                {
-                    Unregister();
-                }
+                if (userSettings.FlyoutsEnabled) { Register(); }
+                else { Unregister(); }
             }
 
             if (e.PropertyName == nameof(Settings.EnableNonKeyboardFlyouts))
             {
-                if (userSettings.EnableNonKeyboardFlyouts) { sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; }
-                else { sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged; }
+                if (userSettings.EnableNonKeyboardFlyouts && userSettings.FlyoutsEnabled) { sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; }
+                else if (!userSettings.EnableKeyboardFlyouts || !userSettings.FlyoutsEnabled) { sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged; }
             }
         }
 
@@ -121,8 +113,12 @@ namespace copy_flyouts.Core
                 Debug.WriteLine("Hotkey pressed");
                 handled = true;
                 sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged; // we stop listening to other copies here, since we know this is a keyboard copy attempt
-                HandleHotkey();
-                sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged;
+
+                // this if is here so that we handle the message and DON'T LISTEN TO KEYBOARD CHANGES,
+                // but also not show the flyout if the user doesn't want it
+                if (userSettings.EnableKeyboardFlyouts) { HandleHotkey(); }
+
+                if (userSettings.EnableNonKeyboardFlyouts && userSettings.FlyoutsEnabled) { sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; }
             }
             return nint.Zero;
         }
@@ -204,13 +200,14 @@ namespace copy_flyouts.Core
         /// </summary>
         public void Register()
         {
-            var helper = new WindowInteropHelper(affectedWindow);
-            _source = HwndSource.FromHwnd(helper.Handle);
-            _source.AddHook(WndProc);
+            if (userSettings.FlyoutsEnabled)
+            {
+                var helper = new WindowInteropHelper(affectedWindow);
+                _source = HwndSource.FromHwnd(helper.Handle);
+                _source.AddHook(WndProc);
 
-            RegisterHotKey(helper.Handle, HOTKEY_ID, (uint)ModifierKeys.Control, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
-
-            sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; // this is for non-keyboard copies
+                RegisterHotKey(helper.Handle, HOTKEY_ID, (uint)ModifierKeys.Control, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
+            }
         }
 
         /// <summary>
@@ -221,8 +218,6 @@ namespace copy_flyouts.Core
             CloseFlyout();
             _source?.RemoveHook(WndProc);
             UnregisterHotKey(new WindowInteropHelper(affectedWindow).Handle, HOTKEY_ID);
-
-            sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged; // this is for non-keyboard copies
         }
 
         ~HotkeyHandler()
