@@ -17,11 +17,25 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <ui:TextBlock Text="Behavior" Grid.Row="0" Appearance="Primary" FontTypography="TitleLarge" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
 
-        <ui:CardControl Icon="{ui:SymbolIcon ClipboardImage24}" Grid.Row="1" Margin="0 0 0 40">
+        <ui:CardControl Icon="{ui:SymbolIcon Cursor24}" Grid.Row="1" Margin="0 0 0 10" >
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Info24" Margin="0 0 5 0" ToolTipService.ToolTip="Non-user copy actions are any copy attempts not manually started by the user. These can be website links that copy an email into your clipboard, or buttons that copy a password. In general, this toggle makes flyouts appear whenever the clipboard received a new copy." FontSize="20"/>
+                        <ui:TextBlock Text="Enable flyouts from non-keyboard copies" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    </StackPanel>
+                    <ui:TextBlock Text="Displays flyouts when copies are made from using a mouse. Also displays flyouts from non-user copy actions." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch IsChecked="{Binding EnableNonKeyboardFlyouts}"/>
+        </ui:CardControl>
+
+        <ui:CardControl Icon="{ui:SymbolIcon ClipboardImage24}" Grid.Row="2" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Show copied images" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -31,7 +45,7 @@
             <ui:ToggleSwitch IsChecked="{Binding AllowImages}"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon ClipboardClock24}" Grid.Row="2" Margin="0 0 0 40">
+        <ui:CardControl Icon="{ui:SymbolIcon ClipboardClock24}" Grid.Row="3" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout lifetime" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -44,7 +58,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon SoundWaveCircle24}" Grid.Row="3" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon SoundWaveCircle24}" Grid.Row="4" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Enable failure sounds" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -54,7 +68,7 @@
             <ui:ToggleSwitch IsChecked="{Binding EnableErrorSound}"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="4" Margin="0 0 0 40" IsEnabled="{Binding EnableErrorSound}">
+        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="5" Margin="0 0 0 40" IsEnabled="{Binding EnableErrorSound}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Failure sound" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -67,6 +81,6 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="5" Content="Reset behavior settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
+        <ui:Button Grid.Row="6" Content="Reset behavior settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
     </Grid>
 </Page>

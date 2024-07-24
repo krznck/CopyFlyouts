@@ -52,7 +52,7 @@ namespace copy_flyouts.Core
             previousClipboard = new ClipboardContent(userSettings);
 
             // subscribe to UserSettings changes
-            userSettings.PropertyChanged += UserSettings_PropertyChanged;
+            if (userSettings.EnableNonKeyboardFlyouts) { userSettings.PropertyChanged += UserSettings_PropertyChanged; }
 
             // ensures the mouse-click listener monitors all formats
             sharpClipboard.ObservableFormats.Texts = true;
@@ -102,6 +102,12 @@ namespace copy_flyouts.Core
                 {
                     Unregister();
                 }
+            }
+
+            if (e.PropertyName == nameof(Settings.EnableNonKeyboardFlyouts))
+            {
+                if (userSettings.EnableNonKeyboardFlyouts) { sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; }
+                else { sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged; }
             }
         }
 

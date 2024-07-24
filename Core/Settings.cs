@@ -39,6 +39,7 @@ namespace copy_flyouts.Core
         private bool _enableErrorSound = true;
         private bool _notifyAboutMinimization = true;
         private string _chosenErrorSound = FailureSounds.Damage.Name;
+        private bool _enableNonKeyboardFlyouts = true;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -278,6 +279,16 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(NotifyAboutMinimization));
             }
         }
+
+        public bool EnableNonKeyboardFlyouts
+        {
+            get => _enableNonKeyboardFlyouts;
+            set
+            {
+                _enableNonKeyboardFlyouts = value;
+                OnPropertyChanged(nameof(EnableNonKeyboardFlyouts));
+            }
+        }
         
         #endregion
 
@@ -330,7 +341,8 @@ namespace copy_flyouts.Core
             bool allowImages = true,
             bool enableErrorSound = true,
             string? chosenErrorSound = null,
-            bool notifyAboutMinimization = true)
+            bool notifyAboutMinimization = true,
+            bool enableNonKeyboardFlyouts = true)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -360,6 +372,7 @@ namespace copy_flyouts.Core
             ChosenErrorSound = chosenErrorSound;
 
             NotifyAboutMinimization = notifyAboutMinimization;
+            EnableNonKeyboardFlyouts = enableNonKeyboardFlyouts;
         }
 
         private void CopySettings(Settings settings)
@@ -384,6 +397,7 @@ namespace copy_flyouts.Core
                 EnableErrorSound = settings.EnableErrorSound;
                 ChosenErrorSound = settings.ChosenErrorSound;
                 NotifyAboutMinimization = settings.NotifyAboutMinimization;
+                EnableNonKeyboardFlyouts = settings.EnableNonKeyboardFlyouts;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.
