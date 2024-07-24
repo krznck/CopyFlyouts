@@ -59,6 +59,12 @@ namespace copy_flyouts
 
         private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            // when the flyouts are disabled, but on a change DIFFERENT than disabling them
+            if (e.PropertyName != nameof(UserSettings.FlyoutsEnabled) && !UserSettings.FlyoutsEnabled)
+            {
+                WarningFooter.Visibility = Visibility.Visible; // we show the footer to warn the user
+            }
+
             if (e.PropertyName == nameof(UserSettings.Theme))
             {
                 if (UserSettings.Theme.Equals("Light"))
@@ -92,7 +98,6 @@ namespace copy_flyouts
                 {
                     ProgramStateMenuItem.Header = "Enable";
                     ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Pause24 };
-                    WarningFooter.Visibility = Visibility.Visible;
                 }
 
                 RefreshNotifyIconAppearance();
@@ -244,10 +249,10 @@ namespace copy_flyouts
                 RemoveFromStartup();
             }
 
-            if (!UserSettings.FlyoutsEnabled)
-            {
-                WarningFooter.Visibility = Visibility.Visible;
-            }
+            //if (!UserSettings.FlyoutsEnabled)
+            //{
+            //    WarningFooter.Visibility = Visibility.Visible;
+            //}
 
             RefreshAboutPageAttentionStatus();
         }
