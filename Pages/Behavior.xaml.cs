@@ -36,6 +36,14 @@ namespace copy_flyouts.Pages
             }
             SoundComboBox.ItemsSource = soundNames;
 
+            var screenOptions = new List<string>();
+            screenOptions.Add("Follow cursor");
+            for (int i = 0; i <= System.Windows.Forms.Screen.AllScreens.Length - 1; i++)
+            {
+                string monitor = "Screen " + (i + 1).ToString();
+                screenOptions.Add(monitor);
+            }
+            ScreenComboBox.ItemsSource = screenOptions;
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)
@@ -46,8 +54,16 @@ namespace copy_flyouts.Pages
             {
                 // to be honest, I couldn't easily think of a good way to get the default values of those attributes somehow
                 // so screw it, just hardcode them in
-                userSettings.FlyoutLifetime = 1.5;
+                userSettings.EnableKeyboardFlyouts = true;
+                userSettings.EnableNonKeyboardFlyouts = true;
                 userSettings.AllowImages = true;
+
+                userSettings.FlyoutLifetime = 1.5;
+                userSettings.EnableFlyoutAnimations = true;
+                userSettings.FlyoutScreen = "Follow cursor";
+
+                userSettings.EnableErrorSound = true;
+                userSettings.ChosenErrorSound = "Damage";
             }
         }
 

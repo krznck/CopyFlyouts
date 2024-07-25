@@ -34,43 +34,35 @@ namespace copy_flyouts
         public const int WS_EX_TRANSPARENT = 0x00000020;
 
         private readonly Settings userSettings;
+        private readonly ClipboardContent _clipContent;
 
         public Flyout(ClipboardContent clipContent, Settings userSettings)
         {
             InitializeComponent();
-            text.Text = clipContent.Text;
+            _clipContent = clipContent;
+            text.Text = _clipContent.Text;
             DataContext = userSettings;
 
-            if (clipContent.fileAmount > 0)
+            if (_clipContent.fileAmount > 0)
             {
                 AddFileIcon();
             }
-            if (clipContent.fileAmount > 1)
+            if (_clipContent.fileAmount > 1)
             {
-                amount.Value = clipContent.fileAmount.ToString();
+                amount.Value = _clipContent.fileAmount.ToString();
                 amount.Visibility = Visibility.Visible;
             }
 
-            bool copyHasNoText = clipContent.Text.Length == 0;
-            bool copyHasImage = clipContent.image != null;
-
-            // note: we're checking for image here, because clipboard history will only retain an image without its path.
-            // so without this check, it will show the image, but also that no text was copied, which isn't false, but misleading
-            if (copyHasNoText && !copyHasImage)
-            {
-                SetToErrorIcon();
-                PlayErrorSound();
-                text.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
-                text.Text = "Copied text is empty!";
-            }
+            bool copyHasNoText = _clipContent.Text.Length == 0;
+            bool copyHasImage = _clipContent.image != null;
 
             if (copyHasImage)
             {
                 AddImageIcon();
 
-                if (!(clipContent.image.Height == 1 && clipContent.image.Width == 1 && !userSettings.AllowImages))
+                if (!(_clipContent.image.Height == 1 && _clipContent.image.Width == 1 && !userSettings.AllowImages))
                 {
-                    flyoutImage.Source = ConvertDrawingImageToWPFImage(clipContent.image);
+                    flyoutImage.Source = ConvertDrawingImageToWPFImage(_clipContent.image);
                     flyoutImage.Visibility = Visibility.Visible;
 
                     if (copyHasNoText)
@@ -109,6 +101,21 @@ namespace copy_flyouts
             // subscribes to the SizeChanged event to ensure window size is correctly initialized
             this.SizeChanged += Flyout_SizeChanged;
             PositionWindow();
+
+            bool copyHasNoText = _clipContent.Text.Length == 0;
+            bool copyHasImage = _clipContent.image != null;
+
+            // note: we're checking for image too, because clipboard history will only retain an image without its path.
+            // so without this check, it will show the image, but also that no text was copied, which isn't false, but misleading
+            // note2: this is here instead of the initialization, to ensure that userSettings was properly acquired from DataContext at this point
+            // also it makes sense that the sound should play after the flyout has shown up, and not when it's processing
+            if (copyHasNoText && !copyHasImage)
+            {
+                SetToErrorIcon();
+                PlayErrorSound();
+                text.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
+                text.Text = "Copied text is empty!";
+            }
         }
 
         private void Flyout_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -124,8 +131,25 @@ namespace copy_flyouts
         /// </summary>
         private void PositionWindow()
         {
-            // gets the current active screen where the cursor is located
-            var currentScreen = System.Windows.Forms.Screen.FromPoint(System.Windows.Forms.Cursor.Position);
+            // get all screens
+            var screens = System.Windows.Forms.Screen.AllScreens;
+
+            Screen? currentScreen;
+            try // tries to get the chosen monitor number
+            {
+                int choice = int.Parse(userSettings.FlyoutScreen.Substring(userSettings.FlyoutScreen.Length - 1));
+                int monitorIndex = choice - 1; // we substract 1 from it since the array of screen starts from 0 and not 1
+
+                // if the monitorIndex is out of bounds, use the primary screen as default
+                currentScreen = (monitorIndex >= 0 && monitorIndex < screens.Length)
+                                    ? screens[monitorIndex]
+                                    : System.Windows.Forms.Screen.PrimaryScreen;
+            }
+            catch (System.FormatException) // but if the choice was "Follow cursor" (or the user wrote something else into the settings)
+            {
+                currentScreen = System.Windows.Forms.Screen.FromPoint(System.Windows.Forms.Cursor.Position); // then the flyout follows the cursor instead
+            }
+
 
             // uses the working area of the current screen to place the flyout
             var workingArea = currentScreen.WorkingArea;

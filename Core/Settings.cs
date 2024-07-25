@@ -42,6 +42,7 @@ namespace copy_flyouts.Core
         private bool _enableNonKeyboardFlyouts = true;
         private bool _enableKeyboardFlyouts = true;
         private bool _enableFlyoutAnimations = true;
+        private string _flyoutScreen = "Follow cursor";
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -311,6 +312,29 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(EnableFlyoutAnimations));
             }
         }
+
+        public string FlyoutScreen
+        {
+            get => _flyoutScreen;
+            set
+            {
+                try
+                {
+                    // if the user specified a screen, that screen will be chosen
+                    // however, if the screen is outside of the range of available screen (i.e. no longer connected),
+                    // then it will default to 1. This is here to reflect that in the settings and not leave the option blank
+                    int number = int.Parse(value.Substring(value.Length - 1)) - 1;
+                    if (number < 0 || number > Screen.AllScreens.Length - 1) { _flyoutScreen = "Screen 1";  }
+                    else { _flyoutScreen = value; }
+                }
+                catch (FormatException) // however, if the user wrote anything that doesn't end in a number
+                {
+                    _flyoutScreen = "Follow cursor"; // then it should just be follow cursor
+                }
+
+                OnPropertyChanged(nameof(FlyoutScreen));
+            }
+        }
         
         #endregion
 
@@ -366,7 +390,8 @@ namespace copy_flyouts.Core
             bool notifyAboutMinimization = true,
             bool enableNonKeyboardFlyouts = true,
             bool enableKeyboardFlyouts = true,
-            bool enableFlyoutAnimations = true)
+            bool enableFlyoutAnimations = true,
+            string flyoutScreen = "Follow cursor")
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -399,6 +424,7 @@ namespace copy_flyouts.Core
             EnableNonKeyboardFlyouts = enableNonKeyboardFlyouts;
             EnableKeyboardFlyouts = enableKeyboardFlyouts;
             EnableFlyoutAnimations = enableFlyoutAnimations;
+            FlyoutScreen = flyoutScreen;
         }
 
         private void CopySettings(Settings settings)
@@ -426,6 +452,7 @@ namespace copy_flyouts.Core
                 EnableNonKeyboardFlyouts = settings.EnableNonKeyboardFlyouts;
                 EnableKeyboardFlyouts = settings.EnableKeyboardFlyouts;
                 EnableFlyoutAnimations = settings.EnableFlyoutAnimations;
+                FlyoutScreen = settings.FlyoutScreen;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.
