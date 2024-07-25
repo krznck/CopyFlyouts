@@ -20,6 +20,7 @@ using Microsoft.Win32;
 using copy_flyouts.UpdateInfrastructure;
 using copy_flyouts.Pages;
 using Microsoft.Toolkit.Uwp.Notifications;
+using System.Windows.Media.Animation;
 
 namespace copy_flyouts
 {

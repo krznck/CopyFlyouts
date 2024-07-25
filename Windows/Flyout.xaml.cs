@@ -96,6 +96,12 @@ namespace copy_flyouts
             {
                 ApplyInverseTheme();
             }
+
+            if (!userSettings.EnableFlyoutAnimations)
+            {
+                FadeInAnimation.Duration = TimeSpan.FromSeconds(0);
+                MoveUpAnimation.Duration = TimeSpan.FromSeconds(0);
+            }
         }
 
         private void Flyout_Loaded(object sender, RoutedEventArgs e)

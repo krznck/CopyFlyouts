@@ -41,6 +41,7 @@ namespace copy_flyouts.Core
         private string _chosenErrorSound = FailureSounds.Damage.Name;
         private bool _enableNonKeyboardFlyouts = true;
         private bool _enableKeyboardFlyouts = true;
+        private bool _enableFlyoutAnimations = true;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -300,6 +301,16 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(EnableKeyboardFlyouts));
             }
         }
+
+        public bool EnableFlyoutAnimations
+        {
+            get => _enableFlyoutAnimations;
+            set
+            {
+                _enableFlyoutAnimations = value;
+                OnPropertyChanged(nameof(EnableFlyoutAnimations));
+            }
+        }
         
         #endregion
 
@@ -354,7 +365,8 @@ namespace copy_flyouts.Core
             string? chosenErrorSound = null,
             bool notifyAboutMinimization = true,
             bool enableNonKeyboardFlyouts = true,
-            bool enableKeyboardFlyouts = true)
+            bool enableKeyboardFlyouts = true,
+            bool enableFlyoutAnimations = true)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -386,6 +398,7 @@ namespace copy_flyouts.Core
             NotifyAboutMinimization = notifyAboutMinimization;
             EnableNonKeyboardFlyouts = enableNonKeyboardFlyouts;
             EnableKeyboardFlyouts = enableKeyboardFlyouts;
+            EnableFlyoutAnimations = enableFlyoutAnimations;
         }
 
         private void CopySettings(Settings settings)
@@ -412,6 +425,7 @@ namespace copy_flyouts.Core
                 NotifyAboutMinimization = settings.NotifyAboutMinimization;
                 EnableNonKeyboardFlyouts = settings.EnableNonKeyboardFlyouts;
                 EnableKeyboardFlyouts = settings.EnableKeyboardFlyouts;
+                EnableFlyoutAnimations = settings.EnableFlyoutAnimations;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.

@@ -12,7 +12,7 @@
     <Grid>
         <Grid.RenderTransform>
             <TransformGroup>
-                <ScaleTransform ScaleY="1" />
+                <ScaleTransform ScaleY="1"/>
                 <TranslateTransform x:Name="translate" Y="0"/>
             </TransformGroup>
         </Grid.RenderTransform>
@@ -20,14 +20,12 @@
         <Grid.Triggers>
             <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                 <BeginStoryboard>
-                    <Storyboard>
-                        <!-- Fade in animation -->
+                    <Storyboard x:Name="FlyoutAnimationStoryboard">
                         <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         From="0" To="1" Duration="0:0:0.1"/>
-                        <!--Move up animation-->
+                                         From="0" To="1" Duration="0:0:0.1" x:Name="FadeInAnimation"/>
                         <DoubleAnimation Storyboard.TargetName="translate"
                                          Storyboard.TargetProperty="Y"
-                                         From="60" To="0" Duration="0:0:0.07"/>
+                                         From="60" To="0" Duration="0:0:0.12" x:Name="MoveUpAnimation"/>
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
