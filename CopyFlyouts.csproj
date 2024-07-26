@@ -16,6 +16,7 @@
     <None Remove="Assets\Audio\beep.wav" />
     <None Remove="assets\audio\damage.wav" />
     <None Remove="Assets\Audio\osu.wav" />
+    <None Remove="Assets\Audio\pip.wav" />
     <None Remove="Assets\Audio\square.wav" />
     <None Remove="Assets\Audio\triangle.wav" />
     <None Remove="Assets\icons\logo-slim-darkmode-disabled.ico" />
@@ -45,6 +46,7 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Assets\Audio\osu.wav" />
+    <EmbeddedResource Include="Assets\Audio\pip.wav" />
     <EmbeddedResource Include="Assets\Audio\square.wav" />
     <EmbeddedResource Include="Assets\Audio\triangle.wav" />
   </ItemGroup>

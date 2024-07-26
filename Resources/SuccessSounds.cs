@@ -10,7 +10,8 @@ namespace copy_flyouts.Resources
     {
         public static readonly Sound Osu = new Sound("Osu", "copy_flyouts.Assets.Audio.osu.wav");
         public static readonly Sound Beep = new Sound("Beep", "copy_flyouts.Assets.Audio.beep.wav");
-        public static readonly List<Sound> Sounds = new List<Sound> { Osu, Beep };
+        public static readonly Sound Pip = new Sound("Pip", "copy_flyouts.Assets.Audio.pip.wav");
+        public static readonly List<Sound> Sounds = new List<Sound> { Osu, Beep, Pip };
 
         public static Sound? Find(string name)
         {
