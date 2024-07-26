@@ -69,8 +69,10 @@ namespace copy_flyouts.Pages
                 userSettings.EnableFlyoutAnimations = true;
                 userSettings.FlyoutScreen = "Follow cursor";
 
+                userSettings.EnableSuccessSound = false;
+                userSettings.ChosenSuccessSound = SuccessSounds.Beep.Name;
                 userSettings.EnableErrorSound = true;
-                userSettings.ChosenErrorSound = "Damage";
+                userSettings.ChosenErrorSound = FailureSounds.Damage.Name;
             }
         }
 
