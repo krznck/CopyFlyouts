@@ -22,6 +22,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <ui:TextBlock Text="Behavior" Grid.Row="0" Appearance="Primary" FontTypography="TitleLarge" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
@@ -95,6 +96,29 @@
         <ui:CardControl Icon="{ui:SymbolIcon SoundWaveCircle24}" Grid.Row="7" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
+                    <ui:TextBlock Text="Enable success sounds" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Text="When a copy attempt is successful, plays a sound." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch IsChecked="{Binding EnableSuccessSound}"/>
+        </ui:CardControl>
+
+        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="8" Margin="0 0 0 10" IsEnabled="{Binding EnableSuccessSound}">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Success sound" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <!--<ui:TextBlock Text="" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>-->
+                </StackPanel>
+            </ui:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <ComboBox x:Name="SuccessSoundComboBox" SelectedItem="{Binding ChosenSuccessSound}"/>
+                <ui:Button Icon="{ui:SymbolIcon Play24, Filled=True}" Margin="10 0 0 0" x:Name="SuccessPreviewButton" Click="SuccessPreviewButton_Click"/>
+            </StackPanel>
+        </ui:CardControl>
+
+        <ui:CardControl Icon="{ui:SymbolIcon SoundWaveCircle24}" Grid.Row="9" Margin="0 0 0 10">
+            <ui:CardControl.Header>
+                <StackPanel>
                     <ui:TextBlock Text="Enable failure sounds" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
                     <ui:TextBlock Text="When a copy attempt is unsuccesful or the copy is empty, plays a sound." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
@@ -102,7 +126,7 @@
             <ui:ToggleSwitch IsChecked="{Binding EnableErrorSound}"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="8" Margin="0 0 0 40" IsEnabled="{Binding EnableErrorSound}">
+        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="10" Margin="0 0 0 40" IsEnabled="{Binding EnableErrorSound}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Failure sound" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -115,6 +139,6 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="9" Content="Reset behavior settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
+        <ui:Button Grid.Row="11" Content="Reset behavior settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
     </Grid>
 </Page>

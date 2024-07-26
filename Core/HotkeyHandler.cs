@@ -151,12 +151,8 @@ namespace copy_flyouts.Core
             bool copyIsEmpty = clipboard.Text.Length == 0;
 
             // creates and shows the new flyout
-            var flyout = new Flyout(clipboard, userSettings);
-            if (previousClipboard != null && previousClipboard.Equals(clipboard))
-            {
-                flyout.PlayErrorSound();
-                flyout.SetToErrorIcon();
-            }
+            var flyout = new Flyout(previousClipboard, clipboard, userSettings);
+
             flyout.Show();
 
             previousClipboard = clipboard;

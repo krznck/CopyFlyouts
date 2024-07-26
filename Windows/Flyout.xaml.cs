@@ -33,15 +33,19 @@ namespace copy_flyouts
         public const int WS_EX_TOOLWINDOW = 0x00000080;
         public const int WS_EX_TRANSPARENT = 0x00000020;
 
-        private readonly Settings userSettings;
+        private readonly Settings _userSettings;
         private readonly ClipboardContent _clipContent;
+        private readonly ClipboardContent _previousClip;
 
-        public Flyout(ClipboardContent clipContent, Settings userSettings)
+        public Flyout(ClipboardContent previousClip, ClipboardContent clipContent, Settings userSettings)
         {
             InitializeComponent();
+            _previousClip = previousClip;
             _clipContent = clipContent;
+            _userSettings = userSettings;
+
+            DataContext = _userSettings;
             text.Text = _clipContent.Text;
-            DataContext = userSettings;
 
             if (_clipContent.fileAmount > 0)
             {
@@ -60,7 +64,7 @@ namespace copy_flyouts
             {
                 AddImageIcon();
 
-                if (!(_clipContent.image.Height == 1 && _clipContent.image.Width == 1 && !userSettings.AllowImages))
+                if (!(_clipContent.image.Height == 1 && _clipContent.image.Width == 1 && !_userSettings.AllowImages))
                 {
                     flyoutImage.Source = ConvertDrawingImageToWPFImage(_clipContent.image);
                     flyoutImage.Visibility = Visibility.Visible;
@@ -75,21 +79,20 @@ namespace copy_flyouts
             // note:
             // this line is crucial for having the flyouts appear at the right place,
             // despite it being bounded in the XAML. Unsure why
-            MaxWidth = userSettings.FlyoutWidth;
-            MaxHeight = userSettings.FlyoutHeight;
+            MaxWidth = _userSettings.FlyoutWidth;
+            MaxHeight = _userSettings.FlyoutHeight;
 
             this.Loaded += Flyout_Loaded;
 
             this.ShowInTaskbar = false;
             this.Focusable = false;
-            this.userSettings = userSettings;
 
-            if (userSettings.InvertedTheme)
+            if (_userSettings.InvertedTheme)
             {
                 ApplyInverseTheme();
             }
 
-            if (!userSettings.EnableFlyoutAnimations)
+            if (!_userSettings.EnableFlyoutAnimations)
             {
                 FadeInAnimation.Duration = TimeSpan.FromSeconds(0);
                 MoveUpAnimation.Duration = TimeSpan.FromSeconds(0);
@@ -101,21 +104,6 @@ namespace copy_flyouts
             // subscribes to the SizeChanged event to ensure window size is correctly initialized
             this.SizeChanged += Flyout_SizeChanged;
             PositionWindow();
-
-            bool copyHasNoText = _clipContent.Text.Length == 0;
-            bool copyHasImage = _clipContent.image != null;
-
-            // note: we're checking for image too, because clipboard history will only retain an image without its path.
-            // so without this check, it will show the image, but also that no text was copied, which isn't false, but misleading
-            // note2: this is here instead of the initialization, to ensure that userSettings was properly acquired from DataContext at this point
-            // also it makes sense that the sound should play after the flyout has shown up, and not when it's processing
-            if (copyHasNoText && !copyHasImage)
-            {
-                SetToErrorIcon();
-                PlayErrorSound();
-                text.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
-                text.Text = "Copied text is empty!";
-            }
         }
 
         private void Flyout_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -137,7 +125,7 @@ namespace copy_flyouts
             Screen? currentScreen;
             try // tries to get the chosen monitor number
             {
-                int choice = int.Parse(userSettings.FlyoutScreen.Substring(userSettings.FlyoutScreen.Length - 1));
+                int choice = int.Parse(_userSettings.FlyoutScreen.Substring(_userSettings.FlyoutScreen.Length - 1));
                 int monitorIndex = choice - 1; // we substract 1 from it since the array of screen starts from 0 and not 1
 
                 // if the monitorIndex is out of bounds, use the primary screen as default
@@ -175,21 +163,18 @@ namespace copy_flyouts
             }
         }
 
-        public void PlayErrorSound()
+        public void PlaySound(Sound sound)
         {
-            if (userSettings.EnableErrorSound)
-            {
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                string resourceName = FailureSounds.Find(userSettings.ChosenErrorSound).ResourcePath;
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string resourceName = sound.ResourcePath;
 
-                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream != null)
                 {
-                    if (stream != null)
-                    {
-                        SoundPlayer player = new SoundPlayer(stream);
-                        player.Load();
-                        player.Play();
-                    }
+                    SoundPlayer player = new SoundPlayer(stream);
+                    player.Load();
+                    player.Play();
                 }
             }
         }
@@ -201,6 +186,28 @@ namespace copy_flyouts
         {
             base.Show();
             MakeToolWindowAndClickThrough(this);
+
+            bool copyHasNoText = _clipContent.Text.Length == 0;
+            bool copyHasImage = _clipContent.image != null;
+
+            // note: we're checking for image too, because clipboard history will only retain an image without its path.
+            // so without this check, it will show the image, but also that no text was copied, which isn't false, but misleading
+            if (copyHasNoText && !copyHasImage)
+            {
+                SetToErrorIcon();
+                PlaySound(FailureSounds.Find(_userSettings.ChosenErrorSound));
+                text.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
+                text.Text = "Copied text is empty!";
+            }
+            else if (_previousClip != null && _previousClip.Equals(_clipContent))
+            {
+                SetToErrorIcon();
+                PlaySound(FailureSounds.Find(_userSettings.ChosenErrorSound));
+            }
+            else if (_userSettings.EnableSuccessSound)
+            {
+                PlaySound(SuccessSounds.Find(_userSettings.ChosenSuccessSound));
+            }
         }
 
         /// <summary>

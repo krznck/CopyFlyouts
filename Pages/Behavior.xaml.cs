@@ -44,6 +44,13 @@ namespace copy_flyouts.Pages
                 screenOptions.Add(monitor);
             }
             ScreenComboBox.ItemsSource = screenOptions;
+
+            var successSoundNames = new List<string>();
+            foreach (Sound sound in SuccessSounds.Sounds)
+            {
+                successSoundNames.Add(sound.Name);
+            }
+            SuccessSoundComboBox.ItemsSource = successSoundNames;
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)
@@ -73,6 +80,24 @@ namespace copy_flyouts.Pages
 
             Assembly assembly = Assembly.GetExecutingAssembly();
             string resourceName = FailureSounds.Find(userSettings.ChosenErrorSound).ResourcePath;
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream != null)
+                {
+                    SoundPlayer player = new SoundPlayer(stream);
+                    player.Load();
+                    player.Play();
+                }
+            }
+        }
+
+        private void SuccessPreviewButton_Click(object sender, RoutedEventArgs e)
+        {
+            var userSettings = DataContext as Settings;
+
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string resourceName = SuccessSounds.Find(userSettings.ChosenSuccessSound).ResourcePath;
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -43,6 +44,8 @@ namespace copy_flyouts.Core
         private bool _enableKeyboardFlyouts = true;
         private bool _enableFlyoutAnimations = true;
         private string _flyoutScreen = "Follow cursor";
+        private bool _enableSuccessSound = false;
+        private string _chosenSuccessSound = SuccessSounds.Beep.Name;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -335,7 +338,34 @@ namespace copy_flyouts.Core
                 OnPropertyChanged(nameof(FlyoutScreen));
             }
         }
-        
+
+        public bool EnableSuccessSound
+        {
+            get => _enableSuccessSound;
+            set
+            {
+                _enableSuccessSound = value;
+                OnPropertyChanged(nameof(EnableSuccessSound));
+            }
+        }
+
+        public string ChosenSuccessSound
+        {
+            get => _chosenSuccessSound;
+            set
+            {
+                if (SuccessSounds.Find(value) is null)
+                {
+                    _chosenSuccessSound = SuccessSounds.Beep.Name;
+                }
+                else
+                {
+                    _chosenSuccessSound = value;
+                }
+                OnPropertyChanged(nameof(ChosenSuccessSound));
+            }
+        }
+
         #endregion
 
         private double RoundToNearestTenth(double number)
@@ -391,7 +421,9 @@ namespace copy_flyouts.Core
             bool enableNonKeyboardFlyouts = true,
             bool enableKeyboardFlyouts = true,
             bool enableFlyoutAnimations = true,
-            string flyoutScreen = "Follow cursor")
+            string flyoutScreen = "Follow cursor",
+            bool enableSuccessSound = false,
+            string? chosenSuccessSound = null)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -425,6 +457,13 @@ namespace copy_flyouts.Core
             EnableKeyboardFlyouts = enableKeyboardFlyouts;
             EnableFlyoutAnimations = enableFlyoutAnimations;
             FlyoutScreen = flyoutScreen;
+            EnableSuccessSound = enableSuccessSound;
+
+            if (chosenSuccessSound is null)
+            {
+                chosenSuccessSound = SuccessSounds.Beep.Name;
+            }
+            ChosenSuccessSound = chosenSuccessSound;
         }
 
         private void CopySettings(Settings settings)
@@ -453,6 +492,8 @@ namespace copy_flyouts.Core
                 EnableKeyboardFlyouts = settings.EnableKeyboardFlyouts;
                 EnableFlyoutAnimations = settings.EnableFlyoutAnimations;
                 FlyoutScreen = settings.FlyoutScreen;
+                EnableSuccessSound = settings.EnableSuccessSound;
+                ChosenSuccessSound = settings.ChosenSuccessSound;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.
