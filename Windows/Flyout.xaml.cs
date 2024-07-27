@@ -138,7 +138,6 @@ namespace copy_flyouts
                 currentScreen = System.Windows.Forms.Screen.FromPoint(System.Windows.Forms.Cursor.Position); // then the flyout follows the cursor instead
             }
 
-
             // uses the working area of the current screen to place the flyout
             var workingArea = currentScreen.WorkingArea;
             var windowWidth = this.ActualWidth;
@@ -157,9 +156,11 @@ namespace copy_flyouts
                 double workingAreaWidthDiu = workingArea.Width / dpiXFactor;
                 double workingAreaHeightDiu = workingArea.Height / dpiYFactor;
 
+                double horizontalAllignment = HorizontalScreenAllignments.Find(_userSettings.FlyoutHorizontalAllignment).Value;
+                double verticalAllignment = VerticalScreenAllignments.Find(_userSettings.FlyoutVerticalAllignment).Value;
                 // centers the flyout within the working area of the current screen (and a little bit to the bottom)
-                this.Left = workingArea.Left / dpiXFactor + (workingAreaWidthDiu - windowWidth) / 2;
-                this.Top = workingArea.Top / dpiYFactor + (workingAreaHeightDiu - windowHeight) * 0.85;
+                this.Left = workingArea.Left / dpiXFactor + (workingAreaWidthDiu - windowWidth) * horizontalAllignment; 
+                this.Top = workingArea.Top / dpiYFactor + (workingAreaHeightDiu - windowHeight) * verticalAllignment;
             }
         }
 

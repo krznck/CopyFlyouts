@@ -51,6 +51,20 @@ namespace copy_flyouts.Pages
                 successSoundNames.Add(sound.Name);
             }
             SuccessSoundComboBox.ItemsSource = successSoundNames;
+
+            var horizontalOptions = new List<string>();
+            foreach (Allignment allignment in HorizontalScreenAllignments.Allignments)
+            {
+                horizontalOptions.Add(allignment.Name);
+            }
+            HorizontalAllignmentComboBox.ItemsSource = horizontalOptions;
+
+            var verticalOptions = new List<string>();
+            foreach (Allignment allignment in VerticalScreenAllignments.Allignments)
+            {
+                verticalOptions.Add(allignment.Name);
+            }
+            VerticalAllignmentComboBox.ItemsSource = verticalOptions;
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)
@@ -67,7 +81,10 @@ namespace copy_flyouts.Pages
 
                 userSettings.FlyoutLifetime = 1.5;
                 userSettings.EnableFlyoutAnimations = true;
+
                 userSettings.FlyoutScreen = "Follow cursor";
+                userSettings.FlyoutHorizontalAllignment = HorizontalScreenAllignments.Center.Name;
+                userSettings.FlyoutVerticalAllignment = VerticalScreenAllignments.BottomCenter.Name;
 
                 userSettings.EnableSuccessSound = false;
                 userSettings.ChosenSuccessSound = SuccessSounds.Beep.Name;

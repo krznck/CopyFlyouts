@@ -23,6 +23,8 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <ui:TextBlock Text="Behavior" Grid.Row="0" Appearance="Primary" FontTypography="TitleLarge" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
@@ -73,7 +75,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon MoviesAndTv24}" Grid.Row="5" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon MoviesAndTv24}" Grid.Row="5" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout animations" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -83,7 +85,7 @@
             <ui:ToggleSwitch IsChecked="{Binding EnableFlyoutAnimations}"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon Desktop24}" Grid.Row="6" Margin="0 0 0 40">
+        <ui:CardControl Icon="{ui:SymbolIcon Desktop24}" Grid.Row="6" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout screen" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -93,7 +95,29 @@
             <ComboBox SelectedItem="{Binding FlyoutScreen}" x:Name="ScreenComboBox"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon SoundWaveCircle24}" Grid.Row="7" Margin="0 0 0 10">
+
+        <ui:CardControl Icon="{ui:SymbolIcon AlignCenterHorizontal24}" Grid.Row="7" Margin="0 0 0 10">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Flyout horizontal allignment" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Text="Where the flyout appears on the screen's horizontal axis." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ComboBox SelectedItem="{Binding FlyoutHorizontalAllignment}" x:Name="HorizontalAllignmentComboBox"/>
+        </ui:CardControl>
+
+
+        <ui:CardControl Icon="{ui:SymbolIcon AlignCenterVertical24}" Grid.Row="8" Margin="0 0 0 40">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Flyout vertical allignment" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Text="Where the flyout appears on the screen's vertical axis." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ComboBox SelectedItem="{Binding FlyoutVerticalAllignment}" x:Name="VerticalAllignmentComboBox"/>
+        </ui:CardControl>
+
+        <ui:CardControl Icon="{ui:SymbolIcon SoundWaveCircle24}" Grid.Row="9" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Enable success sounds" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -103,7 +127,7 @@
             <ui:ToggleSwitch IsChecked="{Binding EnableSuccessSound}"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="8" Margin="0 0 0 10" IsEnabled="{Binding EnableSuccessSound}">
+        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="10" Margin="0 0 0 10" IsEnabled="{Binding EnableSuccessSound}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Success sound" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -116,7 +140,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon SoundWaveCircle24}" Grid.Row="9" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon SoundWaveCircle24}" Grid.Row="11" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Enable failure sounds" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -126,7 +150,7 @@
             <ui:ToggleSwitch IsChecked="{Binding EnableErrorSound}"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="10" Margin="0 0 0 40" IsEnabled="{Binding EnableErrorSound}">
+        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="12" Margin="0 0 0 40" IsEnabled="{Binding EnableErrorSound}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Failure sound" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -139,6 +163,6 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="11" Content="Reset behavior settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
+        <ui:Button Grid.Row="13" Content="Reset behavior settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
     </Grid>
 </Page>

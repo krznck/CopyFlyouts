@@ -46,6 +46,8 @@ namespace copy_flyouts.Core
         private string _flyoutScreen = "Follow cursor";
         private bool _enableSuccessSound = false;
         private string _chosenSuccessSound = SuccessSounds.Beep.Name;
+        private string _flyoutHorizontalAllignment = HorizontalScreenAllignments.Center.Name;
+        private string _flyoutVerticalAllignment = VerticalScreenAllignments.BottomCenter.Name;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -366,6 +368,40 @@ namespace copy_flyouts.Core
             }
         }
 
+        public string FlyoutHorizontalAllignment
+        {
+            get => _flyoutHorizontalAllignment;
+            set
+            {
+                if (HorizontalScreenAllignments.Find(value) is null)
+                {
+                    _flyoutHorizontalAllignment = HorizontalScreenAllignments.Center.Name;
+                }
+                else
+                {
+                    _flyoutHorizontalAllignment = value;
+                }
+                OnPropertyChanged(nameof(FlyoutHorizontalAllignment));
+            }
+        }
+
+        public string FlyoutVerticalAllignment
+        {
+            get => _flyoutVerticalAllignment;
+            set
+            {
+                if (VerticalScreenAllignments.Find(value) is null)
+                {
+                    _flyoutVerticalAllignment = VerticalScreenAllignments.BottomCenter.Name;
+                }
+                else
+                {
+                    _flyoutVerticalAllignment = value;
+                }
+                OnPropertyChanged(nameof(FlyoutVerticalAllignment));
+            }
+        }
+
         #endregion
 
         private double RoundToNearestTenth(double number)
@@ -423,7 +459,9 @@ namespace copy_flyouts.Core
             bool enableFlyoutAnimations = true,
             string flyoutScreen = "Follow cursor",
             bool enableSuccessSound = false,
-            string? chosenSuccessSound = null)
+            string? chosenSuccessSound = null,
+            string? flyoutHorizontalAllignment = null,
+            string? flyoutVerticalAllignment = null)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -446,10 +484,7 @@ namespace copy_flyouts.Core
             AllowImages = allowImages;
             EnableErrorSound = enableErrorSound;
 
-            if (chosenErrorSound is null)
-            {
-                chosenErrorSound = FailureSounds.Damage.Name;
-            }
+            if (chosenErrorSound is null) { chosenErrorSound = FailureSounds.Damage.Name; }
             ChosenErrorSound = chosenErrorSound;
 
             NotifyAboutMinimization = notifyAboutMinimization;
@@ -459,11 +494,14 @@ namespace copy_flyouts.Core
             FlyoutScreen = flyoutScreen;
             EnableSuccessSound = enableSuccessSound;
 
-            if (chosenSuccessSound is null)
-            {
-                chosenSuccessSound = SuccessSounds.Beep.Name;
-            }
+            if (chosenSuccessSound is null) { chosenSuccessSound = SuccessSounds.Beep.Name; }
             ChosenSuccessSound = chosenSuccessSound;
+
+            if (flyoutHorizontalAllignment is null) { flyoutHorizontalAllignment = HorizontalScreenAllignments.Center.Name; }
+            FlyoutHorizontalAllignment = flyoutHorizontalAllignment;
+
+            if (flyoutVerticalAllignment is null) { flyoutVerticalAllignment = VerticalScreenAllignments.BottomCenter.Name; };
+            FlyoutVerticalAllignment = flyoutVerticalAllignment;
         }
 
         private void CopySettings(Settings settings)
@@ -494,6 +532,8 @@ namespace copy_flyouts.Core
                 FlyoutScreen = settings.FlyoutScreen;
                 EnableSuccessSound = settings.EnableSuccessSound;
                 ChosenSuccessSound = settings.ChosenSuccessSound;
+                FlyoutHorizontalAllignment = settings.FlyoutHorizontalAllignment;
+                FlyoutVerticalAllignment = settings.FlyoutVerticalAllignment;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.
