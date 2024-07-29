@@ -196,18 +196,27 @@ namespace copy_flyouts
             if (copyHasNoText && !copyHasImage)
             {
                 SetToErrorIcon();
-                PlaySound(FailureSounds.Find(_userSettings.ChosenErrorSound));
+                if (_userSettings.EnableErrorSound)
+                {
+                    PlaySound(FailureSounds.Find(_userSettings.ChosenErrorSound));
+                }
                 text.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
                 text.Text = "Copied text is empty!";
             }
             else if (_previousClip != null && _previousClip.Equals(_clipContent))
             {
                 SetToErrorIcon();
-                PlaySound(FailureSounds.Find(_userSettings.ChosenErrorSound));
+                if (_userSettings.EnableErrorSound)
+                {
+                    PlaySound(FailureSounds.Find(_userSettings.ChosenErrorSound));
+                }
             }
             else if (_userSettings.EnableSuccessSound)
             {
-                PlaySound(SuccessSounds.Find(_userSettings.ChosenSuccessSound));
+                if (_userSettings.EnableSuccessSound)
+                {
+                    PlaySound(SuccessSounds.Find(_userSettings.ChosenSuccessSound));
+                }
             }
         }
 
