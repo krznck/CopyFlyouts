@@ -197,7 +197,7 @@ namespace copy_flyouts
             }
 
             filePath += ".ico";
-            Debug.WriteLine(filePath);
+            //Debug.WriteLine(filePath);
             iconUri = new Uri(filePath, UriKind.RelativeOrAbsolute);
             ImageSource icon = new BitmapImage(iconUri);
             notifyIcon.Icon = icon;

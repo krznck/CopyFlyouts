@@ -92,8 +92,14 @@ namespace copy_flyouts.Core
         {
             if (e.PropertyName == nameof(Settings.FlyoutsEnabled))
             {
-                if (userSettings.FlyoutsEnabled) { Register(); }
-                else { Unregister(); }
+                if (userSettings.FlyoutsEnabled) {
+                    if (userSettings.EnableKeyboardFlyouts) { Register(); }
+                    if (userSettings.EnableNonKeyboardFlyouts) { sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; }
+                }
+                else {
+                    Unregister();
+                    sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged;
+                }
             }
 
             if (e.PropertyName == nameof(Settings.EnableNonKeyboardFlyouts))
