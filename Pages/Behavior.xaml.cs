@@ -25,9 +25,12 @@ namespace copy_flyouts.Pages
     /// </summary>
     public partial class Behavior : Page
     {
+        private Settings? _userSettings;
+
         public Behavior()
         {
             InitializeComponent();
+            Loaded += Behavior_Loaded;
 
             var soundNames = new List<string>();
             foreach (Sound sound in FailureSounds.Sounds)
@@ -65,6 +68,51 @@ namespace copy_flyouts.Pages
                 verticalOptions.Add(allignment.Name);
             }
             VerticalAllignmentComboBox.ItemsSource = verticalOptions;
+        }
+
+        private void Behavior_Loaded(object sender, RoutedEventArgs e)
+        {
+            _userSettings = DataContext as Settings;
+            _userSettings.PropertyChanged += _userSettings_PropertyChanged;
+
+            LoadToggleLabels();
+        }
+
+        private void _userSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(Settings.EnableKeyboardFlyouts):
+                    EnableKeyboardFlyoutsLabel.Text = _userSettings.EnableKeyboardFlyouts ? "On" : "Off";
+                    break;
+                case nameof(Settings.EnableNonKeyboardFlyouts):
+                    EnableNonKeyboardFlyoutsLabel.Text = _userSettings.EnableNonKeyboardFlyouts ? "On" : "Off";
+                    break;
+                case nameof(Settings.AllowImages):
+                    AllowImagesLabel.Text = _userSettings.AllowImages ? "On" : "Off";
+                    break;
+                case nameof(Settings.EnableFlyoutAnimations):
+                    FlyoutAnimationsLabel.Text = _userSettings.EnableFlyoutAnimations ? "On" : "Off";
+                    break;
+                case nameof(Settings.EnableSuccessSound):
+                    EnableSuccessSoundsLabel.Text = _userSettings.EnableSuccessSound ? "On" : "Off";
+                    break;
+                case nameof(Settings.EnableErrorSound):
+                    EnableErrorSoundsLabel.Text = _userSettings.EnableErrorSound ? "On" : "Off";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void LoadToggleLabels()
+        {
+            EnableKeyboardFlyoutsLabel.Text = _userSettings.EnableKeyboardFlyouts ? "On" : "Off";
+            EnableNonKeyboardFlyoutsLabel.Text = _userSettings.EnableNonKeyboardFlyouts ? "On" : "Off";
+            AllowImagesLabel.Text = _userSettings.AllowImages ? "On" : "Off";
+            FlyoutAnimationsLabel.Text = _userSettings.EnableFlyoutAnimations ? "On" : "Off";
+            EnableSuccessSoundsLabel.Text = _userSettings.EnableSuccessSound ? "On" : "Off";
+            EnableErrorSoundsLabel.Text = _userSettings.EnableErrorSound ? "On" : "Off";
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)

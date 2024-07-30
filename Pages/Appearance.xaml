@@ -49,7 +49,10 @@
                     <ui:TextBlock Text="When the theme is dark, the flyout will be in light theme, and the opposite. This might help with visibility." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding InvertedTheme}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="InvertedThemeLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding InvertedTheme}"/>
+            </StackPanel>
         </ui:CardControl>
         
         <ui:CardControl Icon="{ui:SymbolIcon EyeLines24}" Grid.Row="4" Margin="0 0 0 10">

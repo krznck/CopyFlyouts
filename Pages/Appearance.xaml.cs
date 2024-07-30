@@ -23,6 +23,8 @@ namespace copy_flyouts.Pages
     /// </summary>
     public partial class Appearance : Page
     {
+        private Core.Settings? _userSettings;
+
         public Appearance()
         {
             InitializeComponent();
@@ -33,6 +35,33 @@ namespace copy_flyouts.Pages
                 "Light",
                 "Dark"
             };
+
+            Loaded += Appearance_Loaded;
+        }
+
+        private void Appearance_Loaded(object sender, RoutedEventArgs e)
+        {
+            _userSettings = DataContext as Core.Settings;
+            _userSettings.PropertyChanged += _userSettings_PropertyChanged;
+
+            LoadToggleLabels();
+        }
+
+        private void _userSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(Core.Settings.InvertedTheme):
+                    InvertedThemeLabel.Text = _userSettings.InvertedTheme ? "On" : "Off";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void LoadToggleLabels()
+        {
+            InvertedThemeLabel.Text = _userSettings.InvertedTheme ? "On" : "Off";
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)

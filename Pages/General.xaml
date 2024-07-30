@@ -31,7 +31,10 @@
                     <!--<ui:TextBlock Text="" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>-->
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding FlyoutsEnabled}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="EnableCopyFlyoutsLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding FlyoutsEnabled}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:TextBox Grid.Row="2" Text="Some dummy text to copy and test the flyouts out :)" IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 0 40"/>
@@ -51,7 +54,10 @@
                     </ui:TextBlock>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding RunOnStartup}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="RunOnStartupLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding RunOnStartup}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon ArrowMinimize24}" Grid.Row="4" Margin="0 0 0 10">
@@ -65,7 +71,10 @@
                     <!--<ui:TextBlock Text="" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>-->
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding StartMinimized}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="StartMinimizedLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding StartMinimized}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon EyeOff24}" Grid.Row="5" Margin="0 0 0 10">
@@ -79,7 +88,10 @@
                     </ui:TextBlock>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding MinimizeToTray}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="MinimizeToTrayLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding MinimizeToTray}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon Alert24}" Grid.Row="6" Margin="0 0 0 40" IsEnabled="{Binding MinimizeToTray}">
@@ -93,7 +105,10 @@
                     </ui:TextBlock>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding NotifyAboutMinimization}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="NotifyMinimizedLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding NotifyAboutMinimization}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon ArrowSyncCircle24}" Grid.Row="7" Margin="0 0 0 40">
@@ -107,7 +122,10 @@
                     </ui:TextBlock>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding AutoUpdate}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="CheckForUpdatesLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding AutoUpdate}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:Button Grid.Row="8" Content="Reset general settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>

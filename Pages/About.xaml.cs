@@ -26,7 +26,7 @@ namespace copy_flyouts.Pages
     public partial class About : Page
     {
         private UpdateChecker updateChecker;
-        private Settings userSettings;
+        private Settings _userSettings;
 
         public About()
         {
@@ -36,24 +36,37 @@ namespace copy_flyouts.Pages
 
         private void About_Loaded(object sender, RoutedEventArgs e)
         {
-            // note: doing this logic in a Loaded event rather than construction is necessary, as the DataContext is not yet set on construction
-            userSettings = DataContext as Settings;
-            updateChecker = new UpdateChecker(userSettings);
+            _userSettings = DataContext as Settings;
+            updateChecker = new UpdateChecker(_userSettings);
             RefreshUpdateStatusIndicators();
-            userSettings.PropertyChanged += UserSettings_PropertyChanged;
+            _userSettings.PropertyChanged += UserSettings_PropertyChanged;
+
+            LoadToggleLabels();
         }
 
         private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Settings.UpdatePageUrl))
+            switch (e.PropertyName)
             {
-                RefreshUpdateStatusIndicators();
+                case nameof(Settings.UpdatePageUrl):
+                    RefreshUpdateStatusIndicators();
+                    break;
+                case nameof(Settings.AutoUpdate):
+                    AutoUpdateLabel.Text = _userSettings.AutoUpdate ? "On" : "Off";
+                    break;
+                default:
+                    break;
             }
+        }
+
+        private void LoadToggleLabels()
+        {
+            AutoUpdateLabel.Text = _userSettings.AutoUpdate ? "On" : "Off";
         }
 
         private void RefreshUpdateStatusIndicators()
         {
-            if (userSettings.UpdatePageUrl != null)
+            if (_userSettings.UpdatePageUrl != null)
             {
                 OpenUpdatePageButton.IsEnabled = true;
                 VersionSecondaryText.Visibility = Visibility.Visible;

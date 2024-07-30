@@ -55,7 +55,10 @@
                     </ui:TextBlock>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding AutoUpdate}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="AutoUpdateLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding AutoUpdate}"/>
+            </StackPanel>
         </ui:CardControl>
 
     </Grid>

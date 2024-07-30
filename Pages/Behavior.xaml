@@ -36,7 +36,10 @@
                     <ui:TextBlock Text="Displays a flyout when Ctrl+C is pressed." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding EnableKeyboardFlyouts}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="EnableKeyboardFlyoutsLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding EnableKeyboardFlyouts}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon Cursor24}" Grid.Row="2" Margin="0 0 0 10" >
@@ -49,7 +52,10 @@
                     <ui:TextBlock Text="Displays flyouts when copies are made from using a mouse. Also displays flyouts from non-user copy actions." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding EnableNonKeyboardFlyouts}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="EnableNonKeyboardFlyoutsLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding EnableNonKeyboardFlyouts}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon ClipboardImage24}" Grid.Row="3" Margin="0 0 0 40">
@@ -59,7 +65,10 @@
                     <ui:TextBlock Text="Displaying a flyout may be delayed if the copied image is too big." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding AllowImages}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="AllowImagesLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding AllowImages}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon ClipboardClock24}" Grid.Row="4" Margin="0 0 0 10">
@@ -82,7 +91,10 @@
                     <ui:TextBlock Text="Animation that plays when a flyout is shown." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding EnableFlyoutAnimations}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="FlyoutAnimationsLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding EnableFlyoutAnimations}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon Desktop24}" Grid.Row="6" Margin="0 0 0 10">
@@ -124,7 +136,10 @@
                     <ui:TextBlock Text="When a copy attempt is successful, plays a sound." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding EnableSuccessSound}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="EnableSuccessSoundsLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding EnableSuccessSound}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="10" Margin="0 0 0 10" IsEnabled="{Binding EnableSuccessSound}">
@@ -147,7 +162,10 @@
                     <ui:TextBlock Text="When a copy attempt is unsuccesful or the copy is empty, plays a sound." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:ToggleSwitch IsChecked="{Binding EnableErrorSound}"/>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="EnableErrorSoundsLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding EnableErrorSound}"/>
+            </StackPanel>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="12" Margin="0 0 0 40" IsEnabled="{Binding EnableErrorSound}">
