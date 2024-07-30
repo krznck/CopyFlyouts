@@ -106,11 +106,11 @@ namespace copy_flyouts
 
             if (_userSettings.FlyoutUnderCursor)
             {
-                PositionWindow();
+                PlaceWindowAtCursor();
             }
             else
             {
-                PlaceWindowAtCursor();
+                PositionWindow();
             }
         }
 
@@ -122,11 +122,11 @@ namespace copy_flyouts
 
             if (_userSettings.FlyoutUnderCursor)
             {
-                PositionWindow();
+                PlaceWindowAtCursor();
             }
             else
             {
-                PlaceWindowAtCursor();
+                PositionWindow();
             }
         }
 
@@ -232,7 +232,7 @@ namespace copy_flyouts
                 {
                     PlaySound(FailureSounds.Find(_userSettings.ChosenErrorSound));
                 }
-                text.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));
+                text.Foreground = (SolidColorBrush)System.Windows.Application.Current.Resources["colorStatusDangerForeground1"];
                 text.Text = "Copied text is empty!";
             }
             else if (_previousClip != null && _previousClip.Equals(_clipContent))
@@ -251,7 +251,6 @@ namespace copy_flyouts
                 }
             }
 
-            PositionWindow();
             base.Show();
             MakeToolWindowAndClickThrough(); // this has to be after the base.Show() to work
         }

@@ -108,7 +108,7 @@
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
                 <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="FlyoutsUnderCursorLabel"/>
-                <ui:ToggleSwitch IsChecked="false"/>
+                <ui:ToggleSwitch IsChecked="{Binding FlyoutUnderCursor}"/>
             </StackPanel>
         </ui:CardControl>
 
