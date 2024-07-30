@@ -103,14 +103,31 @@ namespace copy_flyouts
         {
             // subscribes to the SizeChanged event to ensure window size is correctly initialized
             this.SizeChanged += Flyout_SizeChanged;
-            PositionWindow();
+
+            if (_userSettings.FlyoutUnderCursor)
+            {
+                PositionWindow();
+            }
+            else
+            {
+                PlaceWindowAtCursor();
+            }
         }
 
         private void Flyout_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             // unsubscribes after the first size change to avoid repeated repositioning
             this.SizeChanged -= Flyout_SizeChanged;
-            PositionWindow();
+
+
+            if (_userSettings.FlyoutUnderCursor)
+            {
+                PositionWindow();
+            }
+            else
+            {
+                PlaceWindowAtCursor();
+            }
         }
 
         /// <summary>
@@ -164,6 +181,24 @@ namespace copy_flyouts
             }
         }
 
+        private void PlaceWindowAtCursor()
+        {
+            System.Drawing.Point cursorPosition = System.Windows.Forms.Cursor.Position;
+
+            PresentationSource source = PresentationSource.FromVisual(System.Windows.Application.Current.MainWindow);
+            if (source != null)
+            {
+                double dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
+                double dpiY = 96.0 * source.CompositionTarget.TransformToDevice.M22;
+
+                double dipX = cursorPosition.X * (96.0 / dpiX);
+                double dipY = cursorPosition.Y * (96.0 / dpiY);
+
+                this.Left = dipX;
+                this.Top = dipY + 20;
+            }
+        }
+
         public void PlaySound(Sound sound)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -185,9 +220,6 @@ namespace copy_flyouts
         /// </summary>
         public new void Show()
         {
-            base.Show();
-            MakeToolWindowAndClickThrough(this);
-
             bool copyHasNoText = _clipContent.Text.Length == 0;
             bool copyHasImage = _clipContent.image != null;
 
@@ -218,16 +250,20 @@ namespace copy_flyouts
                     PlaySound(SuccessSounds.Find(_userSettings.ChosenSuccessSound));
                 }
             }
+
+            PositionWindow();
+            base.Show();
+            MakeToolWindowAndClickThrough(); // this has to be after the base.Show() to work
         }
 
         /// <summary>
         /// Makes a window (this window) a tool window and click-through, therefore not displaying it in alt-tab and allowing clicks to pass through.
         /// </summary>
-        private static void MakeToolWindowAndClickThrough(Window window)
+        private void MakeToolWindowAndClickThrough()
         {
-            WindowInteropHelper helper = new WindowInteropHelper(window);
+            WindowInteropHelper helper = new WindowInteropHelper(this);
             int exStyle = GetWindowLong(helper.Handle, GWL_EXSTYLE);
-            exStyle |= WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT; // Combine styles with bitwise OR
+            exStyle |= WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT;
             SetWindowLong(helper.Handle, GWL_EXSTYLE, exStyle);
         }
 

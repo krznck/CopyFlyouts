@@ -43,6 +43,7 @@ namespace copy_flyouts.Core
         private SharpClipboard sharpClipboard = new();
 
         private bool isInitialSubscription = true; // this ensures the above does not show the flyout of what's in the clipboard on opening the program
+        private bool _clipboardSubscribed = false;
 
         public HotkeyHandler(Window affectedWindow, Settings userSettings)
         {
@@ -62,7 +63,23 @@ namespace copy_flyouts.Core
             // register Ctrl + + C as global hotkey
             Register();
             // listens to non-keyboard copies
-            if (userSettings.EnableNonKeyboardFlyouts && userSettings.FlyoutsEnabled) { sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; }
+            if (userSettings.EnableNonKeyboardFlyouts && userSettings.FlyoutsEnabled) { SubscribeToClipboard(); }
+        }
+
+        private void SubscribeToClipboard()
+        {
+            if (!_clipboardSubscribed) { 
+                sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; 
+                _clipboardSubscribed = true;
+            }
+        }
+
+        private void UnscrubscribeFromClipboard()
+        {
+            if (_clipboardSubscribed) { 
+                sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged; 
+                _clipboardSubscribed = false;
+            }
         }
 
         private void SharpClipboard_ClipboardChanged(object? sender, SharpClipboard.ClipboardChangedEventArgs e)
@@ -77,14 +94,14 @@ namespace copy_flyouts.Core
 
             // we remove and return the clipboard change listener on a short timer to prevent the bug of a copy being shown twice on the main window, or when screenshotting anything
             // this is ultimately a workaround, but should not significantly mess anything up (hopefully)
-            sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged;
+            UnscrubscribeFromClipboard();
             var timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(1);
             timer.Start();
             timer.Tick += (sender, args) =>
             {
                 timer.Stop();
-                sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged;
+                SubscribeToClipboard();
             };
         }
 
@@ -94,18 +111,18 @@ namespace copy_flyouts.Core
             {
                 if (userSettings.FlyoutsEnabled) {
                     if (userSettings.EnableKeyboardFlyouts) { Register(); }
-                    if (userSettings.EnableNonKeyboardFlyouts) { sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; }
+                    if (userSettings.EnableNonKeyboardFlyouts) { SubscribeToClipboard(); }
                 }
                 else {
                     Unregister();
-                    sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged;
+                    UnscrubscribeFromClipboard();
                 }
             }
 
             if (e.PropertyName == nameof(Settings.EnableNonKeyboardFlyouts))
             {
-                if (userSettings.EnableNonKeyboardFlyouts && userSettings.FlyoutsEnabled) { sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; }
-                else if (!userSettings.EnableKeyboardFlyouts || !userSettings.FlyoutsEnabled) { sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged; }
+                if (userSettings.EnableNonKeyboardFlyouts && userSettings.FlyoutsEnabled) { SubscribeToClipboard(); }
+                else if (!userSettings.EnableKeyboardFlyouts || !userSettings.FlyoutsEnabled) { UnscrubscribeFromClipboard(); }
             }
         }
 
@@ -118,13 +135,13 @@ namespace copy_flyouts.Core
             {
                 Debug.WriteLine("Hotkey pressed");
                 handled = true;
-                sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged; // we stop listening to other copies here, since we know this is a keyboard copy attempt
+                UnscrubscribeFromClipboard(); // we stop listening to other copies here, since we know this is a keyboard copy attempt
 
                 // this if is here so that we handle the message and DON'T LISTEN TO KEYBOARD CHANGES,
                 // but also not show the flyout if the user doesn't want it
                 if (userSettings.EnableKeyboardFlyouts) { HandleHotkey(); }
 
-                if (userSettings.EnableNonKeyboardFlyouts && userSettings.FlyoutsEnabled) { sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; }
+                if (userSettings.EnableNonKeyboardFlyouts && userSettings.FlyoutsEnabled) { SubscribeToClipboard(); }
             }
             return nint.Zero;
         }

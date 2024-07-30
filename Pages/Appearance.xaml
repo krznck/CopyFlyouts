@@ -110,7 +110,7 @@
         <ui:CardControl Icon="{ui:SymbolIcon RectangleLandscape24}" Grid.Row="8" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
-                    <ui:TextBlock Text="Flyout corner radius" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Text="Flyout corner roudness" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
                     <!--<ui:TextBlock Text="" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>-->
                 </StackPanel>
             </ui:CardControl.Header>

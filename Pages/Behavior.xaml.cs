@@ -100,6 +100,9 @@ namespace copy_flyouts.Pages
                 case nameof(Settings.EnableErrorSound):
                     EnableErrorSoundsLabel.Text = _userSettings.EnableErrorSound ? "On" : "Off";
                     break;
+                case nameof(Settings.FlyoutUnderCursor):
+                    FlyoutsUnderCursorLabel.Text = _userSettings.FlyoutUnderCursor ? "On" : "Off";
+                    break;
                 default:
                     break;
             }
@@ -113,6 +116,7 @@ namespace copy_flyouts.Pages
             FlyoutAnimationsLabel.Text = _userSettings.EnableFlyoutAnimations ? "On" : "Off";
             EnableSuccessSoundsLabel.Text = _userSettings.EnableSuccessSound ? "On" : "Off";
             EnableErrorSoundsLabel.Text = _userSettings.EnableErrorSound ? "On" : "Off";
+            FlyoutsUnderCursorLabel.Text = _userSettings.FlyoutUnderCursor ? "On" : "Off";
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)
@@ -130,6 +134,7 @@ namespace copy_flyouts.Pages
                 userSettings.FlyoutLifetime = 1.5;
                 userSettings.EnableFlyoutAnimations = true;
 
+                userSettings.FlyoutUnderCursor = false;
                 userSettings.FlyoutScreen = "Follow cursor";
                 userSettings.FlyoutHorizontalAllignment = HorizontalScreenAllignments.Center.Name;
                 userSettings.FlyoutVerticalAllignment = VerticalScreenAllignments.BottomCenter.Name;
@@ -175,6 +180,11 @@ namespace copy_flyouts.Pages
                     player.Play();
                 }
             }
+        }
+
+        private void CardControl_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
