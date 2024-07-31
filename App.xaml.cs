@@ -15,6 +15,7 @@ namespace copy_flyouts
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(App));
         private readonly string logFilePath;
+        private Mutex mutex = null; // mutex to ensure there is one instance of the program
 
         public App()
         {
@@ -24,6 +25,19 @@ namespace copy_flyouts
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            string appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
+            string authorName = System.Windows.Application.Current.Resources["AuthorName"] as string;
+            string version = System.Windows.Application.Current.Resources["Version"] as string;
+            string mutexName = authorName + "." + appName + "." + version + ".Mutex";
+
+            bool createdNew;
+            mutex = new Mutex(true, mutexName, out createdNew);
+
+            if (!createdNew)
+            {
+                System.Windows.Application.Current.Shutdown();
+            }
+
             base.OnStartup(e);
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             DispatcherUnhandledException += App_DispatcherUnhandledException;
@@ -31,7 +45,7 @@ namespace copy_flyouts
 
         private async void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
+            string appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
 
             log.Error("Unhandled UI Exception", e.Exception);
             string message = "An unexpected error occurred. " + appName + " will close." +
@@ -55,6 +69,16 @@ namespace copy_flyouts
             var appenders = logRepository.GetAppenders();
             var fileAppender = appenders.OfType<log4net.Appender.FileAppender>().FirstOrDefault();
             return fileAppender?.File ?? "Log file path not found.";
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            if (mutex != null)
+            {
+                mutex.ReleaseMutex();
+                mutex = null;
+            }
+            base.OnExit(e);
         }
     }
 }
