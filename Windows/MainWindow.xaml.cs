@@ -326,8 +326,16 @@ namespace copy_flyouts
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            HotkeyHandler.Unregister();
-            System.Windows.Application.Current.Shutdown();
+            if (UserSettings.MinimizeOnClosure && UserSettings.MinimizeToTray)
+            {
+                e.Cancel = true;
+                WindowState = WindowState.Minimized;
+            }
+            else
+            {
+                HotkeyHandler.Unregister();
+                System.Windows.Application.Current.Shutdown();
+            }
         }
 
         private void notifyIcon_LeftClick(Wpf.Ui.Tray.Controls.NotifyIcon sender, RoutedEventArgs e)

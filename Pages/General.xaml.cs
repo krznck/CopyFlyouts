@@ -54,12 +54,16 @@ namespace copy_flyouts.Pages
                 case nameof(Settings.MinimizeToTray):
                     MinimizeToTrayLabel.Text = _userSettings.MinimizeToTray ? "On" : "Off";
                     NotifyMinimizedLabel.Appearance = _userSettings.MinimizeToTray ? Wpf.Ui.Controls.TextColor.Primary : Wpf.Ui.Controls.TextColor.Secondary;
+                    MinimizeOnClosureLabel.Appearance = _userSettings.MinimizeToTray ? Wpf.Ui.Controls.TextColor.Primary : Wpf.Ui.Controls.TextColor.Secondary;
                     break;
                 case nameof(Settings.NotifyAboutMinimization):
                     NotifyMinimizedLabel.Text = _userSettings.NotifyAboutMinimization ? "On" : "Off";
                     break;
                 case nameof(Settings.AutoUpdate):
                     CheckForUpdatesLabel.Text = _userSettings.AutoUpdate ? "On" : "Off";
+                    break;
+                case nameof(Settings.MinimizeOnClosure):
+                    MinimizeOnClosureLabel.Text = _userSettings.MinimizeOnClosure ? "On" : "Off";
                     break;
                 default:
                     break;
@@ -75,6 +79,7 @@ namespace copy_flyouts.Pages
             NotifyMinimizedLabel.Text = _userSettings.NotifyAboutMinimization ? "On" : "Off";
             NotifyMinimizedLabel.Appearance = _userSettings.MinimizeToTray ? Wpf.Ui.Controls.TextColor.Primary : Wpf.Ui.Controls.TextColor.Secondary;
             CheckForUpdatesLabel.Text = _userSettings.AutoUpdate ? "On" : "Off";
+            MinimizeOnClosureLabel.Text = _userSettings.MinimizeOnClosure ? "On" : "Off";
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)
@@ -88,6 +93,7 @@ namespace copy_flyouts.Pages
                 _userSettings.MinimizeToTray = true;
                 _userSettings.RunOnStartup = false;
                 _userSettings.AutoUpdate = true;
+                _userSettings.MinimizeOnClosure = false;
             }
         }
     }

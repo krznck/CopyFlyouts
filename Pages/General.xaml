@@ -20,6 +20,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <ui:TextBlock Text="General" Grid.Row="0" Appearance="Primary" FontTypography="TitleLarge" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
@@ -94,7 +95,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon Alert24}" Grid.Row="6" Margin="0 0 0 40" IsEnabled="{Binding MinimizeToTray}">
+        <ui:CardControl Icon="{ui:SymbolIcon Alert24}" Grid.Row="6" Margin="0 0 0 10" IsEnabled="{Binding MinimizeToTray}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Notify when minimized to system tray" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -111,7 +112,24 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon ArrowSyncCircle24}" Grid.Row="7" Margin="0 0 0 40">
+        <ui:CardControl Icon="{ui:SymbolIcon DismissSquare24}" Grid.Row="7" Margin="0 0 0 40" IsEnabled="{Binding MinimizeToTray}">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Minimize on closure" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Appearance="Secondary" TextWrapping="WrapWithOverflow">
+                        <Run Text="Clicking the close button minimizes"/>
+                        <Run Text="{StaticResource ProgramName}"/>
+                        <Run Text="instead of closing it."/>
+                    </ui:TextBlock>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="MinimizeOnClosureLabel"/>
+                <ui:ToggleSwitch IsChecked="{Binding MinimizeOnClosure}"/>
+            </StackPanel>
+        </ui:CardControl>
+
+        <ui:CardControl Icon="{ui:SymbolIcon ArrowSyncCircle24}" Grid.Row="8" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Check for updates automatically" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -128,6 +146,6 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="8" Content="Reset general settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
+        <ui:Button Grid.Row="9" Content="Reset general settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
     </Grid>
 </Page>
