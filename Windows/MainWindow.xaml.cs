@@ -55,7 +55,6 @@ namespace copy_flyouts
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
             UserSettings.PropertyChanged += UserSettings_PropertyChanged;
-            updateChecker.InitializeUpdateCheckTimer();
         }
 
         private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -250,12 +249,9 @@ namespace copy_flyouts
                 RemoveFromStartup();
             }
 
-            //if (!UserSettings.FlyoutsEnabled)
-            //{
-            //    WarningFooter.Visibility = Visibility.Visible;
-            //}
-
             RefreshAboutPageAttentionStatus();
+
+            if (!(UserSettings.UpdatePageUrl is null)) { updateChecker.NotifyAboutUpdate(); }
         }
 
         private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)

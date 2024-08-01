@@ -34,6 +34,10 @@ namespace copy_flyouts.UpdateInfrastructure
             currentVersion = currentVersion.Substring(1);
 
             userSettings.PropertyChanged += UserSettings_PropertyChanged;
+
+            // checks for updates on startup, before the timer starts
+            if (userSettings.UpdatePageUrl is null && userSettings.AutoUpdate) { Task task = CheckForUpdatesAutomatically(); }
+            InitializeUpdateCheckTimer();
         }
 
         private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -124,15 +128,19 @@ namespace copy_flyouts.UpdateInfrastructure
             if ((latestRelease != null) && IsNewVersionAvailable(currentVersion, latestRelease.TagName))
             {
                 userSettings.UpdatePageUrl = latestRelease.HtmlUrl;
-                new ToastContentBuilder()
-                    .AddText("New update avaiable")
-                    .AddText($"A new version is available!")
-                    .AddButton(new ToastButton()
-                        .SetContent("Open update page")
-                        .SetProtocolActivation(new Uri("https://github.com/krznck/copy-flyouts/releases/latest")))
-                    .Show();
-
+                NotifyAboutUpdate();
             }
+        }
+
+        public void NotifyAboutUpdate()
+        {
+            new ToastContentBuilder()
+                .AddText("New update avaiable")
+                .AddText($"A new version is available!")
+                .AddButton(new ToastButton()
+                    .SetContent("Open update page")
+                    .SetProtocolActivation(new Uri("https://github.com/krznck/copy-flyouts/releases/latest")))
+                .Show();
         }
 
         public void OpenUpdatePage()
@@ -155,7 +163,7 @@ namespace copy_flyouts.UpdateInfrastructure
             return latest.CompareTo(current) > 0;
         }
 
-        public void InitializeUpdateCheckTimer()
+        private void InitializeUpdateCheckTimer()
         {
             if (userSettings.UpdatePageUrl == null && userSettings.AutoUpdate == true)
             {
