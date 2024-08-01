@@ -12,6 +12,7 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Security;
 
 namespace copy_flyouts.Core
 {
@@ -447,9 +448,15 @@ namespace copy_flyouts.Core
 
         public Settings()
         {
+            var appBaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
-            _filePath = Path.Combine(appDataFolder, appName, "settings.json");
+
+            // if we can write to the base directory, then we can just keep the settings there and let the program be portable,
+            // but if not, then the program is probably installed in ProgramFiles for all users, and either way we cannot keep the settings there,
+            // so we use AppData to have the settings be seperate for all users
+            _filePath = IsWriteable(appBaseDirectory) ? Path.Combine(appBaseDirectory, "settings.json") : Path.Combine(appDataFolder, appName, "settings.json");
 
             Directory.CreateDirectory(Path.GetDirectoryName(_filePath));
 
@@ -619,6 +626,37 @@ namespace copy_flyouts.Core
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             SaveSettingsFile();
+        }
+
+        private bool IsWriteable(string directoryPath)
+        {
+            try
+            {
+                string tempFilePath = Path.Combine(directoryPath, Path.GetRandomFileName());
+
+                // attempt to create and delete the temporary file
+                using (FileStream fs = File.Create(tempFilePath, 1, FileOptions.DeleteOnClose))
+                {
+                }
+
+                return true;
+            }
+            catch (UnauthorizedAccessException) // no permission
+            {
+                return false;
+            }
+            catch (SecurityException) // security policy disallows access
+            {
+                return false;
+            }
+            catch (DirectoryNotFoundException) // directory doesn't exist
+            {
+                return false;
+            }
+            catch (IOException) // other I.O (like directory is read-only)
+            {
+                return false;
+            }
         }
     }
 }
