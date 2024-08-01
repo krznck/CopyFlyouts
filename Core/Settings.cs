@@ -51,6 +51,7 @@ namespace copy_flyouts.Core
         private string _flyoutVerticalAllignment = VerticalScreenAllignments.BottomCenter.Name;
         private bool _flyoutUnderCursor = false;
         private bool _minimizeOnClosure = false;
+        private string _updateFrequency = UpdateFrequencies.TwoHours.Name;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         #region PublicProperties
@@ -425,6 +426,23 @@ namespace copy_flyouts.Core
             }
         }
 
+        public string UpdateFrequency
+        {
+            get => _updateFrequency;
+            set
+            {
+                if (UpdateFrequencies.Find(value) is null)
+                {
+                    _updateFrequency = UpdateFrequencies.TwoHours.Name;
+                }
+                else
+                {
+                    _updateFrequency = value;
+                }
+                OnPropertyChanged(nameof(UpdateFrequency));
+            }
+        }
+
         #endregion
 
         private double RoundToNearestTenth(double number)
@@ -492,7 +510,8 @@ namespace copy_flyouts.Core
             string? flyoutHorizontalAllignment = null,
             string? flyoutVerticalAllignment = null,
             bool flyoutUnderCursor = false,
-            bool minimizeOnClosure = false)
+            bool minimizeOnClosure = false,
+            string? updateFrequency = null)
         {
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
@@ -536,6 +555,9 @@ namespace copy_flyouts.Core
 
             FlyoutUnderCursor = flyoutUnderCursor;
             MinimizeOnClosure = minimizeOnClosure;
+
+            if (updateFrequency is null) { updateFrequency = UpdateFrequencies.TwoHours.Name; }
+            UpdateFrequency = updateFrequency;
         }
 
         private void CopySettings(Settings settings)
@@ -570,6 +592,7 @@ namespace copy_flyouts.Core
                 FlyoutVerticalAllignment = settings.FlyoutVerticalAllignment;
                 FlyoutUnderCursor = settings.FlyoutUnderCursor;
                 MinimizeOnClosure = settings.MinimizeOnClosure;
+                UpdateFrequency = settings.UpdateFrequency;
 
                 // note: this little block checks that the saved upate url (which indicates that there is an update)
                 // is not pointing to a program version that is lower than the current program.

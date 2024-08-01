@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using Microsoft.Toolkit.Uwp.Notifications;
 using System.Diagnostics;
 using System.Windows;
+using copy_flyouts.Resources;
 
 namespace copy_flyouts.UpdateInfrastructure
 {
@@ -135,7 +136,7 @@ namespace copy_flyouts.UpdateInfrastructure
         public void NotifyAboutUpdate()
         {
             new ToastContentBuilder()
-                .AddText("New update avaiable")
+                .AddText("New update available")
                 .AddText($"A new version is available!")
                 .AddButton(new ToastButton()
                     .SetContent("Open update page")
@@ -167,7 +168,7 @@ namespace copy_flyouts.UpdateInfrastructure
         {
             if (userSettings.UpdatePageUrl == null && userSettings.AutoUpdate == true)
             {
-                updateCheckTimer.Interval = TimeSpan.FromHours(2);
+                updateCheckTimer.Interval = TimeSpan.FromMinutes(UpdateFrequencies.Find(userSettings.UpdateFrequency).Value);
                 updateCheckTimer.Tick += UpdateCheckTimer_Tick;
                 updateCheckTimer.Start();
             }

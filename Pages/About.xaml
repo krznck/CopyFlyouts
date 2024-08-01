@@ -6,11 +6,12 @@
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" 
       xmlns:local="clr-namespace:copy_flyouts"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignWidth="665"
       Title="General">
 
     <Grid Margin="30" VerticalAlignment="Top">
         <Grid.RowDefinitions>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -35,15 +36,6 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon Link24}" Grid.Row="3" Margin="0 0 0 10">
-            <ui:CardControl.Header>
-                <StackPanel>
-                    <ui:TextBlock Text="Website" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
-                </StackPanel>
-            </ui:CardControl.Header>
-            <ui:HyperlinkButton Content="GitHub" NavigateUri="https://github.com/krznck/copy-flyouts"/>
-        </ui:CardControl>
-
         <ui:CardControl Icon="{ui:SymbolIcon ArrowSyncCircle24}" Grid.Row="2" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
@@ -59,6 +51,29 @@
                 <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="AutoUpdateLabel"/>
                 <ui:ToggleSwitch IsChecked="{Binding AutoUpdate}"/>
             </StackPanel>
+        </ui:CardControl>
+
+        <ui:CardControl Icon="{ui:SymbolIcon Timer24}" Grid.Row="3" Margin="0 0 0 10" IsEnabled="{Binding AutoUpdate}">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Update check frequency" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                    <ui:TextBlock Appearance="Secondary" TextWrapping="WrapWithOverflow">
+                        <Run Text="Will check for an update on opening"/>
+                        <Run Text="{StaticResource ProgramName}"/>
+                        <Run Text=", then do it again after the specified time, on repeat."/>
+                    </ui:TextBlock>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ComboBox x:Name="UpdateCheckFrequencyComboBox" SelectedItem="{Binding UpdateFrequency}"/>
+        </ui:CardControl>
+
+        <ui:CardControl Icon="{ui:SymbolIcon Link24}" Grid.Row="4" Margin="0 0 0 10">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock Text="Website" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:HyperlinkButton Content="GitHub" NavigateUri="https://github.com/krznck/copy-flyouts"/>
         </ui:CardControl>
 
     </Grid>

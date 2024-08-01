@@ -17,6 +17,7 @@ using System.Linq.Expressions;
 using Wpf.Ui.Controls;
 using System.Windows.Threading;
 using copy_flyouts.Core;
+using copy_flyouts.Resources;
 
 namespace copy_flyouts.Pages
 {
@@ -32,6 +33,13 @@ namespace copy_flyouts.Pages
         {
             InitializeComponent();
             this.Loaded += About_Loaded;
+
+            var frequencies = new List<string>();
+            foreach (Time frequency in UpdateFrequencies.Frequencies)
+            {
+                frequencies.Add(frequency.Name);
+            }
+            UpdateCheckFrequencyComboBox.ItemsSource = frequencies;
         }
 
         private void About_Loaded(object sender, RoutedEventArgs e)
