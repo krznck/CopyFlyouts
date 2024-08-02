@@ -25,7 +25,7 @@
 
         <ui:TextBlock Text="General" Grid.Row="0" Appearance="Primary" FontTypography="TitleLarge" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
         
-        <ui:CardControl Icon="{ui:SymbolIcon ClipboardSettings24}" Grid.Row="1" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon ClipboardSettings24}" Grid.Row="1" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Enable copy flyouts" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -38,9 +38,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:TextBox Grid.Row="2" Text="Some dummy text to copy and test the flyouts out :)" IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 0 40"/>
-
-        <ui:CardControl Icon="{ui:SymbolIcon WindowPlay20}" Grid.Row="3" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon WindowPlay20}" Grid.Row="2" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock TextWrapping="WrapWithOverflow" FontTypography="BodyStrong">
@@ -61,7 +59,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon ArrowMinimize24}" Grid.Row="4" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon ArrowMinimize24}" Grid.Row="3" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock FontTypography="BodyStrong" TextWrapping="WrapWithOverflow">
@@ -78,7 +76,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon EyeOff24}" Grid.Row="5" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon EyeOff24}" Grid.Row="4" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Minimize to system tray" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -95,7 +93,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon Alert24}" Grid.Row="6" Margin="0 0 0 10" IsEnabled="{Binding MinimizeToTray}">
+        <ui:CardControl Icon="{ui:SymbolIcon Alert24}" Grid.Row="5" Margin="0 0 0 10" IsEnabled="{Binding MinimizeToTray}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Notify when minimized to system tray" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -112,7 +110,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon DismissSquare24}" Grid.Row="7" Margin="0 0 0 40" IsEnabled="{Binding MinimizeToTray}">
+        <ui:CardControl Icon="{ui:SymbolIcon DismissSquare24}" Grid.Row="6" Margin="0 0 0 40" IsEnabled="{Binding MinimizeToTray}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Minimize on closure" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -129,7 +127,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon ArrowSyncCircle24}" Grid.Row="8" Margin="0 0 0 40">
+        <ui:CardControl Icon="{ui:SymbolIcon ArrowSyncCircle24}" Grid.Row="7" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Check for updates automatically" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -146,6 +144,6 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="9" Content="Reset general settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
+        <ui:Button Grid.Row="8" Content="Reset general settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click"/>
     </Grid>
 </Page>

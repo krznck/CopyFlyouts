@@ -21,6 +21,7 @@ using copy_flyouts.UpdateInfrastructure;
 using copy_flyouts.Pages;
 using Microsoft.Toolkit.Uwp.Notifications;
 using System.Windows.Media.Animation;
+using WK.Libraries.SharpClipboardNS;
 
 namespace copy_flyouts
 {
@@ -374,6 +375,31 @@ namespace copy_flyouts
                 AboutSymbol.Filled = false;
                 AboutSymbol.ClearValue(System.Windows.Controls.Control.ForegroundProperty);
             }
+        }
+
+        private void ToolboxChevron_Click(object sender, RoutedEventArgs e)
+        {
+            if (ToolboxMenu.Visibility == Visibility.Visible)
+            {
+                ToolboxMenu.Visibility = Visibility.Collapsed;
+                ToolboxChevron.Icon = new SymbolIcon { Symbol = SymbolRegular.ChevronDoubleDown20 };
+            }
+            else
+            {
+                ToolboxMenu.Visibility = Visibility.Visible;
+                ToolboxChevron.Icon = new SymbolIcon { Symbol = SymbolRegular.ChevronDoubleUp20 };
+            }
+        }
+
+        private async void ToolboxCopyButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.Clipboard.SetDataObject(ToolboxTextBox.Text, false, 5, 200);
+
+            // the clipboard really doesn't like getting spammed, due to being a shared resource,
+            // and this is the safest way I've found to just not let that happen - we disable the button for a short time
+            ToolboxCopyButton.IsEnabled = false;
+            await Task.Delay(100);
+            ToolboxCopyButton.IsEnabled = true;
         }
     }
 }

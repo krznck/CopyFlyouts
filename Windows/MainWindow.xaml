@@ -24,8 +24,9 @@
     WindowStartupLocation="CenterScreen"
     WindowCornerPreference="Round"
     Icon="/assets/icons/logo.ico">
-    <Grid>
+    <Grid x:Name="RootGrid">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -40,7 +41,26 @@
             </ui:TitleBar.Icon>
         </ui:TitleBar>
 
-        <ui:NavigationView x:Name="RootNavigation" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" IsBackButtonVisible="Collapsed" PaneTitle="Options" IsPaneToggleVisible="False" OpenPaneLength="130" OverridesDefaultStyle="False" CompactPaneLength="48">
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+            <Grid x:Name="ToolboxMenu" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ui:Button Icon="{ui:SymbolIcon DocumentCopy24}" Margin="20 0 10 0" ToolTip="Copy dummy file" Grid.Column="0"/>
+                <ui:Button Icon="{ui:SymbolIcon ImageCopy24}" Margin="0 0 10 0" ToolTip="Copy dummy image" Grid.Column="1"/>
+                <ui:TextBox Grid.Column="2" Text="A little toolbox to try the flyouts in action with dummy data. Select text and use Ctrl+C to copy it, or use the copy button on the right. Copy dummy files or images with the buttons on the left. Refresh dummy data with the refresh button." IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 10 0" x:Name="ToolboxTextBox"/>
+                <ui:Button Icon="{ui:SymbolIcon Copy24}" Grid.Column="3" Margin="0 0 10 0" x:Name="ToolboxCopyButton" Click="ToolboxCopyButton_Click" ToolTip="Copy textbox text"/>
+                <ui:Button Icon="{ui:SymbolIcon ArrowClockwise24}" Margin="0 0 20 0" ToolTip="Refresh dummy data" Grid.Column="4"/>
+            </Grid>
+
+            <ui:Button Icon="{ui:SymbolIcon ChevronDoubleDown20}" Content="Toolbox" Width="{Binding ElementName=RootGrid, Path=ActualWidth}" Background="Transparent" BorderBrush="Transparent" x:Name="ToolboxChevron" Click="ToolboxChevron_Click"/>
+        </StackPanel>
+
+        <ui:NavigationView x:Name="RootNavigation" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" IsBackButtonVisible="Collapsed" PaneTitle="Options" IsPaneToggleVisible="False" OpenPaneLength="130" OverridesDefaultStyle="False" CompactPaneLength="48">
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="General" Icon="{ui:SymbolIcon Settings24}" TargetPageType="{x:Type pages:General}"/>
                 <ui:NavigationViewItem Content="Behavior" Icon="{ui:SymbolIcon Wrench24}" TargetPageType="{x:Type pages:Behavior}"/>
@@ -75,7 +95,7 @@
             
         </tray:NotifyIcon>
 
-        <StackPanel x:Name="WarningFooter" VerticalAlignment="Bottom" Grid.Row="3" HorizontalAlignment="Left" Margin="20 8 0 8" Orientation="Horizontal" Visibility="Collapsed">
+        <StackPanel x:Name="WarningFooter" VerticalAlignment="Bottom" Grid.Row="4" HorizontalAlignment="Left" Margin="20 8 0 8" Orientation="Horizontal" Visibility="Collapsed">
             <ui:SymbolIcon Symbol="Warning24" Margin="0 0 10 0" Foreground="{DynamicResource colorStatusWarningForeground1}"/>
             <ui:TextBlock Text="Flyouts are disabled! Your changes will be saved, but no flyouts will be shown." Foreground="{DynamicResource colorStatusWarningForeground1}"/>
         </StackPanel>

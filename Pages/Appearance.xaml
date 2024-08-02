@@ -25,14 +25,7 @@
 
         <ui:TextBlock Text="Appearance" Grid.Row="0" Appearance="Primary" FontTypography="TitleLarge" Margin="0 0 0 10" Foreground="{DynamicResource colorNeutralForeground1}"/>
 
-        <StackPanel Grid.Row="1" Margin="0 0 0 10" Orientation="Vertical">
-            <ui:TextBlock Text="Dummy text to copy" FontTypography="Subtitle" Foreground="{DynamicResource colorNeutralForeground1}" Opacity="0.7"/>
-            <ui:TextBox 
-                    Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nibh quam, suscipit vitae ullamcorper quis, eleifend eu dolor. Morbi dictum nunc sit amet vehicula pretium. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam commodo tellus lectus, quis finibus nisl dapibus sodales. Morbi consectetur hendrerit nibh id consectetur. In sollicitudin magna at magna iaculis lacinia. Nunc libero risus, feugiat quis consectetur ac, accumsan id leo." 
-                    IsReadOnly="True" TextWrapping="WrapWithOverflow"/>
-        </StackPanel>
-
-        <ui:CardControl Icon="{ui:SymbolIcon DarkTheme24}" Grid.Row="2" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon DarkTheme24}" Grid.Row="1" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Theme" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -42,7 +35,7 @@
             <ComboBox x:Name="ThemeComboBox" SelectedItem="{Binding Theme}"/>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon ArrowSwap24}" Grid.Row="3" Margin="0 0 0 40">
+        <ui:CardControl Icon="{ui:SymbolIcon ArrowSwap24}" Grid.Row="2" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Invert flyout theme" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -55,7 +48,7 @@
             </StackPanel>
         </ui:CardControl>
         
-        <ui:CardControl Icon="{ui:SymbolIcon EyeLines24}" Grid.Row="4" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon EyeLines24}" Grid.Row="3" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout opacity" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -68,7 +61,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon AutoFitWidth24}" Grid.Row="5" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon AutoFitWidth24}" Grid.Row="4" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout maximum width" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -81,7 +74,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon AutoFitHeight24}" Grid.Row="6" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon AutoFitHeight24}" Grid.Row="5" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout maximum height" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -94,7 +87,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon TextFontSize24}" Grid.Row="7" Margin="0 0 0 10">
+        <ui:CardControl Icon="{ui:SymbolIcon TextFontSize24}" Grid.Row="6" Margin="0 0 0 10">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout font size" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -107,7 +100,7 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon RectangleLandscape24}" Grid.Row="8" Margin="0 0 0 40">
+        <ui:CardControl Icon="{ui:SymbolIcon RectangleLandscape24}" Grid.Row="7" Margin="0 0 0 40">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout corner roudness" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -120,6 +113,6 @@
             </StackPanel>
         </ui:CardControl>
 
-        <ui:Button Grid.Row="9" Content="Reset appearance settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
+        <ui:Button Grid.Row="8" Content="Reset appearance settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
     </Grid>
 </Page>
