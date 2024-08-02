@@ -51,10 +51,10 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <ui:Button Icon="{ui:SymbolIcon DocumentCopy24}" Margin="20 0 10 0" ToolTip="Copy dummy file" Grid.Column="0"/>
-                <ui:Button Icon="{ui:SymbolIcon ImageCopy24}" Margin="0 0 10 0" ToolTip="Copy dummy image" Grid.Column="1"/>
+                <ui:Button Icon="{ui:SymbolIcon ImageCopy24}" Margin="0 0 10 0" ToolTip="Copy dummy image" Grid.Column="1" x:Name="ToolboxImageButton" Click="ToolboxImageButton_Click"/>
                 <ui:TextBox Grid.Column="2" Text="A little toolbox to try the flyouts in action with dummy data. Select text and use Ctrl+C to copy it, or use the copy button on the right. Copy dummy files or images with the buttons on the left. Refresh dummy data with the refresh button." IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 10 0" x:Name="ToolboxTextBox"/>
                 <ui:Button Icon="{ui:SymbolIcon Copy24}" Grid.Column="3" Margin="0 0 10 0" x:Name="ToolboxCopyButton" Click="ToolboxCopyButton_Click" ToolTip="Copy textbox text"/>
-                <ui:Button Icon="{ui:SymbolIcon ArrowClockwise24}" Margin="0 0 20 0" ToolTip="Refresh dummy data" Grid.Column="4"/>
+                <ui:Button Icon="{ui:SymbolIcon ArrowClockwise24}" Margin="0 0 20 0" ToolTip="Refresh dummy data" Grid.Column="4" x:Name="ToolboxRefreshButton" Click="ToolboxRefreshButton_Click"/>
             </Grid>
 
             <ui:Button Icon="{ui:SymbolIcon ChevronDoubleDown20}" Content="Toolbox" Width="{Binding ElementName=RootGrid, Path=ActualWidth}" Background="Transparent" BorderBrush="Transparent" x:Name="ToolboxChevron" Click="ToolboxChevron_Click"/>

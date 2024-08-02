@@ -22,6 +22,8 @@ using copy_flyouts.Pages;
 using Microsoft.Toolkit.Uwp.Notifications;
 using System.Windows.Media.Animation;
 using WK.Libraries.SharpClipboardNS;
+using System.IO;
+using copy_flyouts.Resources;
 
 namespace copy_flyouts
 {
@@ -34,6 +36,7 @@ namespace copy_flyouts
         public HotkeyHandler HotkeyHandler { get => hotkeyHandler; private set => hotkeyHandler = value; }
         public Settings UserSettings { get; set; }
         private UpdateChecker updateChecker;
+        private DummyDataHolder dummyDataHolder = new DummyDataHolder();
 
         public MainWindow()
         {
@@ -398,8 +401,23 @@ namespace copy_flyouts
             // the clipboard really doesn't like getting spammed, due to being a shared resource,
             // and this is the safest way I've found to just not let that happen - we disable the button for a short time
             ToolboxCopyButton.IsEnabled = false;
-            await Task.Delay(100);
+            await Task.Delay(250);
             ToolboxCopyButton.IsEnabled = true;
+        }
+
+        private async void ToolboxImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Place the BitmapSource on the clipboard
+            System.Windows.Forms.Clipboard.SetDataObject(dummyDataHolder.CurrentImage, false, 5, 200);
+
+            ToolboxImageButton.IsEnabled = false;
+            await Task.Delay(250);
+            ToolboxImageButton.IsEnabled = true;
+        }
+
+        private void ToolboxRefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            dummyDataHolder.Refresh();
         }
     }
 }

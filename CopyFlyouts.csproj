@@ -19,6 +19,11 @@
     <None Remove="Assets\Audio\pip.wav" />
     <None Remove="Assets\Audio\square.wav" />
     <None Remove="Assets\Audio\triangle.wav" />
+    <None Remove="Assets\DummyFiles\Images\tina1.jpg" />
+    <None Remove="Assets\DummyFiles\Images\tina2.jpg" />
+    <None Remove="Assets\DummyFiles\Images\tina3.jpg" />
+    <None Remove="Assets\DummyFiles\Images\tina4.jpg" />
+    <None Remove="Assets\DummyFiles\Images\tina5.jpg" />
     <None Remove="Assets\icons\logo-slim-darkmode-disabled.ico" />
     <None Remove="Assets\icons\logo-slim-darkmode.ico" />
     <None Remove="Assets\icons\logo-slim-disabled.ico" />
@@ -49,6 +54,11 @@
     <EmbeddedResource Include="Assets\Audio\pip.wav" />
     <EmbeddedResource Include="Assets\Audio\square.wav" />
     <EmbeddedResource Include="Assets\Audio\triangle.wav" />
+    <Resource Include="Assets\DummyFiles\Images\tina1.jpg" />
+    <Resource Include="Assets\DummyFiles\Images\tina2.jpg" />
+    <Resource Include="Assets\DummyFiles\Images\tina3.jpg" />
+    <Resource Include="Assets\DummyFiles\Images\tina4.jpg" />
+    <Resource Include="Assets\DummyFiles\Images\tina5.jpg" />
   </ItemGroup>
 
   <ItemGroup>
