@@ -256,6 +256,8 @@ namespace copy_flyouts
             RefreshAboutPageAttentionStatus();
 
             if (!(UserSettings.UpdatePageUrl is null)) { updateChecker.NotifyAboutUpdate(); }
+
+            ToolboxTextBox.Text = dummyDataHolder.CurrentText;
         }
 
         private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
@@ -389,6 +391,9 @@ namespace copy_flyouts
             }
             else
             {
+                dummyDataHolder.ResetText();
+                ToolboxTextBox.Text = dummyDataHolder.CurrentText;
+
                 ToolboxMenu.Visibility = Visibility.Visible;
                 ToolboxChevron.Icon = new SymbolIcon { Symbol = SymbolRegular.ChevronDoubleUp20 };
             }
@@ -418,6 +423,7 @@ namespace copy_flyouts
         private void ToolboxRefreshButton_Click(object sender, RoutedEventArgs e)
         {
             dummyDataHolder.Refresh();
+            ToolboxTextBox.Text = dummyDataHolder.CurrentText;
         }
     }
 }
