@@ -235,7 +235,10 @@ namespace copy_flyouts
                 text.Foreground = (SolidColorBrush)System.Windows.Application.Current.Resources["colorStatusDangerForeground1"];
                 text.Text = "Copied text is empty!";
             }
-            else if (_previousClip != null && _previousClip.Equals(_clipContent))
+            // note: here, we're not setting this to an error if the copy is an image with no path but images are not allowed,
+            // since comparing a ClipboardContent that just says "Clipboard only has an image, but I'm not telling you what it is!" can't reasonably be compared
+            // to another instance of such a ClipboardContent. This is the downside of avodiing calling Clipboard.GetImage() for performance. User should be told this in an info tooltip.
+            else if (_previousClip != null && _previousClip.Equals(_clipContent) && !(copyHasImage && copyHasNoText && !_userSettings.AllowImages))
             {
                 SetToErrorIcon();
                 if (_userSettings.EnableErrorSound)
@@ -266,7 +269,7 @@ namespace copy_flyouts
             SetWindowLong(helper.Handle, GWL_EXSTYLE, exStyle);
         }
 
-        public void SetToErrorIcon()
+        private void SetToErrorIcon()
         {
             icon.Symbol = SymbolRegular.ClipboardError16;
             icon.Foreground = new SolidColorBrush((Color)System.Windows.Media.ColorConverter.ConvertFromString("#dc626d"));

@@ -21,7 +21,7 @@ namespace copy_flyouts.UpdateInfrastructure
         private readonly HttpClient client = new HttpClient();
         // note - adding a token like this straight into source code is bad, but it will be fine so long as the repo is private.
         // by the time this repo is publicized, the token will be expired or deleted
-        private readonly string personalAccessToken = "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";
+        private readonly string personalAccessToken = "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";
         public readonly string currentVersion;
         private readonly DispatcherTimer updateCheckTimer = new DispatcherTimer();
 
