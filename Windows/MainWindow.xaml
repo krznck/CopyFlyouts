@@ -50,7 +50,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <ui:Button Icon="{ui:SymbolIcon DocumentCopy24}" Margin="20 0 10 0" ToolTip="Copy dummy file" Grid.Column="0"/>
+                <ui:Button Icon="{ui:SymbolIcon DocumentCopy24}" Margin="20 0 10 0" ToolTip="Copy dummy file" Grid.Column="0" x:Name="ToolboxFileButton" Click="ToolboxFileButton_Click"/>
                 <ui:Button Icon="{ui:SymbolIcon ImageCopy24}" Margin="0 0 10 0" ToolTip="Copy dummy image" Grid.Column="1" x:Name="ToolboxImageButton" Click="ToolboxImageButton_Click"/>
                 <ui:TextBox Grid.Column="2" IsReadOnly="True" TextWrapping="WrapWithOverflow" Margin="0 0 10 0" x:Name="ToolboxTextBox"/>
                 <ui:Button Icon="{ui:SymbolIcon Copy24}" Grid.Column="3" Margin="0 0 10 0" x:Name="ToolboxCopyButton" Click="ToolboxCopyButton_Click" ToolTip="Copy textbox text"/>

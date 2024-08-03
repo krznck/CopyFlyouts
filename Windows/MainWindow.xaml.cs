@@ -24,6 +24,7 @@ using System.Windows.Media.Animation;
 using WK.Libraries.SharpClipboardNS;
 using System.IO;
 using copy_flyouts.Resources;
+using System.Collections.Specialized;
 
 namespace copy_flyouts
 {
@@ -424,6 +425,18 @@ namespace copy_flyouts
         {
             dummyDataHolder.Refresh();
             ToolboxTextBox.Text = dummyDataHolder.CurrentText;
+        }
+
+        private async void ToolboxFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dataObject = new System.Windows.Forms.DataObject();
+            dataObject.SetFileDropList(dummyDataHolder.CurrentFiles);
+
+            System.Windows.Forms.Clipboard.SetDataObject(dataObject, false, 5, 200);
+
+            ToolboxFileButton.IsEnabled = false;
+            await Task.Delay(250);
+            ToolboxFileButton.IsEnabled = true;
         }
     }
 }

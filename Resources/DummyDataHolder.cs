@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,15 +17,43 @@ namespace copy_flyouts.Resources
 
         private static string _explanation = "A little toolbox to try the flyouts in action with dummy data. Select text and use Ctrl+C to copy it, or use the copy button on the right. Copy dummy files or images with the buttons on the left. Refresh dummy data with the refresh button.";
 
+        private static StringCollection paths1 = new StringCollection();
+        private static StringCollection paths2 = new StringCollection();
+        private static StringCollection paths3 = new StringCollection();
+
         private List<DummyImage> dummyImages = new List<DummyImage> { tina1, tina2, tina3, tina4, tina5 };
+        private List<StringCollection> dummyPaths = new List<StringCollection> { paths1, paths2, paths3 };
 
         public System.Drawing.Image CurrentImage { get; private set; } = tina1.Image;
         public string CurrentText { get; private set; } = _explanation;
+        public StringCollection CurrentFiles { get; private set; } = paths1;
+
+        /// <summary>
+        /// Static constructor to initialize dummy paths, as they cannot be directly initialized.
+        /// </summary>
+        static DummyDataHolder()
+        {
+            paths1.Add("C:\\these\\are\\fake\\files\\than\\cant\\be\\pasted.txt");
+
+            paths2.Add("C:\\absolute\\paths\\will\\be\\displayed\\when\\copying\\files.txt");
+            paths2.Add("D:\\multiple\\files\\will\\show\\multiple\\paths.exe");
+
+            paths3.AddRange(new string[]
+            {
+                @"C:\Users\JohnDoe\Documents\Report.docx",
+                @"C:\Users\JohnDoe\Pictures\Vacation\Beach.png",
+                @"C:\Users\JohnDoe\Music\FavoriteSong.mp3",
+                @"C:\Users\JohnDoe\Downloads\SoftwareInstaller.exe",
+                @"C:\Users\JohnDoe\Desktop\Project\Presentation.pptx",
+                @"C:\Users\JaneDoe\Work\Spreadsheet.xlsx",
+            });
+        }
 
         public void Refresh()
         {
             RefreshImage();
             RefreshText();
+            RefreshFiles();
         }
 
         private void RefreshImage()
@@ -59,6 +88,21 @@ namespace copy_flyouts.Resources
             }
 
             CurrentText = string.Join(" ", words);
+        }
+
+        private void RefreshFiles()
+        {
+            int currentIndex = dummyPaths.FindIndex(sc => sc == CurrentFiles);
+
+            if (currentIndex == -1)
+            {
+                CurrentFiles = dummyPaths[0];
+            }
+            else
+            {
+                int nextIndex = (currentIndex + 1) % dummyPaths.Count;
+                CurrentFiles = dummyPaths[nextIndex];
+            }
         }
 
         public void ResetText()
