@@ -2,8 +2,8 @@
 {
     using System.Windows;
     using System.Windows.Controls;
-    using copy_flyouts.Settings;
-    using copy_flyouts.Settings.Categories;
+    using CopyFlyouts.Settings;
+    using CopyFlyouts.Settings.Categories;
 
     /// <summary>
     /// Interaction logic for Appearance.xaml.

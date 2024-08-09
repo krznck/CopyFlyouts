@@ -1,6 +1,6 @@
 ﻿namespace CopyFlyouts
 {
-    using copy_flyouts.Settings;
+    using CopyFlyouts.Settings;
     using CopyFlyouts.Core;
     using CopyFlyouts.Resources;
     using System.IO;

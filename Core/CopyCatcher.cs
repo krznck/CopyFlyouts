@@ -6,8 +6,8 @@
     using System.Windows.Input;
     using System.Windows.Interop;
     using System.Windows.Threading;
-    using copy_flyouts.Settings;
     using WK.Libraries.SharpClipboardNS;
+    using CopyFlyouts.Settings;
 
     /// <summary>
     /// Responsible for catching and processing (i.e., generating flyouts for)

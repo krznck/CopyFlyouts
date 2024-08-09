@@ -1,4 +1,4 @@
-﻿namespace copy_flyouts.Settings.Categories
+﻿namespace CopyFlyouts.Settings.Categories
 {
     /// <summary>
     /// Responsible for the settings for general behavior of the program itself, rather than flyouts.

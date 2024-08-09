@@ -1,4 +1,4 @@
-﻿namespace copy_flyouts.Settings
+﻿namespace CopyFlyouts.Settings
 {
     using System.ComponentModel;
     using System.Diagnostics;
@@ -6,7 +6,7 @@
     using System.Text.Json;
     using System.Windows;
     using System.Security;
-    using copy_flyouts.Settings.Categories;
+    using CopyFlyouts.Settings.Categories;
 
     /// <summary>
     /// Holds different settings, and loads settings to and from a JSON file.

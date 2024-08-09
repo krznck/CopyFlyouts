@@ -11,7 +11,7 @@
     using CopyFlyouts.UpdateInfrastructure;
     using CopyFlyouts.Resources;
     using CopyFlyouts.Pages;
-    using copy_flyouts.Settings;
+    using CopyFlyouts.Settings;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml

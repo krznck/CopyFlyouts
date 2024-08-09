@@ -1,7 +1,7 @@
 ﻿namespace CopyFlyouts.Pages
 {
-    using copy_flyouts.Settings;
-    using copy_flyouts.Settings.Categories;
+    using CopyFlyouts.Settings;
+    using CopyFlyouts.Settings.Categories;
     using System.Windows;
     using System.Windows.Controls;
 

@@ -2,8 +2,8 @@
 {
     using System.IO;
     using System.Text.RegularExpressions;
-    using copy_flyouts.Settings;
-    using copy_flyouts.Settings.Categories;
+    using CopyFlyouts.Settings;
+    using CopyFlyouts.Settings.Categories;
 
     /// <summary>
     /// Represents items copied into the clipboard to be shown by a <see cref="Flyout"/>.

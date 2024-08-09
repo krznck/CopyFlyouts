@@ -4,8 +4,8 @@
     using System.Windows;
     using System.Windows.Controls;
     using CopyFlyouts.Resources;
-    using copy_flyouts.Settings;
-    using copy_flyouts.Settings.Categories;
+    using CopyFlyouts.Settings;
+    using CopyFlyouts.Settings.Categories;
 
     /// <summary>
     /// Interaction logic for About.xaml.

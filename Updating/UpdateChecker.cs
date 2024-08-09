@@ -7,8 +7,8 @@
     using System.Diagnostics;
     using System.Windows;
     using Microsoft.Toolkit.Uwp.Notifications;
-    using copy_flyouts.Settings;
-    using copy_flyouts.Settings.Categories;
+    using CopyFlyouts.Settings;
+    using CopyFlyouts.Settings.Categories;
 
     /// <summary>
     /// Responsible for enabling manual and automatic update checking,

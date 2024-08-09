@@ -1,4 +1,4 @@
-﻿namespace copy_flyouts.Settings
+﻿namespace CopyFlyouts.Settings
 {
     using System.ComponentModel;
 

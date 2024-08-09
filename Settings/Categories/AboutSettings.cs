@@ -1,4 +1,4 @@
-﻿namespace copy_flyouts.Settings.Categories
+﻿namespace CopyFlyouts.Settings.Categories
 {
     using CopyFlyouts.Resources;
     using System.Text.RegularExpressions;
