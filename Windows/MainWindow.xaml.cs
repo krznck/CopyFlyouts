@@ -153,7 +153,7 @@
             }
             else
             {
-                _copyCatcher?.Unregister();
+                _copyCatcher?.UnregisterKeyboardCatching();
                 Application.Current.Shutdown();
             }
         }

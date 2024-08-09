@@ -113,7 +113,7 @@
                     }
                     else
                     {
-                        Unregister();
+                        UnregisterKeyboardCatching();
                         UnscrubscribeFromClipboard();
                     }
 
@@ -170,6 +170,12 @@
                 UnscrubscribeFromClipboard(); // we stop listening to other copies here, since we know this is a keyboard copy attempt
 
                 if (_userSettings.Behavior.EnableKeyboardFlyouts) { HandleKeyboardCopy(); }
+                else // note: this behavior is so that non-keyboard flyouts don't get triggerred with EnableKeyboardFlyouts off
+                {
+                    UnregisterKeyboardCatching();
+                    SendKeys.SendWait("^c");
+                    RegisterKeyboardCatching();
+                }
 
                 if (_userSettings.Behavior.EnableNonKeyboardFlyouts && _userSettings.General.FlyoutsEnabled) { SubscribeToClipboard(); }
             }
@@ -188,13 +194,12 @@
         private void HandleKeyboardCopy()
         {
             // unregisters hotkey to send in a standard Ctrl+C to copy stuff
-            UnregisterHotKey(new WindowInteropHelper(Application.Current.MainWindow).Handle, HOTKEY_ID);
+            UnregisterKeyboardCatching();
 
             SendKeys.SendWait("^c"); // sends the Ctrl+C command that will be handled normally now
 
             // registers hotkey again
-            var helper = new WindowInteropHelper(Application.Current.MainWindow);
-            RegisterHotKey(helper.Handle, HOTKEY_ID, (uint)ModifierKeys.Control, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
+            RegisterKeyboardCatching();
 
             ShowNewFlyout();
         }
@@ -260,7 +265,7 @@
         /// </summary>
         private void RegisterKeyboardCatching()
         {
-            if (_userSettings.General.FlyoutsEnabled && _userSettings.Behavior.EnableKeyboardFlyouts)
+            if (_userSettings.General.FlyoutsEnabled)
             {
                 var helper = new WindowInteropHelper(Application.Current.MainWindow);
                 _source = HwndSource.FromHwnd(helper.Handle);
@@ -276,7 +281,7 @@
         /// <remarks>
         /// Public so that it can be triggered when closing.
         /// </remarks>
-        public void Unregister()
+        public void UnregisterKeyboardCatching()
         {
             CloseFlyout();
             _source?.RemoveHook(WndProc);
@@ -285,7 +290,7 @@
 
         ~CopyCatcher()
         {
-            Unregister();
+            UnregisterKeyboardCatching();
         }
     }
 }
