@@ -3,9 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:core="clr-namespace:copy_flyouts.Core"
-    x:Class="copy_flyouts.Flyout"
-    Title="Flyout" SizeToContent="WidthAndHeight" MaxWidth="{Binding FlyoutWidth}"  MaxHeight="{Binding FlyoutHeight}"
+    xmlns:core="clr-namespace:CopyFlyouts.Core"
+    x:Class="CopyFlyouts.Flyout"
+    Title="Flyout" SizeToContent="WidthAndHeight" MaxWidth="{Binding Appearance.FlyoutWidth}"  MaxHeight="{Binding Appearance.FlyoutHeight}"
     WindowStyle="None" AllowsTransparency="True" Background="Transparent"
     Topmost="True" Foreground="{DynamicResource colorNeutralForeground1}">
 
@@ -32,7 +32,7 @@
         </Grid.Triggers>
 
         <!-- Flyout area -->
-        <Border BorderThickness="1" CornerRadius="{Binding FlyoutCorners}" Padding="10" BorderBrush="{DynamicResource border}" Background="{DynamicResource colorNeutralBackground1}" Opacity="{Binding FlyoutOpacity}">
+        <Border BorderThickness="1" CornerRadius="{Binding Appearance.FlyoutCorners}" Padding="10" BorderBrush="{DynamicResource border}" Background="{DynamicResource colorNeutralBackground1}" Opacity="{Binding Appearance.FlyoutOpacity}">
             <Grid x:Name="grid">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -44,14 +44,14 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <ui:SymbolIcon x:Name="icon" Grid.Column="0" Grid.Row="0" Symbol="ClipboardCheckmark16" Filled="True" Margin="5,0,15,0" FontSize="{Binding FlyoutIconSize}"/>
+                <ui:SymbolIcon x:Name="icon" Grid.Column="0" Grid.Row="0" Symbol="ClipboardCheckmark16" Filled="True" Margin="5,0,15,0" FontSize="{Binding Appearance.FlyoutIconSize}"/>
                 <Grid x:Name="fileGrid" Grid.Column="1" Grid.Row="0" Visibility="Collapsed" Margin="0 0 15 0">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ui:SymbolIcon x:Name="icon2" Visibility="Visible" FontSize="{Binding FlyoutIconSize}" Filled="True" Symbol="DocumentCopy24"/>
+                        <ui:SymbolIcon x:Name="icon2" Visibility="Visible" FontSize="{Binding Appearance.FlyoutIconSize}" Filled="True" Symbol="DocumentCopy24"/>
                         <ui:InfoBadge x:Name="amount" Visibility="Collapsed" Value="0" Severity="Informational" HorizontalAlignment="Right" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
                             <ui:InfoBadge.RenderTransform>
                                 <TransformGroup>
-                                    <ScaleTransform ScaleX="{Binding FlyoutFontSizeScale}" ScaleY="{Binding FlyoutFontSizeScale}"/>
+                                    <ScaleTransform ScaleX="{Binding Appearance.FlyoutFontSizeScale}" ScaleY="{Binding Appearance.FlyoutFontSizeScale}"/>
                                     <SkewTransform/>
                                     <TranslateTransform X="3" Y="1"/>
                                 </TransformGroup>
@@ -67,7 +67,7 @@
                            VerticalAlignment="Center" 
                            Padding="0" 
                            TextAlignment="Left" 
-                           FontSize="{Binding FlyoutFontSize}" 
+                           FontSize="{Binding Appearance.FlyoutFontSize}" 
                            LineHeight="20"
                            MinWidth="0">
                     <Run Text="Text to display."/>

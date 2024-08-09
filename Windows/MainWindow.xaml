@@ -3,10 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:copy_flyouts"
-    xmlns:pages="clr-namespace:copy_flyouts.Pages"
+    xmlns:local="clr-namespace:CopyFlyouts"
+    xmlns:pages="clr-namespace:CopyFlyouts.Pages"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" 
-    x:Class="copy_flyouts.MainWindow"
+    x:Class="CopyFlyouts.MainWindow"
     mc:Ignorable="d"
     Title="{StaticResource ProgramName}" 
     Height="660"
@@ -31,6 +31,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        
         <ui:TitleBar
             x:Name="TitleBar"
             Title="{StaticResource ProgramName}"
@@ -78,13 +79,13 @@
         </ui:NavigationView>
 
         <tray:NotifyIcon 
-            x:Name="notifyIcon"
+            x:Name="NotifyIcon"
             Icon="/assets/icons/logo-slim.ico"
             TooltipText="{StaticResource ProgramName}"
             Visibility="Visible"
             FocusOnLeftClick="False"
             MenuOnRightClick="True"
-            LeftClick="notifyIcon_LeftClick">
+            LeftClick="NotifyIcon_LeftClick">
             <tray:NotifyIcon.Menu>
                 <ContextMenu>
                     <ui:MenuItem Header="Disable" Icon="{ui:SymbolIcon Play24}" x:Name="ProgramStateMenuItem" Click="ProgramStateMenuItem_Click"/>

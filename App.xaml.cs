@@ -1,84 +1,99 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.Windows;
-using log4net;
-using log4net.Config;
-using Microsoft.VisualBasic.Logging;
-
-namespace copy_flyouts
+﻿namespace CopyFlyouts
 {
+    using System.Windows;
+    using log4net;
+    using log4net.Config;
+
     /// <summary>
     /// Interaction logic for App.xaml
+    /// Oversees starting the application and handling the logging and Mutex logic.
     /// </summary>
-    public partial class App : System.Windows.Application
+    public partial class App : Application
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(App));
-        private readonly string logFilePath;
-        private Mutex mutex = null; // mutex to ensure there is one instance of the program
+        // crash logging stuff
+        private readonly ILog _log = LogManager.GetLogger(typeof(App));
+        private readonly string _logFilePath;
 
+        private Mutex? _mutex = null; // ensures there is one instance of the program
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="App"/> class.
+        /// </summary>
         public App()
         {
             XmlConfigurator.Configure();
-            logFilePath = GetLogFilePath();
+            _logFilePath = GetLogFilePath();
         }
 
+        /// <summary>
+        /// Overriden OnStartup behavior to check for Mutex availability and shutdown the program if an instance is already running.
+        /// Additionally, sets up unhandled exception event handlers for logging.
+        /// </summary>
+        /// <param name="e">Startup event arguments (unused).</param>
         protected override void OnStartup(StartupEventArgs e)
         {
-            string appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
-            string authorName = System.Windows.Application.Current.Resources["AuthorName"] as string;
-            string version = System.Windows.Application.Current.Resources["Version"] as string;
+            string? appName = Current.Resources["ProgramName"] as string;
+            string? authorName = Current.Resources["AuthorName"] as string;
+            string? version = Current.Resources["Version"] as string;
             string mutexName = authorName + "." + appName + "." + version + ".Mutex";
 
-            bool createdNew;
-            mutex = new Mutex(true, mutexName, out createdNew);
+            _mutex = new Mutex(true, mutexName, out bool createdNew);
 
-            if (!createdNew)
-            {
-                System.Windows.Application.Current.Shutdown();
-            }
+            // an instance of this program is already running, so shut this down right now - no further startup procedures
+            if (!createdNew) { Environment.Exit(0); }
 
             base.OnStartup(e);
+
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
-        private async void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        /// <summary>
+        /// Overriden OnExit behavior to ensure that the mutex is released before exit.
+        /// </summary>
+        /// <param name="e">Exit event arguments (unused).</param>
+        protected override void OnExit(ExitEventArgs e)
         {
-            string appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
+            if (_mutex is not null)
+            {
+                _mutex.ReleaseMutex();
+                _mutex = null;
+            }
 
-            log.Error("Unhandled UI Exception", e.Exception);
-            string message = "An unexpected error occurred. " + appName + " will close." +
-                "\nLog file can be located at " + logFilePath;
-            Wpf.Ui.Controls.MessageBox messageBox = new Wpf.Ui.Controls.MessageBox();
-            messageBox.Title = "Error";
-            messageBox.Content = message;
+            base.OnExit(e);
+        }
+
+        private async void App_DispatcherUnhandledException(
+            object sender,
+            System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e
+        )
+        {
+            string? appName = Current.Resources["ProgramName"] as string;
+
+            _log.Error("Unhandled UI Exception", e.Exception);
+
+            // we inform the user that the program has crashed
+            string message =
+                $"An unexpected error occurred. {appName} will close.\nLog file can be located at {_logFilePath}";
+
+            Wpf.Ui.Controls.MessageBox messageBox = new() { Title = "Error", Content = message, };
             await messageBox.ShowDialogAsync();
+
             e.Handled = true;
             Current.Shutdown();
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            log.Error("Unhandled non-UI Exception", e.ExceptionObject as Exception);
+            _log.Error("Unhandled non-UI Exception", e.ExceptionObject as Exception);
         }
 
-        private string GetLogFilePath()
+        private static string GetLogFilePath()
         {
             var logRepository = LogManager.GetRepository();
             var appenders = logRepository.GetAppenders();
             var fileAppender = appenders.OfType<log4net.Appender.FileAppender>().FirstOrDefault();
             return fileAppender?.File ?? "Log file path not found.";
-        }
-
-        protected override void OnExit(ExitEventArgs e)
-        {
-            if (mutex != null)
-            {
-                mutex.ReleaseMutex();
-                mutex = null;
-            }
-            base.OnExit(e);
         }
     }
 }

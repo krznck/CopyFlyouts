@@ -1,118 +1,143 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-
-namespace copy_flyouts.Core
+﻿namespace CopyFlyouts.Core
 {
-    public class ClipboardContent
+    using System.IO;
+    using System.Text.RegularExpressions;
+    using copy_flyouts.Settings;
+    using copy_flyouts.Settings.Categories;
+
+    /// <summary>
+    /// Represents items copied into the clipboard to be shown by a <see cref="Flyout"/>.
+    /// I.e., prepares the contents of a clipboard for display.
+    /// </summary>
+    public partial class ClipboardContent
     {
-        private string text { get; set; } = "";
-        public int fileAmount { get; set; } = 0;
-        public Image? image { get; set; } = null;
-        private Settings userSettings { get; set; }
+        [GeneratedRegex(@"\s+")]
+        private static partial Regex WhitespaceToSpaceRegex();
+        private readonly BehaviorSettings _userBehaviorSettings;
+        private string _copyText = "";
 
-        public ClipboardContent(Settings userSettings)
+        public int FileAmount { get; set; } = 0;
+        public Image? Image { get; set; } = null;
+
+        /// <summary>
+        /// The text copied into the clipboard.
+        /// All instances of whitespace are cleaned into just one space,
+        /// to not unnecessarily take up <see cref="Flyout"/> space.
+        /// </summary>
+        public string Text
         {
-            this.userSettings = userSettings;
-            CheckSystemClipboard();
-
-            // this while loop is here to *hopefully* prevent a bug where sometimes a copy will be successful,
-            // but ClipBboardContent is unable to retrieve it.
-            // That the program cannot access the system clipboard at the time is my guess to why this happens,
-            // so a retry might fix that.
-            int failure = 0;
-            while (text.Equals("") && fileAmount == 0 && image is null && failure < 5)
+            get { return _copyText; }
+            set
             {
-                Thread.Sleep(1);
-                CheckSystemClipboard();
-                failure++;
+                value = WhitespaceToSpaceRegex().Replace(value, " ");
+                _copyText = value.Trim();
             }
-
         }
 
-        private void CheckSystemClipboard()
+        /// <summary>
+        /// Initializes the <see cref="ClipboardContent"/> instance.
+        /// On this initialization, the object builds itself using the system <see cref="Clipboard"/>.
+        /// </summary>
+        /// <param name="behaviorSettings">
+        /// User's <see cref="BehaviorSettings"/> object - 
+        /// used here to determine whether we need to perform the potentially performance intenstive process of getting an image.
+        /// </param>
+        public ClipboardContent(BehaviorSettings behaviorSettings)
         {
-            if (Clipboard.ContainsText())
+            _userBehaviorSettings = behaviorSettings;
+            LoadContent();
+        }
+
+        /// <summary>
+        /// Wrapper for <see cref="GetDataFromClipboard"/>, 
+        /// that calls it an additional five times if the initial call resulted in no data.
+        /// </summary>
+        /// <remarks>
+        /// This is done due to the method sometimes failing to assign <see cref="Clipboard"/> data correctly,
+        /// due to what I assume is a result of the quirkiness of the system clipboard being a precious shared resource.
+        /// </remarks>
+        private void LoadContent()
+        {
+            GetDataFromClipboard();
+
+            int failure = 0;
+            while (_copyText.Length.Equals(0) && FileAmount == 0 && Image is null && failure < 5)
             {
-                Text = Clipboard.GetText();
+                Thread.Sleep(1);
+                GetDataFromClipboard();
+                failure++;
             }
+        }
+
+        /// <summary>
+        /// Assigns <see cref="Clipboard"/> data to the object instance's attributes,
+        /// after having processed them.
+        /// </summary>
+        private void GetDataFromClipboard()
+        {
+            if (Clipboard.ContainsText()) { Text = Clipboard.GetText(); }
 
             if (Clipboard.ContainsFileDropList())
             {
                 string combinedPaths = "";
-                foreach (string filePath in Clipboard.GetFileDropList())
+                foreach (string? filePath in Clipboard.GetFileDropList())
                 {
                     combinedPaths += filePath + " ; ";
-                    fileAmount++;
+                    FileAmount++;
                 }
-                Text = combinedPaths.TrimEnd(new char[] { ' ', ';' }); // removes the trailing semicolon
+                Text = combinedPaths.TrimEnd([' ', ';']); // removes the trailing semicolon
             }
 
-            // this is done both here and in Flyout, so that we never call GetImage on the system clipboard if it's not needed
-            // as that turns out to be heavy for the machine when the image is large enough
-            bool hasImage = Clipboard.ContainsImage();
-            if (hasImage && userSettings.AllowImages)
+            if (Clipboard.ContainsImage())
             {
-                this.image = Clipboard.GetImage();
-            }
-            else if (hasImage && !userSettings.AllowImages)
-            {
-                this.image = new Bitmap(1, 1); // creates a fake image that can be passed on and easily detected
+                // we're using user settings here instead of simply not displaying the image in the Flyout,
+                // so that we don't have to call GetImage(), which can be intensive on big images
+                if (_userBehaviorSettings.AllowImages) { Image = Clipboard.GetImage(); }
+                else { Image = new Bitmap(1, 1); } // creates a fake image that can be passed on and easily detected
             }
         }
 
-        public string Text
-        {
-            get { return text; }
-            set
-            {
-                value = Regex.Replace(value, @"\s+", " "); // replaces all whitespace with one space
-                text = value.Trim();
-            }
-        }
-
+        /// <summary>
+        /// Equality check needs to be overriden to facilitate comparing old copy attemps with new ones.
+        /// </summary>
+        /// <remarks>
+        /// It is, as far as I know, impossible to compare images from the <see cref="Clipboard"/> without
+        /// *getting* those images. Hence, that functionality when displaying images if turned off.
+        /// </remarks>
+        /// <param name="obj">Object to be compared against. False if not <see cref="ClipboardContent"/> instance.</param>
+        /// <returns>Booelan representing whether the two objects represent the same Clipboard values.</returns>
         public override bool Equals(object? obj)
         {
-            var other = obj as ClipboardContent;
-            if (other == null)
-            { return false; }
+            if (obj is not ClipboardContent other) { return false; }
 
-            return text == other.text
-                && fileAmount == other.fileAmount
-                && (
-                    image == null && other.image == null
-                    || 
-                        image != null && other.image != null
-                        && ImageToByteArray(image).SequenceEqual(ImageToByteArray(other.image))
-                        
-                    );
+            return _copyText == other._copyText
+                && FileAmount == other.FileAmount
+                && (Image is null && other.Image is null
+                    || (Image is not null && other.Image is not null
+                        && 
+                        ImageToByteArray(Image).SequenceEqual(ImageToByteArray(other.Image))));
         }
 
         public override int GetHashCode()
         {
-            if (image == null)
+            if (Image is null)
             {
-                return HashCode.Combine(text, fileAmount);
+                return HashCode.Combine(_copyText, FileAmount);
             }
-            return HashCode.Combine(text, fileAmount, ImageToByteArray(image));
+            return HashCode.Combine(_copyText, FileAmount, ImageToByteArray(Image));
         }
 
-        private byte[] ImageToByteArray(Image imageIn)
+        /// <summary>
+        /// A way of seeing an image by its contents, rather than any other attribute.
+        /// Used comparing and hashing our images.
+        /// </summary>
+        /// <param name="inputImage">Image to be converted.</param>
+        /// <returns>Byte array representation of the input image.</returns>
+        private static byte[] ImageToByteArray(Image inputImage)
         {
-            using (var ms = new MemoryStream())
-            {
-                imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                return ms.ToArray();
-            }
+            using var ms = new MemoryStream();
+            inputImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            return ms.ToArray();
         }
     }
 }

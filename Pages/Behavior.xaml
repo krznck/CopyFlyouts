@@ -1,10 +1,10 @@
-﻿<Page x:Class="copy_flyouts.Pages.Behavior"
+﻿<Page x:Class="CopyFlyouts.Pages.Behavior"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" 
-      xmlns:local="clr-namespace:copy_flyouts"
+      xmlns:local="clr-namespace:CopyFlyouts"
       mc:Ignorable="d" 
       d:DesignWidth="1200"
       Title="Behavior">
@@ -40,7 +40,7 @@
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
                 <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="EnableKeyboardFlyoutsLabel"/>
-                <ui:ToggleSwitch IsChecked="{Binding EnableKeyboardFlyouts}"/>
+                <ui:ToggleSwitch IsChecked="{Binding Behavior.EnableKeyboardFlyouts}"/>
             </StackPanel>
         </ui:CardControl>
 
@@ -56,7 +56,7 @@
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
                 <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="EnableNonKeyboardFlyoutsLabel"/>
-                <ui:ToggleSwitch IsChecked="{Binding EnableNonKeyboardFlyouts}"/>
+                <ui:ToggleSwitch IsChecked="{Binding Behavior.EnableNonKeyboardFlyouts}"/>
             </StackPanel>
         </ui:CardControl>
 
@@ -72,7 +72,7 @@
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
                 <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="AllowImagesLabel"/>
-                <ui:ToggleSwitch IsChecked="{Binding AllowImages}"/>
+                <ui:ToggleSwitch IsChecked="{Binding Behavior.AllowImages}"/>
             </StackPanel>
         </ui:CardControl>
 
@@ -84,8 +84,8 @@
                 </StackPanel>
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
-                <ui:TextBlock Margin="0 0 0 0" Text="{Binding FlyoutLifetime}" HorizontalAlignment="Center"/>
-                <Slider Value="{Binding FlyoutLifetime}" Margin="15 0 0 0" Maximum="5" Minimum="0.3" TickFrequency="0.1" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
+                <ui:TextBlock Margin="0 0 0 0" Text="{Binding Behavior.FlyoutLifetime}" HorizontalAlignment="Center"/>
+                <Slider Value="{Binding Behavior.FlyoutLifetime}" Margin="15 0 0 0" Maximum="5" Minimum="0.3" TickFrequency="0.1" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
             </StackPanel>
         </ui:CardControl>
 
@@ -98,7 +98,7 @@
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
                 <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="FlyoutAnimationsLabel"/>
-                <ui:ToggleSwitch IsChecked="{Binding EnableFlyoutAnimations}"/>
+                <ui:ToggleSwitch IsChecked="{Binding Behavior.EnableFlyoutAnimations}"/>
             </StackPanel>
         </ui:CardControl>
 
@@ -111,40 +111,40 @@
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
                 <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="FlyoutsUnderCursorLabel"/>
-                <ui:ToggleSwitch IsChecked="{Binding FlyoutUnderCursor}"/>
+                <ui:ToggleSwitch IsChecked="{Binding Behavior.FlyoutUnderCursor}"/>
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon Desktop24}" Grid.Row="7" Margin="0 0 0 10" IsEnabled="{Binding FlyoutUnderCursor, Converter={StaticResource InverseBooleanConverter}}">
+        <ui:CardControl Icon="{ui:SymbolIcon Desktop24}" Grid.Row="7" Margin="0 0 0 10" IsEnabled="{Binding Behavior.FlyoutUnderCursor, Converter={StaticResource InverseBooleanConverter}}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout screen" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
                     <ui:TextBlock Text="Which screen the flyouts should appear on." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ComboBox SelectedItem="{Binding FlyoutScreen}" x:Name="ScreenComboBox"/>
+            <ComboBox SelectedItem="{Binding Behavior.FlyoutScreen}" x:Name="ScreenComboBox"/>
         </ui:CardControl>
 
 
-        <ui:CardControl Icon="{ui:SymbolIcon AlignCenterHorizontal24}" Grid.Row="8" Margin="0 0 0 10" IsEnabled="{Binding FlyoutUnderCursor, Converter={StaticResource InverseBooleanConverter}}">
+        <ui:CardControl Icon="{ui:SymbolIcon AlignCenterHorizontal24}" Grid.Row="8" Margin="0 0 0 10" IsEnabled="{Binding Behavior.FlyoutUnderCursor, Converter={StaticResource InverseBooleanConverter}}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout horizontal allignment" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
                     <ui:TextBlock Text="Where the flyout appears on the screen's horizontal axis." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ComboBox SelectedItem="{Binding FlyoutHorizontalAllignment}" x:Name="HorizontalAllignmentComboBox"/>
+            <ComboBox SelectedItem="{Binding Behavior.FlyoutHorizontalAllignment}" x:Name="HorizontalAllignmentComboBox"/>
         </ui:CardControl>
 
 
-        <ui:CardControl Icon="{ui:SymbolIcon AlignCenterVertical24}" Grid.Row="9" Margin="0 0 0 40" IsEnabled="{Binding FlyoutUnderCursor, Converter={StaticResource InverseBooleanConverter}}">
+        <ui:CardControl Icon="{ui:SymbolIcon AlignCenterVertical24}" Grid.Row="9" Margin="0 0 0 40" IsEnabled="{Binding Behavior.FlyoutUnderCursor, Converter={StaticResource InverseBooleanConverter}}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Flyout vertical allignment" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
                     <ui:TextBlock Text="Where the flyout appears on the screen's vertical axis." Appearance="Secondary" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ComboBox SelectedItem="{Binding FlyoutVerticalAllignment}" x:Name="VerticalAllignmentComboBox"/>
+            <ComboBox SelectedItem="{Binding Behavior.FlyoutVerticalAllignment}" x:Name="VerticalAllignmentComboBox"/>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon SoundWaveCircle24}" Grid.Row="10" Margin="0 0 0 10">
@@ -156,11 +156,11 @@
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
                 <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="EnableSuccessSoundsLabel"/>
-                <ui:ToggleSwitch IsChecked="{Binding EnableSuccessSound}"/>
+                <ui:ToggleSwitch IsChecked="{Binding Behavior.EnableSuccessSound}"/>
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="11" Margin="0 0 0 10" IsEnabled="{Binding EnableSuccessSound}">
+        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="11" Margin="0 0 0 10" IsEnabled="{Binding Behavior.EnableSuccessSound}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Success sound" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -168,7 +168,7 @@
                 </StackPanel>
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
-                <ComboBox x:Name="SuccessSoundComboBox" SelectedItem="{Binding ChosenSuccessSound}"/>
+                <ComboBox x:Name="SuccessSoundComboBox" SelectedItem="{Binding Behavior.ChosenSuccessSound}"/>
                 <ui:Button Icon="{ui:SymbolIcon Play24, Filled=True}" Margin="10 0 0 0" x:Name="SuccessPreviewButton" Click="SuccessPreviewButton_Click"/>
             </StackPanel>
         </ui:CardControl>
@@ -182,11 +182,11 @@
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
                 <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="EnableErrorSoundsLabel"/>
-                <ui:ToggleSwitch IsChecked="{Binding EnableErrorSound}"/>
+                <ui:ToggleSwitch IsChecked="{Binding Behavior.EnableErrorSound, Mode=TwoWay}" x:Name="testToggle"/>
             </StackPanel>
         </ui:CardControl>
 
-        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="13" Margin="0 0 0 40" IsEnabled="{Binding EnableErrorSound}">
+        <ui:CardControl Icon="{ui:SymbolIcon SoundSource24}" Grid.Row="13" Margin="0 0 0 40" IsEnabled="{Binding Behavior.EnableErrorSound}">
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock Text="Failure sound" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
@@ -194,7 +194,7 @@
                 </StackPanel>
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
-                <ComboBox x:Name="SoundComboBox" SelectedItem="{Binding ChosenErrorSound}"/>
+                <ComboBox x:Name="SoundComboBox" SelectedItem="{Binding Behavior.ChosenErrorSound, Mode=TwoWay}"/>
                 <ui:Button Icon="{ui:SymbolIcon Play24, Filled=True}" Margin="10 0 0 0" Click="FailurePlayButton_Click"/>
             </StackPanel>
         </ui:CardControl>

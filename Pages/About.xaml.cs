@@ -1,67 +1,77 @@
-﻿using copy_flyouts.UpdateInfrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Linq.Expressions;
-using Wpf.Ui.Controls;
-using System.Windows.Threading;
-using copy_flyouts.Core;
-using copy_flyouts.Resources;
-
-namespace copy_flyouts.Pages
+﻿namespace CopyFlyouts.Pages
 {
+    using CopyFlyouts.UpdateInfrastructure;
+    using System.Windows;
+    using System.Windows.Controls;
+    using CopyFlyouts.Resources;
+    using copy_flyouts.Settings;
+    using copy_flyouts.Settings.Categories;
+
     /// <summary>
-    /// Interaction logic for About.xaml
+    /// Interaction logic for About.xaml.
+    /// Handles informing the user about the program version, giving website link(s?),
+    /// and acts as a setting page for the updates.
     /// </summary>
     public partial class About : Page
     {
-        private UpdateChecker updateChecker;
-        private Settings _userSettings;
+        public UpdateChecker? UpdateChecker; // note: should be be passed by the MainWindow, so that they use the same instance
+        private AboutSettings? _userAboutSettings;
 
+        /// <summary>
+        /// Initializes the <see cref="About"/> instance.
+        /// Fills the one present combo box with data here, 
+        /// as that does not require anything derived from non-static objects.
+        /// </summary>
         public About()
         {
             InitializeComponent();
-            this.Loaded += About_Loaded;
+            Loaded += About_Loaded;
 
             var frequencies = new List<string>();
-            foreach (Time frequency in UpdateFrequencies.Frequencies)
+            foreach (NamedValue frequency in UpdateFrequencies.Frequencies)
             {
                 frequencies.Add(frequency.Name);
             }
             UpdateCheckFrequencyComboBox.ItemsSource = frequencies;
         }
 
+        /// <summary>
+        /// Event handler for the Loaded event.
+        /// Importantly, this is where we get the user's Settings object from,
+        /// as the settings are given to each page as DataContext.
+        /// </summary>
+        /// <param name="sender">Sender of the event, the <see cref="About"/> object itself (unused).</param>
+        /// <param name="e">Routed event arguments (unused).</param>
         private void About_Loaded(object sender, RoutedEventArgs e)
         {
-            _userSettings = DataContext as Settings;
-            updateChecker = new UpdateChecker(_userSettings);
-            RefreshUpdateStatusIndicators();
-            _userSettings.PropertyChanged += UserSettings_PropertyChanged;
+            if (DataContext is not SettingsManager settings) { return; }
+
+            _userAboutSettings = settings.About;
+            _userAboutSettings.PropertyChanged += UserSettings_PropertyChanged;
 
             LoadToggleLabels();
         }
 
+        /// <summary>
+        /// Handles the <see cref="SettingsManager"/> PropertyChanged event.
+        /// Notably, it enables the update button if an update becomes available.
+        /// </summary>
+        /// <param name="sender">Sender of the event - <see cref="SettingsManager"/> object (unused).</param>
+        /// <param name="e">Property changed event arguments - used to see which property has changed.</param>
         private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            if (_userAboutSettings is null) { return; }
+
             switch (e.PropertyName)
             {
-                case nameof(Settings.UpdatePageUrl):
+                case nameof(SettingsManager.About.UpdatePageUrl):
                     RefreshUpdateStatusIndicators();
                     break;
-                case nameof(Settings.AutoUpdate):
-                    AutoUpdateLabel.Text = _userSettings.AutoUpdate ? "On" : "Off";
+
+                case nameof(SettingsManager.About.AutoUpdate):
+                    AutoUpdateLabel.Text = _userAboutSettings.AutoUpdate ? "On" : "Off";
                     break;
+
                 default:
                     break;
             }
@@ -69,30 +79,39 @@ namespace copy_flyouts.Pages
 
         private void LoadToggleLabels()
         {
-            AutoUpdateLabel.Text = _userSettings.AutoUpdate ? "On" : "Off";
+            if (_userAboutSettings is null) { return; }
+
+            AutoUpdateLabel.Text = _userAboutSettings.AutoUpdate ? "On" : "Off";
         }
 
         private void RefreshUpdateStatusIndicators()
         {
-            if (_userSettings.UpdatePageUrl != null)
-            {
-                OpenUpdatePageButton.IsEnabled = true;
-                VersionSecondaryText.Visibility = Visibility.Visible;
-            }
-            else
+            if (_userAboutSettings is null || _userAboutSettings.UpdatePageUrl is null)
             {
                 OpenUpdatePageButton.IsEnabled = false;
+                return;
             }
+
+            OpenUpdatePageButton.IsEnabled = true;
+            VersionSecondaryText.Visibility = Visibility.Visible;
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Reset_Click(object sender, RoutedEventArgs e)
         {
-            await updateChecker.CheckForUpdatesManually();
+            if (_userAboutSettings is null) { return; }
+
+            _userAboutSettings.AutoUpdate = true;
+            _userAboutSettings.UpdateFrequency = UpdateFrequencies.TwoHours.Name;
+        }
+
+        private async void CheckUpdatesButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (UpdateChecker is not null) { await UpdateChecker.CheckForUpdatesManually(); }
         }
 
         private void OpenUpdatePageButton_Click(object sender, RoutedEventArgs e)
         {
-            updateChecker.OpenUpdatePage();
+            UpdateChecker?.OpenUpdatePage();
         }
     }
 }

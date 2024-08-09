@@ -1,30 +1,24 @@
-﻿using copy_flyouts.Core;
-using copy_flyouts.Properties;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-namespace copy_flyouts.Pages
+﻿namespace CopyFlyouts.Pages
 {
+    using System.Windows;
+    using System.Windows.Controls;
+    using copy_flyouts.Settings;
+    using copy_flyouts.Settings.Categories;
+
     /// <summary>
-    /// Interaction logic for Appearance.xaml
+    /// Interaction logic for Appearance.xaml.
+    /// Settings page for the appearance of the flyout,
+    /// and to some degree the program in general.
     /// </summary>
     public partial class Appearance : Page
     {
-        private Core.Settings? _userSettings;
+        private AppearanceSettings? _userAppearanceSettings;
 
+        /// <summary>
+        /// Initializes the <see cref="Appearance"/> instance.
+        /// Fills the one present combo box with data here, 
+        /// as that does not require anything derived from other objects.
+        /// </summary>
         public Appearance()
         {
             InitializeComponent();
@@ -39,21 +33,33 @@ namespace copy_flyouts.Pages
             Loaded += Appearance_Loaded;
         }
 
+        /// <summary>
+        /// Event handler for the Loaded event.
+        /// Importantly, this is where we get the user's Settings object from,
+        /// as the settings are given to each page as DataContext.
+        /// </summary>
+        /// <param name="sender">Sender of the event, the <see cref="Appearance"/> object itself (unused).</param>
+        /// <param name="e">Routed event arguments (unused).</param>
         private void Appearance_Loaded(object sender, RoutedEventArgs e)
         {
-            _userSettings = DataContext as Core.Settings;
-            _userSettings.PropertyChanged += _userSettings_PropertyChanged;
+            if (DataContext is not SettingsManager settings) { return; }
+
+            _userAppearanceSettings = settings.Appearance;
+            _userAppearanceSettings.PropertyChanged += UserSettings_PropertyChanged;
 
             LoadToggleLabels();
         }
 
-        private void _userSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            if (_userAppearanceSettings is null) { return; }
+
             switch (e.PropertyName)
             {
-                case nameof(Core.Settings.InvertedTheme):
-                    InvertedThemeLabel.Text = _userSettings.InvertedTheme ? "On" : "Off";
+                case nameof(SettingsManager.Appearance.InvertedTheme):
+                    InvertedThemeLabel.Text = _userAppearanceSettings.InvertedTheme ? "On" : "Off";
                     break;
+
                 default:
                     break;
             }
@@ -61,25 +67,23 @@ namespace copy_flyouts.Pages
 
         private void LoadToggleLabels()
         {
-            InvertedThemeLabel.Text = _userSettings.InvertedTheme ? "On" : "Off";
+            if (_userAppearanceSettings is null) { return; }
+
+            InvertedThemeLabel.Text = _userAppearanceSettings.InvertedTheme ? "On" : "Off";
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)
         {
-            var userSettings = DataContext as Core.Settings;
+            if (_userAppearanceSettings is null) { return; }
 
-            if (userSettings != null)
-            {
-                // to be honest, I couldn't easily think of a good way to get the default values of those attributes somehow
-                // so screw it, just hardcode them in
-                userSettings.FlyoutOpacity = 1.0;
-                userSettings.FlyoutWidthScale = 1.0;
-                userSettings.FlyoutHeightScale = 1.0;
-                userSettings.FlyoutFontSizeScale = 1.0;
-                userSettings.Theme = "System";
-                userSettings.InvertedTheme = false;
-                userSettings.FlyoutCorners = 5;
-            }
+            _userAppearanceSettings.Theme = "System";
+            _userAppearanceSettings.InvertedTheme = false;
+
+            _userAppearanceSettings.FlyoutOpacity = 1.0;
+            _userAppearanceSettings.FlyoutWidthScale = 1.0;
+            _userAppearanceSettings.FlyoutHeightScale = 1.0;
+            _userAppearanceSettings.FlyoutFontSizeScale = 1.0;
+            _userAppearanceSettings.FlyoutCorners = 5;
         }
     }
 }

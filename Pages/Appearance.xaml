@@ -1,10 +1,10 @@
-﻿<Page x:Class="copy_flyouts.Pages.Appearance"
+﻿<Page x:Class="CopyFlyouts.Pages.Appearance"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" 
-      xmlns:local="clr-namespace:copy_flyouts"
+      xmlns:local="clr-namespace:CopyFlyouts"
       mc:Ignorable="d" 
       d:DesignWidth="1200"
       Title="Appearance">
@@ -32,7 +32,7 @@
                     <!--<ui:TextBlock Text="" Appearance="Secondary" TextWrapping="WrapWithOverflow"/>-->
                 </StackPanel>
             </ui:CardControl.Header>
-            <ComboBox x:Name="ThemeComboBox" SelectedItem="{Binding Theme}"/>
+            <ComboBox x:Name="ThemeComboBox" SelectedItem="{Binding Appearance.Theme}"/>
         </ui:CardControl>
 
         <ui:CardControl Icon="{ui:SymbolIcon ArrowSwap24}" Grid.Row="2" Margin="0 0 0 40">
@@ -44,7 +44,7 @@
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
                 <ui:TextBlock Text="Off" Margin="0 0 13 0" x:Name="InvertedThemeLabel"/>
-                <ui:ToggleSwitch IsChecked="{Binding InvertedTheme}"/>
+                <ui:ToggleSwitch IsChecked="{Binding Appearance.InvertedTheme}"/>
             </StackPanel>
         </ui:CardControl>
         
@@ -56,8 +56,8 @@
                 </StackPanel>
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
-                <ui:TextBlock Margin="0 0 0 0" Text="{Binding FlyoutOpacity}" HorizontalAlignment="Center"/>
-                <Slider Value="{Binding FlyoutOpacity}" Margin="15 0 0 0" Maximum="1" Minimum="0.3" TickFrequency="0.05" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
+                <ui:TextBlock Margin="0 0 0 0" Text="{Binding Appearance.FlyoutOpacity}" HorizontalAlignment="Center"/>
+                <Slider Value="{Binding Appearance.FlyoutOpacity}" Margin="15 0 0 0" Maximum="1" Minimum="0.3" TickFrequency="0.05" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
             </StackPanel>
         </ui:CardControl>
 
@@ -69,8 +69,8 @@
                 </StackPanel>
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
-                <ui:TextBlock Margin="0 0 0 0" Text="{Binding FlyoutWidthScale}" HorizontalAlignment="Center"/>
-                <Slider Value="{Binding FlyoutWidthScale}" Margin="15 0 0 0" Maximum="3" Minimum="0.5" TickFrequency="0.10" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
+                <ui:TextBlock Margin="0 0 0 0" Text="{Binding Appearance.FlyoutWidthScale}" HorizontalAlignment="Center"/>
+                <Slider Value="{Binding Appearance.FlyoutWidthScale}" Margin="15 0 0 0" Maximum="3" Minimum="0.5" TickFrequency="0.10" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
             </StackPanel>
         </ui:CardControl>
 
@@ -82,8 +82,8 @@
                 </StackPanel>
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
-                <ui:TextBlock Margin="0 0 0 0" Text="{Binding FlyoutHeightScale}" HorizontalAlignment="Center"/>
-                <Slider Value="{Binding FlyoutHeightScale}" Margin="15 0 0 0" Maximum="3" Minimum="0.5" TickFrequency="0.10" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
+                <ui:TextBlock Margin="0 0 0 0" Text="{Binding Appearance.FlyoutHeightScale}" HorizontalAlignment="Center"/>
+                <Slider Value="{Binding Appearance.FlyoutHeightScale}" Margin="15 0 0 0" Maximum="3" Minimum="0.5" TickFrequency="0.10" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
             </StackPanel>
         </ui:CardControl>
 
@@ -95,8 +95,8 @@
                 </StackPanel>
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
-                <ui:TextBlock Margin="0 0 0 0" Text="{Binding FlyoutFontSizeScale}" HorizontalAlignment="Center"/>
-                <Slider Value="{Binding FlyoutFontSizeScale}" Margin="15 0 0 0" Maximum="3" Minimum="0.5" TickFrequency="0.10" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
+                <ui:TextBlock Margin="0 0 0 0" Text="{Binding Appearance.FlyoutFontSizeScale}" HorizontalAlignment="Center"/>
+                <Slider Value="{Binding Appearance.FlyoutFontSizeScale}" Margin="15 0 0 0" Maximum="3" Minimum="0.5" TickFrequency="0.10" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
             </StackPanel>
         </ui:CardControl>
 
@@ -108,8 +108,8 @@
                 </StackPanel>
             </ui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
-                <ui:TextBlock Margin="0 0 0 0" Text="{Binding FlyoutCorners}" HorizontalAlignment="Center"/>
-                <Slider Value="{Binding FlyoutCorners}" Margin="15 0 0 0" Maximum="20" Minimum="0" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
+                <ui:TextBlock Margin="0 0 0 0" Text="{Binding Appearance.FlyoutCorners}" HorizontalAlignment="Center"/>
+                <Slider Value="{Binding Appearance.FlyoutCorners}" Margin="15 0 0 0" Maximum="20" Minimum="0" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
             </StackPanel>
         </ui:CardControl>
 

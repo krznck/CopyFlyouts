@@ -1,152 +1,341 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Forms;
-using System.Windows.Threading;
-using Wpf.Ui.Controls;
-using Wpf.Ui.Appearance;
-using copy_flyouts.Core;
-using Microsoft.Win32;
-using copy_flyouts.UpdateInfrastructure;
-using copy_flyouts.Pages;
-using Microsoft.Toolkit.Uwp.Notifications;
-using System.Windows.Media.Animation;
-using WK.Libraries.SharpClipboardNS;
-using System.IO;
-using copy_flyouts.Resources;
-using System.Collections.Specialized;
-
-namespace copy_flyouts
+﻿namespace CopyFlyouts
 {
+    using System.Windows;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using Wpf.Ui.Controls;
+    using Wpf.Ui.Appearance;
+    using Microsoft.Win32;
+    using Microsoft.Toolkit.Uwp.Notifications;
+    using CopyFlyouts.Core;
+    using CopyFlyouts.UpdateInfrastructure;
+    using CopyFlyouts.Resources;
+    using CopyFlyouts.Pages;
+    using copy_flyouts.Settings;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
+    /// Acts as the main logic of the program from which other classes flow.
     /// </summary>
     public partial class MainWindow : FluentWindow
     {
-        private HotkeyHandler hotkeyHandler;
-        public HotkeyHandler HotkeyHandler { get => hotkeyHandler; private set => hotkeyHandler = value; }
-        public Settings UserSettings { get; set; }
-        private UpdateChecker updateChecker;
-        private DummyDataHolder dummyDataHolder = new DummyDataHolder();
+        private CopyCatcher? _copyCatcher;
+        private readonly SettingsManager _userSettings;
+        private readonly UpdateChecker _updateChecker;
+        private readonly DummyDataHolder _dummyDataHolder = new ();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// Sets up additional event handlers related to the window and the settings.
+        /// </summary>
         public MainWindow()
         {
-            // before we show the window, we make sure the program matches the system theme
-            Wpf.Ui.Appearance.ApplicationThemeManager.ApplySystemTheme();
-                // also changes the resource dictionary
-            var newTheme = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme();
-            string theme = newTheme.ToString();
-            string newThemeDictionaryPath = "Resources/" + theme + ".xaml";
-            ResourceDictionary newThemeDictionary = new ResourceDictionary
-            {
-                Source = new Uri(newThemeDictionaryPath, UriKind.Relative)
-            };
-            System.Windows.Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
-
-            UserSettings = new Settings();
-            updateChecker = new UpdateChecker(UserSettings);
+            _userSettings = new SettingsManager();
+            _userSettings.LoadSettingsFile();
+            _updateChecker = new UpdateChecker(_userSettings.About);
 
             InitializeComponent();
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
-            UserSettings.PropertyChanged += UserSettings_PropertyChanged;
+            _userSettings.PropertyChanged += UserSettings_PropertyChanged;
         }
 
+        #region Non-click Event Handlers
+
+        /// <summary>
+        /// Overriden OnStateChanged behavior to ensure window is minimized to system tray when the appropriate setting is enabled.
+        /// </summary>
+        /// <param name="e">Event argument (unused).</param>
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized && _userSettings.General.MinimizeToTray)
+            {
+                Hide();
+                NotifyIcon.Visibility = Visibility.Visible;
+
+                if (!NotifyIcon.IsRegistered) { NotifyIcon.Register(); }
+
+                NotifyAboutMinimization();
+            }
+
+            base.OnStateChanged(e);
+        }
+
+        /// <summary>
+        /// Handles the Loaded event for the <see cref="MainWindow"/> instance.
+        /// </summary>
+        /// <remarks>
+        /// Initializes the <see cref="CopyCatcher"/>, ensures proper themeing before the window is shown, proper handling of pages,
+        /// preparing the system tray icon and showing it if the user wants the window to be minimized, handling startup behavior,
+        /// proper update indicator before the window is shown, and default toolbox instructions.
+        /// </remarks>
+        /// <param name="sender">Source of the event - typically the MainWindow instance.</param>
+        /// <param name="e">Routed event arguments (unused).</param>
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            _copyCatcher = new(_userSettings); // this is the fundamental piece of the program, together with Flyout windows
+            // note: it is crucial to do this on load and not initialization to avoid System.ArgumentException "hwnd of zero is not valid"
+
+            #region Theme Handling
+            // handles switching the theme when the system does
+            ApplicationThemeManager.Changed += ApplicationThemeManager_Changed;
+            // we also have to listen to the system preferences to apply custom changes to the system tray icon
+            // (essentially our own way of watching the system theme, just for that)
+            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+
+            // and ensures that the correct theme is applied on load
+            if (_userSettings.Appearance.Theme.Equals("Dark")) { ApplicationThemeManager.Apply(ApplicationTheme.Dark); }
+            else if (_userSettings.Appearance.Theme.Equals("Light")) { ApplicationThemeManager.Apply(ApplicationTheme.Light); }
+            else if (_userSettings.Appearance.Theme.Equals("System"))
+            {
+                ApplicationThemeManager.ApplySystemTheme();
+                SystemThemeWatcher.Watch(this);
+            }
+
+            // and changes the resource dictionary to allign with the app theme
+            var newTheme = ApplicationThemeManager.GetAppTheme();
+            string newThemeDictionaryPath = "Resources/" + newTheme.ToString() + ".xaml";
+            ResourceDictionary newThemeDictionary = new()
+            {
+                Source = new Uri(newThemeDictionaryPath, UriKind.Relative)
+            };
+            Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
+
+            RefreshNotifyIconAppearance(); // finally, we ensure the notify icon will use the correct team when visible
+            #endregion
+
+            // all pages need to use the user settings extensively, and we can pass it to all of them universally like this
+            RootNavigation.DataContext = _userSettings;
+            RootNavigation.Navigate(typeof(General)); // ensures General page is opened on load
+            RootNavigation.Navigated += RootNavigation_Navigated;
+
+            // prepares the system tray icon
+            // note: we can't just set the initial Visibility to Collapsed while keeping it registered,
+            // otherwise the tooltip will always be invisible
+            NotifyIcon.Unregister();
+            NotifyIcon.Visibility = Visibility.Collapsed;
+
+            if (_userSettings.General.StartMinimized)
+            {
+                WindowState = WindowState.Minimized;
+                // but we make it visible right away if the program starts minimized
+                NotifyIcon.Register();
+                NotifyIcon.Visibility = Visibility.Visible;
+            }
+
+            // these are here in the rare case that the user manually changed the settings file while the program was off,
+            // in which case the OnPropertyChanged of the user settings would have never triggered to add it/remove it from startup
+            if (_userSettings.General.RunOnStartup) { AddToStartup(); }
+            else { RemoveFromStartup(); }
+
+            // we want to make sure it's clear when there is an update, so it's good to do these on each load
+            RefreshUpdateIndicator();
+            if (_userSettings.About.UpdatePageUrl is not null) { UpdateChecker.NotifyAboutUpdate(); }
+
+            ToolboxTextBox.Text = _dummyDataHolder.CurrentText;
+        }
+
+        /// <summary>
+        /// Handles the Closing event for the <see cref="MainWindow"/> instance.
+        /// </summary>
+        /// <remarks>
+        /// Ensures that if the user wants the close button to minimize the program (which is pretty common), then that's what it does.
+        /// Additionally, unregisters the <see cref="CopyCatcher"/> instance before shutting down.
+        /// </remarks>
+        /// <param name="sender">Source of the event - typically the <see cref="MainWindow"/> instance.</param>
+        /// <param name="e">Cancel event arguments - used to cancel closing if the user configured the settings that way.</param>
+        private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_userSettings.General.MinimizeOnClosure && _userSettings.General.MinimizeToTray)
+            {
+                e.Cancel = true;
+                WindowState = WindowState.Minimized;
+            }
+            else
+            {
+                _copyCatcher?.Unregister();
+                Application.Current.Shutdown();
+            }
+        }
+
+        /// <summary>
+        /// Handles the Navigated event of the <see cref="RootNavigation"/> <see cref="NavigationView"/>.
+        /// Namely, passes the UpdateChecker to the <see cref="About"/> page, if that is the page being navigated to.
+        /// </summary>
+        /// <remarks>
+        /// This is to ensure we don't unnecessarily create multiple instances of <see cref="UpdateChecker"/> just so
+        /// the <see cref="About"/> page has access to some of its methods, since the <see cref="UpdateChecker"/> is capable
+        /// of doing things automatically, and it would be wasteful or buggy to do the same thing multiple times.
+        /// </remarks>
+        /// <param name="sender">Sender of the event, in this case <see cref="NavigationView"/> </param>
+        /// <param name="args">Navigated events arguments - used here to check whether the page being navigated to is <see cref="About"/></param>
+        private void RootNavigation_Navigated(NavigationView sender, NavigatedEventArgs args)
+        {
+            if (args.Page is About aboutPage && aboutPage.UpdateChecker is null) { aboutPage.UpdateChecker = _updateChecker; }
+        }
+
+        /// <summary>
+        /// Event handler responsible for switching the Resources.Dark.xaml and Resources.Light.xaml to match the theme of the app.
+        /// </summary>
+        /// <param name="currentApplicationTheme">The application theme after the change - used to delete the old resource and switch to the new.</param>
+        /// <param name="systemAccent">System accent color (unused).</param>
+        private void ApplicationThemeManager_Changed(ApplicationTheme currentApplicationTheme, Color systemAccent)
+        {
+            // determines what the old theme was
+            Uri oldThemeUri;
+            if (currentApplicationTheme.Equals(ApplicationTheme.Light)) { oldThemeUri = new Uri("Resources/Dark.xaml", UriKind.Relative); }
+            else { oldThemeUri = new Uri("Resources/Light.xaml", UriKind.Relative); }
+
+            // finds it by its uri
+            var oldThemeDictionary = Application.Current.Resources.MergedDictionaries.FirstOrDefault(d => d.Source == oldThemeUri);
+
+            // removes it, if found
+            if (oldThemeDictionary is not null) { Application.Current.Resources.MergedDictionaries.Remove(oldThemeDictionary); }
+
+            // and adds the new one in
+            string newThemeDictionaryPath = "Resources/" + currentApplicationTheme.ToString() + ".xaml";
+            ResourceDictionary newThemeDictionary = new () { Source = new Uri(newThemeDictionaryPath, UriKind.Relative) };
+            Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
+
+            // and finally also updates the update indicator with the new theme colors
+            RefreshUpdateIndicator();
+        }
+
+        /// <summary>
+        /// Handles changing the system tray icon to match the system theme. Essentially a simple system theme watcher.
+        /// It is important it should not match the application theme, since naturally the application theme does not change the taskbar.
+        /// </summary>
+        /// <param name="sender">Source of the event - typically <see cref="Microsoft.Win32.SystemEvents"/> in this case.</param>
+        /// <param name="e">User preferences changed arguments (unused).</param>
+        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        {
+            // Category is Desktop when we force theme via the Auto Dark Mode app, and General if we do it via the settings
+            // I don't really know why
+            if (e.Category == UserPreferenceCategory.Desktop || e.Category == UserPreferenceCategory.General)
+            {
+                RefreshNotifyIconAppearance();
+                RefreshUpdateIndicator();
+            }
+        }
+
+        /// <summary>
+        /// Handles behavior for when user settings have changed.
+        /// </summary>
+        /// <param name="sender">Source of the event - should be <see cref="SettingsManager"/> (unused).</param>
+        /// <param name="e">Property changed event arguments - used to see which property has changed.</param>
         private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             // when the flyouts are disabled, but on a change DIFFERENT than disabling them
-            if (e.PropertyName != nameof(UserSettings.FlyoutsEnabled) && !UserSettings.FlyoutsEnabled)
+            if (e.PropertyName != nameof(SettingsManager.General.FlyoutsEnabled) && !_userSettings.General.FlyoutsEnabled)
             {
                 WarningFooter.Visibility = Visibility.Visible; // we show the footer to warn the user
             }
 
-            if (e.PropertyName == nameof(UserSettings.Theme))
+            switch (e.PropertyName)
             {
-                if (UserSettings.Theme.Equals("Light"))
-                {
-                    ApplicationThemeManager.Apply(ApplicationTheme.Light);
-                    Wpf.Ui.Appearance.SystemThemeWatcher.UnWatch(this);
-                }
-                else if (UserSettings.Theme.Equals("Dark"))
-                {
-                    ApplicationThemeManager.Apply(ApplicationTheme.Dark);
-                    Wpf.Ui.Appearance.SystemThemeWatcher.UnWatch(this);
-                }
-                else if (UserSettings.Theme.Equals("System"))
-                {
-                    ApplicationThemeManager.ApplySystemTheme();
-                    Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
-                }
+                case nameof(SettingsManager.Appearance.Theme):
+                    if (_userSettings.Appearance.Theme.Equals("Light"))
+                    {
+                        ApplicationThemeManager.Apply(ApplicationTheme.Light);
+                        SystemThemeWatcher.UnWatch(this);
+                    }
+                    else if (_userSettings.Appearance.Theme.Equals("Dark"))
+                    {
+                        ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+                        SystemThemeWatcher.UnWatch(this);
+                    }
+                    else if (_userSettings.Appearance.Theme.Equals("System"))
+                    {
+                        ApplicationThemeManager.ApplySystemTheme();
+                        SystemThemeWatcher.Watch(this);
+                    }
 
-                RefreshAboutPageAttentionStatus(); // this is here to ensure the color is correct to the theme
-            }
+                    RefreshUpdateIndicator(); // this is here to ensure the color is correct to the theme
+                    break;
 
-            if (e.PropertyName == nameof(UserSettings.FlyoutsEnabled))
-            {
-                if (UserSettings.FlyoutsEnabled)
-                {
-                    ProgramStateMenuItem.Header = "Disable";
-                    ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Play24 };
-                    WarningFooter.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    ProgramStateMenuItem.Header = "Enable";
-                    ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Pause24 };
-                }
+                case nameof(SettingsManager.General.FlyoutsEnabled): // the system tray icon has to be updated
+                    if (_userSettings.General.FlyoutsEnabled)
+                    {
+                        ProgramStateMenuItem.Header = "Disable";
+                        ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Play24 };
+                        WarningFooter.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        ProgramStateMenuItem.Header = "Enable";
+                        ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Pause24 };
+                    }
 
-                RefreshNotifyIconAppearance();
-            }
+                    RefreshNotifyIconAppearance();
+                    break;
 
-            if (e.PropertyName == nameof(UserSettings.RunOnStartup))
-            {
-                if (UserSettings.RunOnStartup)
-                {
-                    AddToStartup();
-                }
-                else
-                {
-                    RemoveFromStartup();
-                }
-            }
+                case nameof(SettingsManager.General.RunOnStartup):
+                    if (_userSettings.General.RunOnStartup) { AddToStartup(); }
+                    else { RemoveFromStartup(); }
+                    break;
 
-            if (e.PropertyName == nameof(UserSettings.UpdatePageUrl))
-            {
-                RefreshAboutPageAttentionStatus();
+                case nameof(SettingsManager.About.UpdatePageUrl):
+                    RefreshUpdateIndicator();
+                    break;
+
+                default:
+                    break;
             }
         }
 
-        protected override void OnStateChanged(EventArgs e)
+        #endregion
+
+        #region Startup
+
+        /// <summary>
+        /// Adds the program to user's startup programs.
+        /// </summary>
+        /// <remarks>
+        /// This is done by adding the executable absolute path to the user's SOFTWARE\Microsoft\Windows\CurrentVersion\Run registry.
+        /// </remarks>
+        private static void AddToStartup()
         {
-            if (WindowState == WindowState.Minimized && UserSettings.MinimizeToTray)
-            {
-                Hide();
-                notifyIcon.Visibility = Visibility.Visible;
-                if (!notifyIcon.IsRegistered)
-                {
-                    notifyIcon.Register();
-                }
+            var appName = Application.Current.Resources["ProgramName"] as string;
+            var appFileName = appName + ".exe";
 
-                NotifyAboutMinimization();
-            }
-            base.OnStateChanged(e);
+            string executablePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, appFileName);
+            RegistryKey? registryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            registryKey?.SetValue(appName, executablePath);
         }
 
+        /// <summary>
+        /// Removes the program from the user's startup programs.
+        /// </summary>
+        /// <remarks>
+        /// This is done by removing the executable path from the user's SOFTWARE\Microsoft\Windows\CurrentVersion\Run registry.
+        /// </remarks>
+        private static void RemoveFromStartup()
+        {
+            var appName = Application.Current.Resources["ProgramName"] as string;
+
+            RegistryKey? registryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+            if (registryKey is not null
+                && registryKey.GetValue(appName) is not null
+                && appName is not null)
+            {
+                registryKey.DeleteValue(appName, false);
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Displays a notification toast informing the user that the program has been minimized to the system tray.
+        /// </summary>
+        /// <remarks>
+        /// Only happens if the "Notify when minimized to system tray" setting is on.
+        /// </remarks>
         private void NotifyAboutMinimization()
         {
-            if (UserSettings.NotifyAboutMinimization)
+            if (_userSettings.General.NotifyAboutMinimization)
             {
-                var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
+                var appName = Application.Current.Resources["ProgramName"] as string;
 
                 new ToastContentBuilder()
                     .AddText($"Minimized to system tray")
@@ -156,19 +345,24 @@ namespace copy_flyouts
 
         }
 
-        public void ShowWindow()
+        /// <summary>
+        /// Shows the <see cref="MainWindow"/> instance, and makes the system tray icon disappear.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="Window.Show()"/> cannot be overriden, hence method hiding was used instead.
+        /// </remarks>
+        private new void Show()
         {
-            Show();
+            base.Show();
             WindowState = WindowState.Normal;
-            notifyIcon.Unregister();
-            notifyIcon.Visibility = Visibility.Collapsed;
+            NotifyIcon.Unregister();
+            NotifyIcon.Visibility = Visibility.Collapsed;
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
-            base.OnClosing(e);
-        }
-
+        /// <summary>
+        /// Updates the system tray icon to allign with the current theme of the system,
+        /// by supplying it a different image from an asset file path.
+        /// </summary>
         private void RefreshNotifyIconAppearance()
         {
             Uri iconUri;
@@ -179,208 +373,58 @@ namespace copy_flyouts
 
             if (ApplicationThemeManager.GetSystemTheme() == SystemTheme.Dark)
             {
-                if (UserSettings.FlyoutsEnabled)
-                {
-                    filePath += "logo-slim-darkmode";
-                }
-                else
-                {
-                    filePath += "logo-slim-darkmode-disabled";
-                }
+                filePath += _userSettings.General.FlyoutsEnabled ? "logo-slim-darkmode" : "logo-slim-darkmode-disabled";
             }
             else
             {
-                if (UserSettings.FlyoutsEnabled)
-                {
-                    filePath += "logo-slim";
-                }
-                else
-                {
-                    filePath += "logo-slim-disabled";
-                }
+                filePath += _userSettings.General.FlyoutsEnabled ? "logo-slim" : "logo-slim-disabled";
             }
 
             filePath += ".ico";
-            //Debug.WriteLine(filePath);
             iconUri = new Uri(filePath, UriKind.RelativeOrAbsolute);
             ImageSource icon = new BitmapImage(iconUri);
-            notifyIcon.Icon = icon;
+            NotifyIcon.Icon = icon;
         }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Sets the update indicator, responsible for informing the user there's an update available within the settings,
+        /// to either show itself, or stay empty.
+        /// </summary>
+        private void RefreshUpdateIndicator()
         {
-            HotkeyHandler = new(this, UserSettings); // creates the hotkey to make the program work
-
-            // handles switching the theme when the system does
-            Wpf.Ui.Appearance.ApplicationThemeManager.Changed += ApplicationThemeManager_Changed;
-            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged; // this is to changing the notifyicon when the system theme changes
-
-            // and ensures that the correct theme is applied on load
-            if (UserSettings.Theme.Equals("Dark"))
-            {
-                ApplicationThemeManager.Apply(ApplicationTheme.Dark);
-            }
-            else if (UserSettings.Theme.Equals("Light"))
-            {
-                ApplicationThemeManager.Apply(ApplicationTheme.Light);
-            }
-            else if (UserSettings.Theme.Equals("System"))
-            {
-                ApplicationThemeManager.ApplySystemTheme();
-                Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
-            }
-
-            RootNavigation.DataContext = UserSettings;
-            RootNavigation.Navigate(typeof(Pages.General)); // ensures General page is opened on load
-
-            RefreshNotifyIconAppearance();
-
-            notifyIcon.Unregister(); // note: we can't just set the initial Visibility to Collapsed, otherwise the tooltip will always be invisible
-            notifyIcon.Visibility = Visibility.Collapsed;
-
-            if (UserSettings.StartMinimized)
-            {
-                WindowState = WindowState.Minimized;
-                notifyIcon.Register();
-                notifyIcon.Visibility = Visibility.Visible;
-            }
-
-            if (UserSettings.RunOnStartup)
-            {
-                AddToStartup();
-            }
-            else
-            {
-                RemoveFromStartup();
-            }
-
-            RefreshAboutPageAttentionStatus();
-
-            if (!(UserSettings.UpdatePageUrl is null)) { updateChecker.NotifyAboutUpdate(); }
-
-            ToolboxTextBox.Text = dummyDataHolder.CurrentText;
-        }
-
-        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
-        {
-            // Category is Desktop when we force theme via Auto Dark Mode app, and General if we do it via the settings
-            // beats me as to why--
-            if (e.Category == UserPreferenceCategory.Desktop || e.Category == UserPreferenceCategory.General)
-            {
-                RefreshNotifyIconAppearance();
-                RefreshAboutPageAttentionStatus();
-            }
-        }
-
-        private void AddToStartup()
-        {
-            var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
-            var appFileName = appName + ".exe";
-
-            string executablePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, appFileName);
-            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            registryKey.SetValue(appName, executablePath);
-        }
-
-        private void RemoveFromStartup()
-        {
-            var appName = System.Windows.Application.Current.Resources["ProgramName"] as string;
-
-            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            if (registryKey.GetValue(appName) != null)
-            {
-                registryKey.DeleteValue(appName, false);
-            }
-        }
-
-        private void ApplicationThemeManager_Changed(ApplicationTheme currentApplicationTheme, System.Windows.Media.Color systemAccent)
-        {
-            var newTheme = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme();
-            // determines what the old theme was
-            Uri oldThemeUri;
-            if (newTheme.Equals(Wpf.Ui.Appearance.ApplicationTheme.Light))
-            {
-                oldThemeUri = new Uri("Resources/Dark.xaml", UriKind.Relative);
-            }
-            else
-            {
-                oldThemeUri = new Uri("Resources/Light.xaml", UriKind.Relative);
-            }
-
-            // find it by its uri
-            var oldThemeDictionary = System.Windows.Application.Current.Resources.MergedDictionaries
-                .FirstOrDefault(d => d.Source == oldThemeUri);
-
-            // removes it, if found
-            if (oldThemeDictionary != null)
-            {
-                System.Windows.Application.Current.Resources.MergedDictionaries.Remove(oldThemeDictionary);
-            }
-
-            // and adds the new one in
-            string theme = newTheme.ToString();
-            string newThemeDictionaryPath = "Resources/" + theme + ".xaml";
-            ResourceDictionary newThemeDictionary = new ResourceDictionary
-            {
-                Source = new Uri(newThemeDictionaryPath, UriKind.Relative)
-            };
-            System.Windows.Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
-        }
-
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (UserSettings.MinimizeOnClosure && UserSettings.MinimizeToTray)
-            {
-                e.Cancel = true;
-                WindowState = WindowState.Minimized;
-            }
-            else
-            {
-                HotkeyHandler.Unregister();
-                System.Windows.Application.Current.Shutdown();
-            }
-        }
-
-        private void notifyIcon_LeftClick(Wpf.Ui.Tray.Controls.NotifyIcon sender, RoutedEventArgs e)
-        {
-            ShowWindow();
-        }
-
-        private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ShowWindow();
-        }
-
-        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Application.Current.Shutdown();
-        }
-
-        private void ProgramStateMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (UserSettings.FlyoutsEnabled)
-            {
-                UserSettings.FlyoutsEnabled = false;
-            }
-            else
-            {
-                UserSettings.FlyoutsEnabled = true;
-            }
-        }
-
-        private void RefreshAboutPageAttentionStatus()
-        {
-            if (UserSettings.UpdatePageUrl != null)
+            if (_userSettings.About.UpdatePageUrl is not null)
             {
                 AboutSymbol.Filled = true;
-                SolidColorBrush colorStatusDangerForeground1 = (SolidColorBrush)System.Windows.Application.Current.Resources["colorStatusDangerForeground1"];
+                SolidColorBrush colorStatusDangerForeground1 = (SolidColorBrush)Application.Current.Resources["colorStatusDangerForeground1"];
                 AboutSymbol.Foreground = colorStatusDangerForeground1;
             }
             else
             {
                 AboutSymbol.Filled = false;
-                AboutSymbol.ClearValue(System.Windows.Controls.Control.ForegroundProperty);
+                AboutSymbol.ClearValue(ForegroundProperty);
             }
+        }
+
+        #region Click Event Handlers
+
+        private void NotifyIcon_LeftClick(Wpf.Ui.Tray.Controls.NotifyIcon sender, RoutedEventArgs e)
+        {
+            Show();
+        }
+
+        private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Show();
+        }
+
+        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void ProgramStateMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            _userSettings.General.FlyoutsEnabled = !_userSettings.General.FlyoutsEnabled;
         }
 
         private void ToolboxChevron_Click(object sender, RoutedEventArgs e)
@@ -392,8 +436,8 @@ namespace copy_flyouts
             }
             else
             {
-                dummyDataHolder.ResetText();
-                ToolboxTextBox.Text = dummyDataHolder.CurrentText;
+                _dummyDataHolder.ResetText(); // we reset this in case the user needs instructions again
+                ToolboxTextBox.Text = _dummyDataHolder.CurrentText;
 
                 ToolboxMenu.Visibility = Visibility.Visible;
                 ToolboxChevron.Icon = new SymbolIcon { Symbol = SymbolRegular.ChevronDoubleUp20 };
@@ -413,8 +457,7 @@ namespace copy_flyouts
 
         private async void ToolboxImageButton_Click(object sender, RoutedEventArgs e)
         {
-            // Place the BitmapSource on the clipboard
-            System.Windows.Forms.Clipboard.SetDataObject(dummyDataHolder.CurrentImage, false, 5, 200);
+            System.Windows.Forms.Clipboard.SetDataObject(_dummyDataHolder.CurrentImage, false, 5, 200);
 
             ToolboxImageButton.IsEnabled = false;
             await Task.Delay(250);
@@ -423,14 +466,14 @@ namespace copy_flyouts
 
         private void ToolboxRefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            dummyDataHolder.Refresh();
-            ToolboxTextBox.Text = dummyDataHolder.CurrentText;
+            _dummyDataHolder.Refresh();
+            ToolboxTextBox.Text = _dummyDataHolder.CurrentText; // only element that needs to be changed live
         }
 
         private async void ToolboxFileButton_Click(object sender, RoutedEventArgs e)
         {
             var dataObject = new System.Windows.Forms.DataObject();
-            dataObject.SetFileDropList(dummyDataHolder.CurrentFiles);
+            dataObject.SetFileDropList(_dummyDataHolder.CurrentFiles);
 
             System.Windows.Forms.Clipboard.SetDataObject(dataObject, false, 5, 200);
 
@@ -438,5 +481,7 @@ namespace copy_flyouts
             await Task.Delay(250);
             ToolboxFileButton.IsEnabled = true;
         }
+
+        #endregion
     }
 }

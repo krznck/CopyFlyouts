@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace copy_flyouts.Properties {
+namespace CopyFlyouts.Properties {
     using System;
     
     
