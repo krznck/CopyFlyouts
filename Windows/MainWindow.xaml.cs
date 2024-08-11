@@ -12,6 +12,7 @@
     using CopyFlyouts.Resources;
     using CopyFlyouts.Pages;
     using CopyFlyouts.Settings;
+    using System.Windows.Interop;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -41,6 +42,45 @@
         }
 
         #region Non-click Event Handlers
+
+        /// <summary>
+        /// Adds a hook to process Windows Procedure messages.
+        /// This is specifically so that the instance is capable of receiving messages
+        /// telling it to call <see cref="Show()"/>, as the user tried to open the program anew.
+        /// </summary>
+        /// <param name="e">Event arguments, only used to pass it to the base method.</param>
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
+            source.AddHook(WndProc);
+        }
+
+        /// <summary>
+        /// Windows Procedure method which triggers if the message received is the program should show itself to the user.
+        /// </summary>
+        /// <remarks>
+        /// This message is sent by another instance of the program at <see cref="App.OnStartup(StartupEventArgs)"/>,
+        /// when if it detects that a mutex is already created, it tells the original instance (instance receiving this message)
+        /// to show its <see cref="MainWindow"/> to the user.
+        /// </remarks>
+        /// <param name="hwnd">Unique identifier of the window receiving the message (unused).</param>
+        /// <param name="messageCode">Identifier for the type of message being sent - used to check whether we are told to show ourselves.</param>
+        /// <param name="wParam">Additional information about the message - (unused).</param>
+        /// <param name="lParam">Additional information about the message (unused).</param>
+        /// <param name="handled">Flag to indicate that the message has been processed - true when we have a hit.</param>
+        /// <returns>Indication that no specific result needs to be returned to the OS (nint.Zero).</returns>
+        private nint WndProc(nint hwnd, int messageCode, nint wParam, nint lParam, ref bool handled)
+        {
+            if (messageCode == App.WM_SHOWAPP)
+            {
+                Show();
+                Activate();
+                handled = true;
+            }
+            return nint.Zero;
+        }
 
         /// <summary>
         /// Overriden OnStateChanged behavior to ensure window is minimized to system tray when the appropriate setting is enabled.
