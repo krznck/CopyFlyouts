@@ -65,13 +65,16 @@
         /// <param name="e">Clipboard changed event arguments (unused).</param>
         private void SharpClipboard_ClipboardChanged(object? sender, SharpClipboard.ClipboardChangedEventArgs e)
         {
-            // SharpClipboard detects a clipboard change when the program is turned on, I'm not sure why.
-            // hence, it's ignored at first
-            if (_isInitialSubscription)
+            // SharpClipboard detects a clipboard change when the program is turned on,
+            // causing a flyout of the _previousClipboard to show.
+            // to fix that, we introduce a simple flag to ensure SharpClipboard doesn't do anything the first time
+            // it is triggered, but only if the clipboard isn't empty (otherwise it will erronously not show when it should)
+            if (_isInitialSubscription && !(_previousClipboard.IsEmpty()))
             {
                 _isInitialSubscription = false;
                 return;
             }
+            _isInitialSubscription = false; // we also force the flag here in case _previousClipboard was ineed empty
 
             ShowNewFlyout();
 

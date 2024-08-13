@@ -2,7 +2,6 @@
 {
     using System.IO;
     using System.Text.RegularExpressions;
-    using CopyFlyouts.Settings;
     using CopyFlyouts.Settings.Categories;
 
     /// <summary>
@@ -95,6 +94,15 @@
                 if (_userBehaviorSettings.AllowImages) { Image = Clipboard.GetImage(); }
                 else { Image = new Bitmap(1, 1); } // creates a fake image that can be passed on and easily detected
             }
+        }
+
+        /// <summary>
+        /// Little public method to access whether the clipboard didn't return anything.
+        /// </summary>
+        /// <returns>Booelan corresponding to whether the instance's attribute didn't get any actual values.</returns>
+        public bool IsEmpty()
+        {
+            return (Image is null && _copyText.Equals("") && FileAmount == 0);
         }
 
         /// <summary>
