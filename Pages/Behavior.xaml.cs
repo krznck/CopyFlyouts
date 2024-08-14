@@ -104,22 +104,7 @@
         {
             if (_userBehaviorSettings is null) { return; }
 
-            _userBehaviorSettings.EnableKeyboardFlyouts = true;
-            _userBehaviorSettings.EnableNonKeyboardFlyouts = true;
-            _userBehaviorSettings.AllowImages = true;
-
-            _userBehaviorSettings.FlyoutLifetime = 1.5;
-            _userBehaviorSettings.EnableFlyoutAnimations = true;
-
-            _userBehaviorSettings.FlyoutUnderCursor = false;
-            _userBehaviorSettings.FlyoutScreen = "Follow cursor";
-            _userBehaviorSettings.FlyoutHorizontalAllignment = HorizontalScreenAllignments.Center.Name;
-            _userBehaviorSettings.FlyoutVerticalAllignment = VerticalScreenAllignments.BottomCenter.Name;
-
-            _userBehaviorSettings.EnableSuccessSound = false;
-            _userBehaviorSettings.ChosenSuccessSound = SuccessSounds.Beep.Name;
-            _userBehaviorSettings.EnableErrorSound = true;
-            _userBehaviorSettings.ChosenErrorSound = FailureSounds.Damage.Name;
+            _userBehaviorSettings.Reset();
         }
 
         private static void UpdateAllToggleButtonBindings(DependencyObject parent)

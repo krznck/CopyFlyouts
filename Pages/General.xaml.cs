@@ -108,13 +108,7 @@
         {
             if (_userGeneralSettings is null) { return; }
 
-            _userGeneralSettings.FlyoutsEnabled = true;
-
-            _userGeneralSettings.RunOnStartup = false;
-            _userGeneralSettings.StartMinimized = false;
-            _userGeneralSettings.MinimizeToTray = true;
-            _userGeneralSettings.NotifyAboutMinimization = true;
-            _userGeneralSettings.MinimizeOnClosure = false;
+            _userGeneralSettings.Reset();
         }
     }
 }

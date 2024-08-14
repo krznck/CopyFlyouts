@@ -49,5 +49,29 @@
 
             return value;
         }
+
+        /// <summary>
+        /// Public method that resets all of the setting attributes to their default values.
+        /// </summary>
+        /// <remarks>
+        /// Can be overwritten in case we don't want some attribute to be reset.
+        /// </remarks>
+        public virtual void Reset()
+        {
+            var defaultInstance = Activator.CreateInstance(GetType());
+            foreach (var property in GetType().GetProperties())
+            {
+                if (property.CanWrite)
+                {
+                    var defaultValue = property.GetValue(defaultInstance);
+                    var currentValue = property.GetValue(this);
+
+                    if (!Equals(currentValue, defaultValue))
+                    {
+                        property.SetValue(this, defaultValue);
+                    }
+                }
+            }
+        }
     }
 }

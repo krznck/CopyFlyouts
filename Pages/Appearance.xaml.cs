@@ -76,14 +76,7 @@
         {
             if (_userAppearanceSettings is null) { return; }
 
-            _userAppearanceSettings.Theme = "System";
-            _userAppearanceSettings.InvertedTheme = false;
-
-            _userAppearanceSettings.FlyoutOpacity = 1.0;
-            _userAppearanceSettings.FlyoutWidthScale = 1.0;
-            _userAppearanceSettings.FlyoutHeightScale = 1.0;
-            _userAppearanceSettings.FlyoutFontSizeScale = 1.0;
-            _userAppearanceSettings.FlyoutCorners = 5;
+            _userAppearanceSettings.Reset();
         }
     }
 }

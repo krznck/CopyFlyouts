@@ -85,5 +85,16 @@
                 }
             }
         }
+
+        /// <summary>
+        /// The method is overriden from <see cref="SettingHolder.Reset()"/> 
+        /// to ensure <see cref="UpdatePageUrl"/> cannot be reset, as that is not shown to the user.
+        /// </summary>
+        public override void Reset()
+        {
+            var page = UpdatePageUrl;
+            base.Reset();
+            UpdatePageUrl = page;
+        }
     }
 }

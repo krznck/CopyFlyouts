@@ -50,6 +50,7 @@
             _userAboutSettings.PropertyChanged += UserSettings_PropertyChanged;
 
             LoadToggleLabels();
+            RefreshUpdateStatusIndicators();
         }
 
         /// <summary>
@@ -100,8 +101,7 @@
         {
             if (_userAboutSettings is null) { return; }
 
-            _userAboutSettings.AutoUpdate = true;
-            _userAboutSettings.UpdateFrequency = UpdateFrequencies.TwoHours.Name;
+            _userAboutSettings.Reset();
         }
 
         private async void CheckUpdatesButton_Click(object sender, RoutedEventArgs e)
