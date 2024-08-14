@@ -6,7 +6,7 @@
     /// Abstract class representing a holders of settings,
     /// i.e. objects that contain configurable user settings that change the behavior of the program.
     /// </summary>
-    public abstract class SettingHolder
+    public abstract class SettingHolder : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
