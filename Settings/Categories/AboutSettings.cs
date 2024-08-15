@@ -1,8 +1,8 @@
 ﻿namespace CopyFlyouts.Settings.Categories
 {
-    using CopyFlyouts.Resources;
     using System.Text.RegularExpressions;
     using System.Windows;
+    using CopyFlyouts.Resources;
 
     /// <summary>
     /// Responsible for the settings related to the program version and updates.
@@ -32,7 +32,11 @@
                 var currentVersionString = commonResources["Version"] as string;
                 currentVersionString = currentVersionString?[1..];
 
-                _ = currentVersionString ?? throw new NullReferenceException("Can't find current version resource string.");
+                _ =
+                    currentVersionString
+                    ?? throw new NullReferenceException(
+                        "Can't find current version resource string."
+                    );
 
                 var currentVersion = new Version(currentVersionString);
 
@@ -78,7 +82,7 @@
         #endregion
 
         /// <summary>
-        /// The method is overriden from <see cref="SettingHolder.Reset()"/> 
+        /// The method is overriden from <see cref="SettingHolder.Reset()"/>
         /// to ensure <see cref="UpdateVersion"/> cannot be reset, as that is not shown to the user.
         /// </summary>
         public override void Reset()

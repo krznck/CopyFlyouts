@@ -1,14 +1,14 @@
 ﻿namespace CopyFlyouts.UpdateInfrastructure
 {
-    using CopyFlyouts.Resources;
+    using System.Diagnostics;
     using System.Net.Http;
     using System.Text.Json;
-    using System.Windows.Threading;
-    using System.Diagnostics;
     using System.Windows;
-    using Microsoft.Toolkit.Uwp.Notifications;
+    using System.Windows.Threading;
+    using CopyFlyouts.Resources;
     using CopyFlyouts.Settings;
     using CopyFlyouts.Settings.Categories;
+    using Microsoft.Toolkit.Uwp.Notifications;
 
     /// <summary>
     /// Responsible for enabling manual and automatic update checking,
@@ -17,16 +17,19 @@
     public class UpdateChecker
     {
         private readonly AboutSettings _userAboutSettings;
-        private readonly HttpClient _client = new ();
+        private readonly HttpClient _client = new();
+
         // note - adding a token like this straight into source code is bad, but it will be fine so long as the repo is private.
         // by the time this repo is publicized, the token will be expired or deleted
         private readonly string _personalAccessToken = "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";
         private readonly string _currentVersion;
         private readonly string _authorName;
         private readonly string _programName;
-        private readonly DispatcherTimer _updateCheckTimer = new ();
+        private readonly DispatcherTimer _updateCheckTimer = new();
+
         // cached instead of creating a new one every time GetLatestReleaseAsync() is called
-        private static readonly JsonSerializerOptions _jsonOptions = new () { PropertyNameCaseInsensitive = true }; 
+        private static readonly JsonSerializerOptions _jsonOptions =
+            new() { PropertyNameCaseInsensitive = true };
 
         /// <summary>
         /// Initializes the <see cref="UpdateChecker"/> instance, taking the current version from Resources/CommonResources.xaml
@@ -36,10 +39,15 @@
         {
             _userAboutSettings = aboutSettings;
 
-            var commonResources = new ResourceDictionary { Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative) };
-            if (commonResources["AuthorName"] is not string authorName 
+            var commonResources = new ResourceDictionary
+            {
+                Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative)
+            };
+            if (
+                commonResources["AuthorName"] is not string authorName
                 || commonResources["ProgramName"] is not string programName
-                || commonResources["Version"] is not string currentVersion)
+                || commonResources["Version"] is not string currentVersion
+            )
             {
                 throw new NullReferenceException("Cannot find program naming resources.");
             }
@@ -50,7 +58,10 @@
             aboutSettings.PropertyChanged += UserSettings_PropertyChanged;
 
             // checks for updates on startup, before the timer starts
-            if (aboutSettings.UpdateVersion is null && aboutSettings.AutoUpdate) { Task task = CheckForUpdatesAutomatically(); }
+            if (aboutSettings.UpdateVersion is null && aboutSettings.AutoUpdate)
+            {
+                Task task = CheckForUpdatesAutomatically();
+            }
             InitializeUpdateCheckTimer();
         }
 
@@ -59,18 +70,33 @@
         /// </summary>
         /// <param name="sender">Source of the event - should be CopyFlyouts.Core.Settings (unused).</param>
         /// <param name="e">Property changed event arguments - used to see which property has changed.</param>
-        private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void UserSettings_PropertyChanged(
+            object? sender,
+            System.ComponentModel.PropertyChangedEventArgs e
+        )
         {
             switch (e.PropertyName)
             {
                 case nameof(SettingsManager.About.UpdateVersion):
-                    if (_userAboutSettings.UpdateVersion is not null) { StopUpdateCheckTimer(); }
-                    else { InitializeUpdateCheckTimer(); }
+                    if (_userAboutSettings.UpdateVersion is not null)
+                    {
+                        StopUpdateCheckTimer();
+                    }
+                    else
+                    {
+                        InitializeUpdateCheckTimer();
+                    }
                     break;
 
                 case nameof(SettingsManager.About.AutoUpdate):
-                    if (_userAboutSettings.AutoUpdate) { InitializeUpdateCheckTimer(); }
-                    else { StopUpdateCheckTimer();  }
+                    if (_userAboutSettings.AutoUpdate)
+                    {
+                        InitializeUpdateCheckTimer();
+                    }
+                    else
+                    {
+                        StopUpdateCheckTimer();
+                    }
                     break;
 
                 default:
@@ -89,9 +115,14 @@
         {
             try
             {
-                var url = $"https://api.github.com/repos/{_authorName}/{_programName}/releases/latest";
+                var url =
+                    $"https://api.github.com/repos/{_authorName}/{_programName}/releases/latest";
                 _client.DefaultRequestHeaders.UserAgent.ParseAdd("request");
-                _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Token", _personalAccessToken);
+                _client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue(
+                        "Token",
+                        _personalAccessToken
+                    );
                 var response = await _client.GetStringAsync(url);
                 var release = JsonSerializer.Deserialize<GitHubRelease>(response, _jsonOptions);
                 return release;
@@ -117,36 +148,35 @@
 
             if (latestRelease is null || _currentVersion is null || latestRelease.TagName is null)
             {
-                Wpf.Ui.Controls.MessageBox messageBox = new()
-                {
-                    Title = "Error",
-                    Content = "Failed to check for updates."
-                };
+                Wpf.Ui.Controls.MessageBox messageBox =
+                    new() { Title = "Error", Content = "Failed to check for updates." };
                 await messageBox.ShowDialogAsync();
                 return;
             }
 
             if (IsNewVersionAvailable(_currentVersion, latestRelease.TagName))
             {
-                Wpf.Ui.Controls.MessageBox messageBox = new ()
-                {
-                    Title = "New Updates",
-                    Content = $"A new version - {latestRelease.TagName} - is available on GitHub!",
-                    IsPrimaryButtonEnabled = true,
-                    PrimaryButtonText = "Open update page"
-                };
+                Wpf.Ui.Controls.MessageBox messageBox =
+                    new()
+                    {
+                        Title = "New Updates",
+                        Content =
+                            $"A new version - {latestRelease.TagName} - is available on GitHub!",
+                        IsPrimaryButtonEnabled = true,
+                        PrimaryButtonText = "Open update page"
+                    };
 
                 _userAboutSettings.UpdateVersion = GetVersionFromString(latestRelease.TagName);
 
-                if (await messageBox.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary) { OpenUpdatePage(); }
+                if (await messageBox.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary)
+                {
+                    OpenUpdatePage();
+                }
             }
             else
             {
-                Wpf.Ui.Controls.MessageBox messageBox = new ()
-                {
-                    Title = "No Updates",
-                    Content = "You are using the latest version."
-                };
+                Wpf.Ui.Controls.MessageBox messageBox =
+                    new() { Title = "No Updates", Content = "You are using the latest version." };
                 await messageBox.ShowDialogAsync();
             }
         }
@@ -156,7 +186,7 @@
         /// </summary>
         /// <remarks>
         /// The main reason to differenciate this from <see cref="CheckForUpdatesManually"/>
-        /// is that this is action -is not- actively perpetrated by the user, 
+        /// is that this is action -is not- actively perpetrated by the user,
         /// and should not be obstructive, facilitating the use of a notification toast.
         /// </remarks>
         /// <returns>This is an asynchronous operation that returns a Task.</returns>
@@ -188,9 +218,15 @@
             new ToastContentBuilder()
                 .AddText("New update available")
                 .AddText($"A new version is available!")
-                .AddButton(new ToastButton()
-                    .SetContent("Open update page")
-                    .SetProtocolActivation(new Uri($"https://github.com/{_authorName}/{_programName}/releases/latest")))
+                .AddButton(
+                    new ToastButton()
+                        .SetContent("Open update page")
+                        .SetProtocolActivation(
+                            new Uri(
+                                $"https://github.com/{_authorName}/{_programName}/releases/latest"
+                            )
+                        )
+                )
                 .Show();
         }
 
@@ -201,13 +237,20 @@
         {
             if (_userAboutSettings.UpdateVersion is not null)
             {
-                Process.Start(new ProcessStartInfo($"https://github.com/{_authorName}/{_programName}/releases/latest") { UseShellExecute = true });
+                Process.Start(
+                    new ProcessStartInfo(
+                        $"https://github.com/{_authorName}/{_programName}/releases/latest"
+                    )
+                    {
+                        UseShellExecute = true
+                    }
+                );
             }
         }
 
         private static bool IsNewVersionAvailable(string currentVersion, string latestVersion)
         {
-            Version current = new (currentVersion);
+            Version current = new(currentVersion);
             Version latest = GetVersionFromString(latestVersion);
             return latest.CompareTo(current) > 0;
         }

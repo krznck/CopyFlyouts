@@ -3,9 +3,9 @@
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
+    using System.Security;
     using System.Text.Json;
     using System.Windows;
-    using System.Security;
     using CopyFlyouts.Settings.Categories;
 
     /// <summary>
@@ -16,10 +16,10 @@
         private readonly string _filePath;
         private readonly JsonSerializerOptions jsonOptions = new() { WriteIndented = true };
 
-        public GeneralSettings General { get; set; } = new ();
-        public BehaviorSettings Behavior { get; set; } = new ();
-        public AppearanceSettings Appearance { get; set; } = new ();
-        public AboutSettings About { get; set; } = new ();
+        public GeneralSettings General { get; set; } = new();
+        public BehaviorSettings Behavior { get; set; } = new();
+        public AppearanceSettings Appearance { get; set; } = new();
+        public AboutSettings About { get; set; } = new();
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -31,13 +31,19 @@
         {
             var appBaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var appName = Application.Current.Resources["ProgramName"] as string ?? throw new ArgumentNullException("Cannot find program name.");
+            var appDataFolder = Environment.GetFolderPath(
+                Environment.SpecialFolder.ApplicationData
+            );
+            var appName =
+                Application.Current.Resources["ProgramName"] as string
+                ?? throw new ArgumentNullException("Cannot find program name.");
 
             // if we can write to the base directory, then we can just keep the settings there and let the program be portable,
             // but if not, then the program is probably installed in ProgramFiles for all users, and either way we cannot keep the settings there,
             // so we use AppData to have the settings be seperate for all users
-            _filePath = IsWriteable(appBaseDirectory) ? Path.Combine(appBaseDirectory, "settings.json") : Path.Combine(appDataFolder, appName, "settings.json");
+            _filePath = IsWriteable(appBaseDirectory)
+                ? Path.Combine(appBaseDirectory, "settings.json")
+                : Path.Combine(appDataFolder, appName, "settings.json");
         }
 
         /// <summary>
@@ -47,7 +53,10 @@
         /// <param name="settings"></param>
         private void CopySettings(SettingsManager settings)
         {
-            if (settings is null) { return;  }
+            if (settings is null)
+            {
+                return;
+            }
 
             General = settings.General;
             Behavior = settings.Behavior;
@@ -71,7 +80,10 @@
                 {
                     var json = File.ReadAllText(_filePath);
                     var settings = JsonSerializer.Deserialize<SettingsManager>(json);
-                    if (settings is not null) { CopySettings(settings); }
+                    if (settings is not null)
+                    {
+                        CopySettings(settings);
+                    }
                 }
                 catch (JsonException)
                 {
@@ -82,7 +94,10 @@
             else
             {
                 var directory = Path.GetDirectoryName(_filePath);
-                if (directory is not null) { Directory.CreateDirectory(directory); }
+                if (directory is not null)
+                {
+                    Directory.CreateDirectory(directory);
+                }
             }
 
             General.PropertyChanged += Settings_PropertyChanged;
@@ -103,7 +118,10 @@
         /// <param name="e">Property changed event arguments, used to get the name of the changed property.</param>
         private void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is not null) { OnPropertyChanged(e.PropertyName); }
+            if (e.PropertyName is not null)
+            {
+                OnPropertyChanged(e.PropertyName);
+            }
         }
 
         private void SaveSettingsFile()

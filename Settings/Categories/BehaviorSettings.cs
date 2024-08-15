@@ -97,8 +97,14 @@
                     // however, if the screen is outside of the range of available screen (i.e. no longer connected),
                     // then it will default to 1. This is here to reflect that in the settings and not leave the option blank
                     int number = int.Parse(value[^1..]) - 1;
-                    if (number < 0 || number > Screen.AllScreens.Length - 1) { _flyoutScreen = "Screen 1"; }
-                    else { _flyoutScreen = value; }
+                    if (number < 0 || number > Screen.AllScreens.Length - 1)
+                    {
+                        _flyoutScreen = "Screen 1";
+                    }
+                    else
+                    {
+                        _flyoutScreen = value;
+                    }
                 }
                 catch (FormatException) // however, if the user wrote anything that doesn't end in a number
                 {

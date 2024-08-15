@@ -12,6 +12,7 @@
     {
         [GeneratedRegex(@"\s+")]
         private static partial Regex WhitespaceToSpaceRegex();
+
         private readonly BehaviorSettings _userBehaviorSettings;
         private string _copyText = "";
 
@@ -38,7 +39,7 @@
         /// On this initialization, the object builds itself using the system <see cref="Clipboard"/>.
         /// </summary>
         /// <param name="behaviorSettings">
-        /// User's <see cref="BehaviorSettings"/> object - 
+        /// User's <see cref="BehaviorSettings"/> object -
         /// used here to determine whether we need to perform the potentially performance intenstive process of getting an image.
         /// </param>
         public ClipboardContent(BehaviorSettings behaviorSettings)
@@ -48,7 +49,7 @@
         }
 
         /// <summary>
-        /// Wrapper for <see cref="GetDataFromClipboard"/>, 
+        /// Wrapper for <see cref="GetDataFromClipboard"/>,
         /// that calls it an additional five times if the initial call resulted in no data.
         /// </summary>
         /// <remarks>
@@ -74,7 +75,10 @@
         /// </summary>
         private void GetDataFromClipboard()
         {
-            if (Clipboard.ContainsText()) { Text = Clipboard.GetText(); }
+            if (Clipboard.ContainsText())
+            {
+                Text = Clipboard.GetText();
+            }
 
             if (Clipboard.ContainsFileDropList())
             {
@@ -91,8 +95,14 @@
             {
                 // we're using user settings here instead of simply not displaying the image in the Flyout,
                 // so that we don't have to call GetImage(), which can be intensive on big images
-                if (_userBehaviorSettings.AllowImages) { Image = Clipboard.GetImage(); }
-                else { Image = new Bitmap(1, 1); } // creates a fake image that can be passed on and easily detected
+                if (_userBehaviorSettings.AllowImages)
+                {
+                    Image = Clipboard.GetImage();
+                }
+                else
+                {
+                    Image = new Bitmap(1, 1);
+                } // creates a fake image that can be passed on and easily detected
             }
         }
 
@@ -116,14 +126,21 @@
         /// <returns>Booelan representing whether the two objects represent the same Clipboard values.</returns>
         public override bool Equals(object? obj)
         {
-            if (obj is not ClipboardContent other) { return false; }
+            if (obj is not ClipboardContent other)
+            {
+                return false;
+            }
 
             return _copyText == other._copyText
                 && FileAmount == other.FileAmount
-                && (Image is null && other.Image is null
-                    || (Image is not null && other.Image is not null
-                        && 
-                        ImageToByteArray(Image).SequenceEqual(ImageToByteArray(other.Image))));
+                && (
+                    Image is null && other.Image is null
+                    || (
+                        Image is not null
+                        && other.Image is not null
+                        && ImageToByteArray(Image).SequenceEqual(ImageToByteArray(other.Image))
+                    )
+                );
         }
 
         public override int GetHashCode()

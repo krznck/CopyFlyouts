@@ -14,13 +14,24 @@
         public static readonly NamedValue SixteenHours = new("16 hours", 960);
         public static readonly NamedValue OneDay = new("1 day", 1440);
 
-        public static readonly List<NamedValue> Frequencies = [FifteenMinutes, ThirtyMinutes, OneHour, TwoHours, FourHours, EightHours, SixteenHours, OneDay];
+        public static readonly List<NamedValue> Frequencies =
+        [
+            FifteenMinutes,
+            ThirtyMinutes,
+            OneHour,
+            TwoHours,
+            FourHours,
+            EightHours,
+            SixteenHours,
+            OneDay
+        ];
 
         public static NamedValue? Find(string name)
         {
             foreach (NamedValue frequency in Frequencies)
             {
-                if (name.Equals(frequency.ToString())) return frequency;
+                if (name.Equals(frequency.ToString()))
+                    return frequency;
             }
 
             return null;

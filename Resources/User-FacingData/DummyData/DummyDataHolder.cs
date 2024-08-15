@@ -10,23 +10,38 @@
     public class DummyDataHolder
     {
         #region Hardcoded Values
-        private static readonly DummyImage tina1 = new (new Uri("pack://application:,,,/Assets/DummyFiles/Images/tina1.jpg"));
-        private static readonly DummyImage tina2 = new (new Uri("pack://application:,,,/Assets/DummyFiles/Images/tina2.jpg"));
-        private static readonly DummyImage tina3 = new (new Uri("pack://application:,,,/Assets/DummyFiles/Images/tina3.jpg"));
-        private static readonly DummyImage tina4 = new (new Uri("pack://application:,,,/Assets/DummyFiles/Images/tina4.jpg"));
-        private static readonly DummyImage tina5 = new (new Uri("pack://application:,,,/Assets/DummyFiles/Images/tina5.jpg"));
+        private static readonly DummyImage tina1 =
+            new(new Uri("pack://application:,,,/Assets/DummyFiles/Images/tina1.jpg"));
+        private static readonly DummyImage tina2 =
+            new(new Uri("pack://application:,,,/Assets/DummyFiles/Images/tina2.jpg"));
+        private static readonly DummyImage tina3 =
+            new(new Uri("pack://application:,,,/Assets/DummyFiles/Images/tina3.jpg"));
+        private static readonly DummyImage tina4 =
+            new(new Uri("pack://application:,,,/Assets/DummyFiles/Images/tina4.jpg"));
+        private static readonly DummyImage tina5 =
+            new(new Uri("pack://application:,,,/Assets/DummyFiles/Images/tina5.jpg"));
 
-        private static readonly string _explanation = "A little toolbox to try the flyouts in action with dummy data. Select text and use Ctrl+C to copy it, or use the copy button on the right. Copy dummy files or images with the buttons on the left. Refresh dummy data with the refresh button.";
+        private static readonly string _explanation =
+            "A little toolbox to try the flyouts in action with dummy data. Select text and use Ctrl+C to copy it, or use the copy button on the right. Copy dummy files or images with the buttons on the left. Refresh dummy data with the refresh button.";
 
-        private static readonly StringCollection paths1 = ["C:\\these\\are\\fake\\files\\than\\cant\\be\\pasted.txt"];
-        private static readonly StringCollection paths2 = ["C:\\absolute\\paths\\will\\be\\displayed\\when\\copying\\files.txt", "D:\\multiple\\files\\will\\show\\multiple\\paths.exe"];
-        private static readonly StringCollection paths3 = [
-                @"C:\Users\JohnDoe\Documents\Report.docx",
-                @"C:\Users\JohnDoe\Pictures\Vacation\Beach.png",
-                @"C:\Users\JohnDoe\Music\FavoriteSong.mp3",
-                @"C:\Users\JohnDoe\Downloads\SoftwareInstaller.exe",
-                @"C:\Users\JohnDoe\Desktop\Project\Presentation.pptx",
-                @"C:\Users\JaneDoe\Work\Spreadsheet.xlsx",];
+        private static readonly StringCollection paths1 =
+        [
+            "C:\\these\\are\\fake\\files\\than\\cant\\be\\pasted.txt"
+        ];
+        private static readonly StringCollection paths2 =
+        [
+            "C:\\absolute\\paths\\will\\be\\displayed\\when\\copying\\files.txt",
+            "D:\\multiple\\files\\will\\show\\multiple\\paths.exe"
+        ];
+        private static readonly StringCollection paths3 =
+        [
+            @"C:\Users\JohnDoe\Documents\Report.docx",
+            @"C:\Users\JohnDoe\Pictures\Vacation\Beach.png",
+            @"C:\Users\JohnDoe\Music\FavoriteSong.mp3",
+            @"C:\Users\JohnDoe\Downloads\SoftwareInstaller.exe",
+            @"C:\Users\JohnDoe\Desktop\Project\Presentation.pptx",
+            @"C:\Users\JaneDoe\Work\Spreadsheet.xlsx",
+        ];
         #endregion
 
         private readonly List<DummyImage> _dummyImages = [tina1, tina2, tina3, tina4, tina5];
@@ -75,7 +90,7 @@
             string[] words = CurrentText.Split(' ');
 
             // shuffles the words around with Fisher-Yates shuffle
-            Random rng = new ();
+            Random rng = new();
             int n = words.Length;
             while (n > 1)
             {

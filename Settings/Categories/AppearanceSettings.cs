@@ -134,8 +134,10 @@
             get => _flyoutCorners;
             set
             {
-                if (value < 0) value = 0;
-                if (value > 20) value = 20;
+                if (value < 0)
+                    value = 0;
+                if (value > 20)
+                    value = 20;
                 _flyoutCorners = value;
                 OnPropertyChanged(nameof(FlyoutCorners));
             }

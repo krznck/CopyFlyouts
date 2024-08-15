@@ -16,19 +16,14 @@
 
         /// <summary>
         /// Initializes the <see cref="Appearance"/> instance.
-        /// Fills the one present combo box with data here, 
+        /// Fills the one present combo box with data here,
         /// as that does not require anything derived from other objects.
         /// </summary>
         public Appearance()
         {
             InitializeComponent();
 
-            ThemeComboBox.ItemsSource = new List<string>
-            {
-                "System",
-                "Light",
-                "Dark"
-            };
+            ThemeComboBox.ItemsSource = new List<string> { "System", "Light", "Dark" };
 
             Loaded += Appearance_Loaded;
         }
@@ -42,7 +37,10 @@
         /// <param name="e">Routed event arguments (unused).</param>
         private void Appearance_Loaded(object sender, RoutedEventArgs e)
         {
-            if (DataContext is not SettingsManager settings) { return; }
+            if (DataContext is not SettingsManager settings)
+            {
+                return;
+            }
 
             _userAppearanceSettings = settings.Appearance;
             _userAppearanceSettings.PropertyChanged += UserSettings_PropertyChanged;
@@ -50,9 +48,15 @@
             LoadToggleLabels();
         }
 
-        private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void UserSettings_PropertyChanged(
+            object? sender,
+            System.ComponentModel.PropertyChangedEventArgs e
+        )
         {
-            if (_userAppearanceSettings is null) { return; }
+            if (_userAppearanceSettings is null)
+            {
+                return;
+            }
 
             switch (e.PropertyName)
             {
@@ -67,14 +71,20 @@
 
         private void LoadToggleLabels()
         {
-            if (_userAppearanceSettings is null) { return; }
+            if (_userAppearanceSettings is null)
+            {
+                return;
+            }
 
             InvertedThemeLabel.Text = _userAppearanceSettings.InvertedTheme ? "On" : "Off";
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)
         {
-            if (_userAppearanceSettings is null) { return; }
+            if (_userAppearanceSettings is null)
+            {
+                return;
+            }
 
             _userAppearanceSettings.Reset();
         }

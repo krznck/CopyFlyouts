@@ -1,8 +1,5 @@
 ﻿namespace CopyFlyouts.Pages
 {
-    using CopyFlyouts.Settings;
-    using CopyFlyouts.Settings.Categories;
-    using CopyFlyouts.Resources;
     using System.IO;
     using System.Media;
     using System.Reflection;
@@ -10,6 +7,9 @@
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Media;
+    using CopyFlyouts.Resources;
+    using CopyFlyouts.Settings;
+    using CopyFlyouts.Settings.Categories;
 
     /// <summary>
     /// Interaction logic for Behavior.xaml.
@@ -41,7 +41,10 @@
         /// <param name="e">Routed event arguments (unused).</param>
         private void Behavior_Loaded(object sender, RoutedEventArgs e)
         {
-            if (DataContext is not SettingsManager settings) { return; }
+            if (DataContext is not SettingsManager settings)
+            {
+                return;
+            }
 
             _userBehaviorSettings = settings.Behavior;
             _userBehaviorSettings.PropertyChanged += UserSettings_PropertyChanged;
@@ -54,23 +57,32 @@
         /// Here, it is used to just switch between the On/Off toggle indicators.
         /// </summary>
         /// <remarks>
-        /// Note: <see cref="Wpf.Ui.Controls.ToggleSwitch"/> objects actually have a way to do this natively within XAML, 
+        /// Note: <see cref="Wpf.Ui.Controls.ToggleSwitch"/> objects actually have a way to do this natively within XAML,
         /// but... then they're on the right, and not on the left like it's on Windows.
         /// </remarks>
         /// <param name="sender">Sender of the event - <see cref="SettingsManager"/> object (unused).</param>
         /// <param name="e">Property changed event arguments (unused).</param>
-        private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void UserSettings_PropertyChanged(
+            object? sender,
+            System.ComponentModel.PropertyChangedEventArgs e
+        )
         {
-            if (_userBehaviorSettings is null) {  return; }
+            if (_userBehaviorSettings is null)
+            {
+                return;
+            }
 
             switch (e.PropertyName)
             {
                 case nameof(SettingsManager.Behavior.EnableKeyboardFlyouts):
-                    EnableKeyboardFlyoutsLabel.Text = _userBehaviorSettings.EnableKeyboardFlyouts ? "On" : "Off";
+                    EnableKeyboardFlyoutsLabel.Text = _userBehaviorSettings.EnableKeyboardFlyouts
+                        ? "On"
+                        : "Off";
                     break;
 
                 case nameof(SettingsManager.Behavior.EnableNonKeyboardFlyouts):
-                    EnableNonKeyboardFlyoutsLabel.Text = _userBehaviorSettings.EnableNonKeyboardFlyouts ? "On" : "Off";
+                    EnableNonKeyboardFlyoutsLabel.Text =
+                        _userBehaviorSettings.EnableNonKeyboardFlyouts ? "On" : "Off";
                     break;
 
                 case nameof(SettingsManager.Behavior.AllowImages):
@@ -78,19 +90,27 @@
                     break;
 
                 case nameof(SettingsManager.Behavior.EnableFlyoutAnimations):
-                    FlyoutAnimationsLabel.Text = _userBehaviorSettings.EnableFlyoutAnimations ? "On" : "Off";
+                    FlyoutAnimationsLabel.Text = _userBehaviorSettings.EnableFlyoutAnimations
+                        ? "On"
+                        : "Off";
                     break;
 
                 case nameof(SettingsManager.Behavior.EnableSuccessSound):
-                    EnableSuccessSoundsLabel.Text = _userBehaviorSettings.EnableSuccessSound ? "On" : "Off";
+                    EnableSuccessSoundsLabel.Text = _userBehaviorSettings.EnableSuccessSound
+                        ? "On"
+                        : "Off";
                     break;
 
                 case nameof(SettingsManager.Behavior.EnableErrorSound):
-                    EnableErrorSoundsLabel.Text = _userBehaviorSettings.EnableErrorSound ? "On" : "Off";
+                    EnableErrorSoundsLabel.Text = _userBehaviorSettings.EnableErrorSound
+                        ? "On"
+                        : "Off";
                     break;
 
                 case nameof(SettingsManager.Behavior.FlyoutUnderCursor):
-                    FlyoutsUnderCursorLabel.Text = _userBehaviorSettings.FlyoutUnderCursor ? "On" : "Off";
+                    FlyoutsUnderCursorLabel.Text = _userBehaviorSettings.FlyoutUnderCursor
+                        ? "On"
+                        : "Off";
                     break;
 
                 default:
@@ -102,7 +122,10 @@
 
         private void Reset_Click(object sender, RoutedEventArgs e)
         {
-            if (_userBehaviorSettings is null) { return; }
+            if (_userBehaviorSettings is null)
+            {
+                return;
+            }
 
             _userBehaviorSettings.Reset();
         }
@@ -117,7 +140,9 @@
                 // If the child is a ToggleButton, update its binding
                 if (child is ToggleButton toggleButton)
                 {
-                    var bindingExpression = toggleButton.GetBindingExpression(ToggleButton.IsCheckedProperty);
+                    var bindingExpression = toggleButton.GetBindingExpression(
+                        ToggleButton.IsCheckedProperty
+                    );
                     bindingExpression?.UpdateTarget();
                 }
 
@@ -128,11 +153,17 @@
 
         private void FailurePlayButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_userBehaviorSettings is null) { return; }
+            if (_userBehaviorSettings is null)
+            {
+                return;
+            }
 
             var sound = FailureSounds.Find(_userBehaviorSettings.ChosenErrorSound);
 
-            if (sound is null) { return; }
+            if (sound is null)
+            {
+                return;
+            }
 
             string assetPath = sound.AssetPath;
             PlaySound(assetPath);
@@ -140,11 +171,17 @@
 
         private void SuccessPreviewButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_userBehaviorSettings is null) { return; }
+            if (_userBehaviorSettings is null)
+            {
+                return;
+            }
 
             var sound = SuccessSounds.Find(_userBehaviorSettings.ChosenSuccessSound);
 
-            if (sound is null) { return; }
+            if (sound is null)
+            {
+                return;
+            }
 
             string assetPath = sound.AssetPath;
             PlaySound(assetPath);
@@ -154,12 +191,21 @@
 
         private void LoadToggleLabels()
         {
-            if (_userBehaviorSettings is null) { return; }
+            if (_userBehaviorSettings is null)
+            {
+                return;
+            }
 
-            EnableKeyboardFlyoutsLabel.Text = _userBehaviorSettings.EnableKeyboardFlyouts ? "On" : "Off";
-            EnableNonKeyboardFlyoutsLabel.Text = _userBehaviorSettings.EnableNonKeyboardFlyouts ? "On" : "Off";
+            EnableKeyboardFlyoutsLabel.Text = _userBehaviorSettings.EnableKeyboardFlyouts
+                ? "On"
+                : "Off";
+            EnableNonKeyboardFlyoutsLabel.Text = _userBehaviorSettings.EnableNonKeyboardFlyouts
+                ? "On"
+                : "Off";
             AllowImagesLabel.Text = _userBehaviorSettings.AllowImages ? "On" : "Off";
-            FlyoutAnimationsLabel.Text = _userBehaviorSettings.EnableFlyoutAnimations ? "On" : "Off";
+            FlyoutAnimationsLabel.Text = _userBehaviorSettings.EnableFlyoutAnimations
+                ? "On"
+                : "Off";
             EnableSuccessSoundsLabel.Text = _userBehaviorSettings.EnableSuccessSound ? "On" : "Off";
             EnableErrorSoundsLabel.Text = _userBehaviorSettings.EnableErrorSound ? "On" : "Off";
             FlyoutsUnderCursorLabel.Text = _userBehaviorSettings.FlyoutUnderCursor ? "On" : "Off";
@@ -181,10 +227,7 @@
         {
             // extracted this here because it really cluttered the constructor
 
-            var screenOptions = new List<string>
-            {
-                "Follow cursor"
-            };
+            var screenOptions = new List<string> { "Follow cursor" };
             for (int i = 0; i <= Screen.AllScreens.Length - 1; i++)
             {
                 string monitor = "Screen " + (i + 1).ToString();

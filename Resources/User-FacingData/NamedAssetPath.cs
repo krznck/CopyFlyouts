@@ -12,7 +12,7 @@
     /// <param name="assetPath">Path of an asset to be processed.</param>
     public class NamedAssetPath(string name, string assetPath)
     {
-        public string Name { get; } = name; 
+        public string Name { get; } = name;
         public string AssetPath { get; } = assetPath;
 
         public override string ToString()

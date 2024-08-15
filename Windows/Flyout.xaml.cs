@@ -1,8 +1,5 @@
 ﻿namespace CopyFlyouts
 {
-    using CopyFlyouts.Settings;
-    using CopyFlyouts.Core;
-    using CopyFlyouts.Resources;
     using System.IO;
     using System.Media;
     using System.Reflection;
@@ -13,6 +10,9 @@
     using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using CopyFlyouts.Core;
+    using CopyFlyouts.Resources;
+    using CopyFlyouts.Settings;
     using Wpf.Ui.Appearance;
     using Wpf.Ui.Controls;
 
@@ -50,7 +50,11 @@
         /// <param name="previousClip">Previous clipboard content, to compare with current for success or failure.</param>
         /// <param name="clipContent">Current clipboard content, to be compared and shown.</param>
         /// <param name="userSettings">The settings necessary to manipulate the flyout per user's wishes.</param>
-        public Flyout(ClipboardContent previousClip, ClipboardContent clipContent, SettingsManager userSettings)
+        public Flyout(
+            ClipboardContent previousClip,
+            ClipboardContent clipContent,
+            SettingsManager userSettings
+        )
         {
             InitializeComponent();
             _previousClip = previousClip;
@@ -61,7 +65,10 @@
 
             text.Text = _clipContent.Text;
 
-            if (_clipContent.FileAmount > 0) { AddFileIcon(); }
+            if (_clipContent.FileAmount > 0)
+            {
+                AddFileIcon();
+            }
 
             if (_clipContent.FileAmount > 1)
             {
@@ -75,14 +82,21 @@
 
                 // the following check is to see that this is a flyout with an image that we are allowed to show
                 // i.e., if the image is a dummy and the user has no need to see it, then there's no point in going further
-                if (!(_clipContent.Image.Height == 1 
-                    && _clipContent.Image.Width == 1 
-                    && !_userSettings.Behavior.AllowImages))
+                if (
+                    !(
+                        _clipContent.Image.Height == 1
+                        && _clipContent.Image.Width == 1
+                        && !_userSettings.Behavior.AllowImages
+                    )
+                )
                 {
                     flyoutImage.Source = ConvertDrawingImageToWPFImage(_clipContent.Image);
                     flyoutImage.Visibility = Visibility.Visible;
 
-                    if (_clipContent.Text.Length.Equals(0)) { Grid.SetColumnSpan(fileGrid, 2); }
+                    if (_clipContent.Text.Length.Equals(0))
+                    {
+                        Grid.SetColumnSpan(fileGrid, 2);
+                    }
                 }
             }
 
@@ -98,7 +112,10 @@
             ShowInTaskbar = false;
             Focusable = false;
 
-            if (_userSettings.Appearance.InvertedTheme) { ApplyInverseTheme(); }
+            if (_userSettings.Appearance.InvertedTheme)
+            {
+                ApplyInverseTheme();
+            }
 
             if (!_userSettings.Behavior.EnableFlyoutAnimations)
             {
@@ -119,8 +136,14 @@
         {
             SizeChanged += Flyout_SizeChanged;
 
-            if (_userSettings.Behavior.FlyoutUnderCursor) { PlaceWindowAtCursor(); }
-            else { PositionWindow(); }
+            if (_userSettings.Behavior.FlyoutUnderCursor)
+            {
+                PlaceWindowAtCursor();
+            }
+            else
+            {
+                PositionWindow();
+            }
         }
 
         /// <summary>
@@ -135,8 +158,14 @@
             // unsubscribes after the first size change to avoid repeated repositioning
             SizeChanged -= Flyout_SizeChanged;
 
-            if (_userSettings.Behavior.FlyoutUnderCursor) { PlaceWindowAtCursor(); }
-            else { PositionWindow(); }
+            if (_userSettings.Behavior.FlyoutUnderCursor)
+            {
+                PlaceWindowAtCursor();
+            }
+            else
+            {
+                PositionWindow();
+            }
         }
 
         /// <summary>
@@ -149,7 +178,10 @@
             var screens = Screen.AllScreens;
 
             Screen? displayScreen;
-            if (_userSettings.Behavior.FlyoutScreen.Contains("Follow cursor")) { displayScreen = Screen.FromPoint(System.Windows.Forms.Cursor.Position); }
+            if (_userSettings.Behavior.FlyoutScreen.Contains("Follow cursor"))
+            {
+                displayScreen = Screen.FromPoint(System.Windows.Forms.Cursor.Position);
+            }
             else
             {
                 try // tries to get the chosen monitor number
@@ -158,16 +190,21 @@
                     int monitorIndex = choice - 1; // we substract 1 from it since the array of screens starts from 0 and not 1
 
                     // if the monitorIndex is out of bounds, use the primary screen as default
-                    displayScreen = (monitorIndex >= 0 && monitorIndex < screens.Length) ? screens[monitorIndex] : Screen.PrimaryScreen;
+                    displayScreen =
+                        (monitorIndex >= 0 && monitorIndex < screens.Length)
+                            ? screens[monitorIndex]
+                            : Screen.PrimaryScreen;
                 }
                 catch (FormatException) // but if the settings somehow had anything other than the allowed choice
                 {
                     displayScreen = Screen.FromPoint(System.Windows.Forms.Cursor.Position); // then default to following cursor
                 }
-
             }
 
-            if (displayScreen is null) { throw new ArgumentNullException("Display screen not determined"); }
+            if (displayScreen is null)
+            {
+                throw new ArgumentNullException("Display screen not determined");
+            }
 
             // uses the working area of the screen to place the flyout
             var workingArea = displayScreen.WorkingArea;
@@ -179,7 +216,10 @@
             // (on laptops, very commonly 125% scaling is used instead of 100%)
             var matrix = PresentationSource.FromVisual(this)?.CompositionTarget?.TransformToDevice;
 
-            if (!matrix.HasValue) { throw new ArgumentException("Display transformation matrix has no value."); }
+            if (!matrix.HasValue)
+            {
+                throw new ArgumentException("Display transformation matrix has no value.");
+            }
 
             double dpiXFactor = matrix.Value.M11; // horizontal scaling factor
             double dpiYFactor = matrix.Value.M22; // vertical scaling factor
@@ -188,17 +228,28 @@
             double workingAreaWidthDiu = workingArea.Width / dpiXFactor;
             double workingAreaHeightDiu = workingArea.Height / dpiYFactor;
 
-            var horizontalAllignment = HorizontalScreenAllignments.Find(_userSettings.Behavior.FlyoutHorizontalAllignment);
-            var verticalAllignment = VerticalScreenAllignments.Find(_userSettings.Behavior.FlyoutVerticalAllignment);
+            var horizontalAllignment = HorizontalScreenAllignments.Find(
+                _userSettings.Behavior.FlyoutHorizontalAllignment
+            );
+            var verticalAllignment = VerticalScreenAllignments.Find(
+                _userSettings.Behavior.FlyoutVerticalAllignment
+            );
 
-            if (horizontalAllignment is null || verticalAllignment is null) { throw new ArgumentNullException("Possible allignments not found."); }
+            if (horizontalAllignment is null || verticalAllignment is null)
+            {
+                throw new ArgumentNullException("Possible allignments not found.");
+            }
 
             double horizontalValue = horizontalAllignment.Value;
             double verticalValue = verticalAllignment.Value;
 
             // finally puts the flyout at the appropriate place, in accordance with the settings
-            Left = workingArea.Left / dpiXFactor + (workingAreaWidthDiu - windowWidth) * horizontalValue;
-            Top = workingArea.Top / dpiYFactor + (workingAreaHeightDiu - windowHeight) * verticalValue;
+            Left =
+                workingArea.Left / dpiXFactor
+                + (workingAreaWidthDiu - windowWidth) * horizontalValue;
+            Top =
+                workingArea.Top / dpiYFactor
+                + (workingAreaHeightDiu - windowHeight) * verticalValue;
         }
 
         /// <summary>
@@ -206,8 +257,13 @@
         /// </summary>
         private void PlaceWindowAtCursor()
         {
-            PresentationSource source = PresentationSource.FromVisual(System.Windows.Application.Current.MainWindow);
-            if (source is null) { return; }
+            PresentationSource source = PresentationSource.FromVisual(
+                System.Windows.Application.Current.MainWindow
+            );
+            if (source is null)
+            {
+                return;
+            }
 
             double dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
             double dpiY = 96.0 * source.CompositionTarget.TransformToDevice.M22;
@@ -253,36 +309,53 @@
 
                 if (_userSettings.Behavior.EnableErrorSound)
                 {
-                    NamedAssetPath? sound = FailureSounds.Find(_userSettings.Behavior.ChosenErrorSound);
-                    if (sound is not null) { PlaySound(sound); }
+                    NamedAssetPath? sound = FailureSounds.Find(
+                        _userSettings.Behavior.ChosenErrorSound
+                    );
+                    if (sound is not null)
+                    {
+                        PlaySound(sound);
+                    }
                 }
 
-                text.Foreground = (SolidColorBrush)System.Windows.Application.Current.Resources["colorStatusDangerForeground1"];
+                text.Foreground = (SolidColorBrush)
+                    System.Windows.Application.Current.Resources["colorStatusDangerForeground1"];
                 text.Text = "Copied text is empty!";
             }
-
             // note: here, we're not setting this to an error if the copy is an image with no path but images are not allowed,
             // since comparing a ClipboardContent that just says "Clipboard only has an image, but I'm not telling you what it is!" can't reasonably be compared
             // to another instance of such a ClipboardContent. This is the downside of avoiding calling Clipboard.GetImage() for performance. User should be told this in an info tooltip.
-            else if (_previousClip is not null && _previousClip.Equals(_clipContent) && !(copyHasImage && copyHasNoText && !_userSettings.Behavior.AllowImages))
+            else if (
+                _previousClip is not null
+                && _previousClip.Equals(_clipContent)
+                && !(copyHasImage && copyHasNoText && !_userSettings.Behavior.AllowImages)
+            )
             {
                 SetToErrorIcon();
 
                 if (_userSettings.Behavior.EnableErrorSound)
                 {
-                    NamedAssetPath? sound = FailureSounds.Find(_userSettings.Behavior.ChosenErrorSound);
-                    if (sound is not null) { PlaySound(sound); }
+                    NamedAssetPath? sound = FailureSounds.Find(
+                        _userSettings.Behavior.ChosenErrorSound
+                    );
+                    if (sound is not null)
+                    {
+                        PlaySound(sound);
+                    }
                 }
             }
-
             else if (_userSettings.Behavior.EnableSuccessSound)
             {
                 if (_userSettings.Behavior.EnableSuccessSound)
                 {
-                    NamedAssetPath? sound = SuccessSounds.Find(_userSettings.Behavior.ChosenSuccessSound);
-                    if (sound is not null) { PlaySound(sound); }
+                    NamedAssetPath? sound = SuccessSounds.Find(
+                        _userSettings.Behavior.ChosenSuccessSound
+                    );
+                    if (sound is not null)
+                    {
+                        PlaySound(sound);
+                    }
                 }
-
             }
             base.Show();
             ConvertToToolWindowAndClickThrough(); // this has to be after the base.Show() to work
@@ -293,7 +366,7 @@
         /// </summary>
         private void ConvertToToolWindowAndClickThrough()
         {
-            WindowInteropHelper helper = new (this);
+            WindowInteropHelper helper = new(this);
             int extendedWindowStyles = GetWindowLong(helper.Handle, GWL_EXSTYLE);
             extendedWindowStyles |= WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT;
             _ = SetWindowLong(helper.Handle, GWL_EXSTYLE, extendedWindowStyles);
@@ -303,7 +376,8 @@
         private void SetToErrorIcon()
         {
             icon.Symbol = SymbolRegular.ClipboardError16;
-            icon.Foreground = (SolidColorBrush)System.Windows.Application.Current.Resources["colorStatusDangerForeground1"];
+            icon.Foreground = (SolidColorBrush)
+                System.Windows.Application.Current.Resources["colorStatusDangerForeground1"];
         }
 
         private void AddSecondIcon(SymbolRegular symbol)
@@ -336,7 +410,7 @@
             memoryStream.Seek(0, SeekOrigin.Begin);
 
             // then create a new BitmapImage and set its properties
-            BitmapImage bitmapImage = new ();
+            BitmapImage bitmapImage = new();
             bitmapImage.BeginInit();
             bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
             bitmapImage.StreamSource = memoryStream;
@@ -350,12 +424,22 @@
             if (ApplicationThemeManager.GetAppTheme().Equals(ApplicationTheme.Dark))
             {
                 Resources.MergedDictionaries.Clear();
-                Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("/Resources/Light.xaml", UriKind.Relative) });
+                Resources.MergedDictionaries.Add(
+                    new ResourceDictionary
+                    {
+                        Source = new Uri("/Resources/Light.xaml", UriKind.Relative)
+                    }
+                );
             }
             else
             {
                 Resources.MergedDictionaries.Clear();
-                Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("/Resources/Dark.xaml", UriKind.Relative) });
+                Resources.MergedDictionaries.Add(
+                    new ResourceDictionary
+                    {
+                        Source = new Uri("/Resources/Dark.xaml", UriKind.Relative)
+                    }
+                );
             }
         }
     }

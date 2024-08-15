@@ -1,11 +1,11 @@
 ﻿namespace CopyFlyouts.Pages
 {
-    using CopyFlyouts.UpdateInfrastructure;
     using System.Windows;
     using System.Windows.Controls;
     using CopyFlyouts.Resources;
     using CopyFlyouts.Settings;
     using CopyFlyouts.Settings.Categories;
+    using CopyFlyouts.UpdateInfrastructure;
 
     /// <summary>
     /// Interaction logic for About.xaml.
@@ -19,7 +19,7 @@
 
         /// <summary>
         /// Initializes the <see cref="About"/> instance.
-        /// Fills the one present combo box with data here, 
+        /// Fills the one present combo box with data here,
         /// as that does not require anything derived from non-static objects.
         /// </summary>
         public About()
@@ -44,7 +44,10 @@
         /// <param name="e">Routed event arguments (unused).</param>
         private void About_Loaded(object sender, RoutedEventArgs e)
         {
-            if (DataContext is not SettingsManager settings) { return; }
+            if (DataContext is not SettingsManager settings)
+            {
+                return;
+            }
 
             _userAboutSettings = settings.About;
             _userAboutSettings.PropertyChanged += UserSettings_PropertyChanged;
@@ -59,9 +62,15 @@
         /// </summary>
         /// <param name="sender">Sender of the event - <see cref="SettingsManager"/> object (unused).</param>
         /// <param name="e">Property changed event arguments - used to see which property has changed.</param>
-        private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void UserSettings_PropertyChanged(
+            object? sender,
+            System.ComponentModel.PropertyChangedEventArgs e
+        )
         {
-            if (_userAboutSettings is null) { return; }
+            if (_userAboutSettings is null)
+            {
+                return;
+            }
 
             switch (e.PropertyName)
             {
@@ -80,7 +89,10 @@
 
         private void LoadToggleLabels()
         {
-            if (_userAboutSettings is null) { return; }
+            if (_userAboutSettings is null)
+            {
+                return;
+            }
 
             AutoUpdateLabel.Text = _userAboutSettings.AutoUpdate ? "On" : "Off";
         }
@@ -99,14 +111,20 @@
 
         private void Reset_Click(object sender, RoutedEventArgs e)
         {
-            if (_userAboutSettings is null) { return; }
+            if (_userAboutSettings is null)
+            {
+                return;
+            }
 
             _userAboutSettings.Reset();
         }
 
         private async void CheckUpdatesButton_Click(object sender, RoutedEventArgs e)
         {
-            if (UpdateChecker is not null) { await UpdateChecker.CheckForUpdatesManually(); }
+            if (UpdateChecker is not null)
+            {
+                await UpdateChecker.CheckForUpdatesManually();
+            }
         }
 
         private void OpenUpdatePageButton_Click(object sender, RoutedEventArgs e)

@@ -11,12 +11,12 @@
     {
         public Image Image { get; private set; }
 
-        public DummyImage(Uri imageUri) 
+        public DummyImage(Uri imageUri)
         {
             ArgumentNullException.ThrowIfNull(imageUri);
 
-            using MemoryStream memoryStream = new ();
-            JpegBitmapEncoder encoder = new ();
+            using MemoryStream memoryStream = new();
+            JpegBitmapEncoder encoder = new();
             encoder.Frames.Add(BitmapFrame.Create(new BitmapImage(imageUri)));
 
             encoder.Save(memoryStream);

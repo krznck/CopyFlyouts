@@ -22,6 +22,7 @@
         // when this process turns out to be a duplicate
         [DllImport("user32.dll", SetLastError = true)]
         private static extern nint FindWindow(string? lpClassName, string lpWindowName);
+
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern nint SendMessage(nint hWnd, uint Msg, nint wParam, nint lParam);
 
@@ -42,11 +43,15 @@
         /// <param name="e">Startup event arguments - minor role in debugging only if resources can't be found.</param>
         protected override void OnStartup(StartupEventArgs e)
         {
-            if (Current.Resources["ProgramName"] is not string appName 
-                || Current.Resources["AuthorName"] is not string authorName 
-                || Current.Resources["Version"] is not string version) 
-            { 
-                throw new ArgumentNullException("Can't find program naming resources on StartUp with arguments: " + e); 
+            if (
+                Current.Resources["ProgramName"] is not string appName
+                || Current.Resources["AuthorName"] is not string authorName
+                || Current.Resources["Version"] is not string version
+            )
+            {
+                throw new ArgumentNullException(
+                    "Can't find program naming resources on StartUp with arguments: " + e
+                );
             }
 
             string mutexName = authorName + "." + appName + "." + version + ".Mutex";

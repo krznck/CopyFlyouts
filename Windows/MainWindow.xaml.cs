@@ -1,18 +1,18 @@
 ﻿namespace CopyFlyouts
 {
     using System.Windows;
+    using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using Wpf.Ui.Controls;
-    using Wpf.Ui.Appearance;
-    using Microsoft.Win32;
-    using Microsoft.Toolkit.Uwp.Notifications;
     using CopyFlyouts.Core;
-    using CopyFlyouts.UpdateInfrastructure;
-    using CopyFlyouts.Resources;
     using CopyFlyouts.Pages;
+    using CopyFlyouts.Resources;
     using CopyFlyouts.Settings;
-    using System.Windows.Interop;
+    using CopyFlyouts.UpdateInfrastructure;
+    using Microsoft.Toolkit.Uwp.Notifications;
+    using Microsoft.Win32;
+    using Wpf.Ui.Appearance;
+    using Wpf.Ui.Controls;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,7 +23,7 @@
         private CopyCatcher? _copyCatcher;
         private readonly SettingsManager _userSettings;
         private readonly UpdateChecker _updateChecker;
-        private readonly DummyDataHolder _dummyDataHolder = new ();
+        private readonly DummyDataHolder _dummyDataHolder = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -93,7 +93,10 @@
                 Hide();
                 NotifyIcon.Visibility = Visibility.Visible;
 
-                if (!NotifyIcon.IsRegistered) { NotifyIcon.Register(); }
+                if (!NotifyIcon.IsRegistered)
+                {
+                    NotifyIcon.Register();
+                }
 
                 NotifyAboutMinimization();
             }
@@ -124,8 +127,14 @@
             SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
 
             // and ensures that the correct theme is applied on load
-            if (_userSettings.Appearance.Theme.Equals("Dark")) { ApplicationThemeManager.Apply(ApplicationTheme.Dark); }
-            else if (_userSettings.Appearance.Theme.Equals("Light")) { ApplicationThemeManager.Apply(ApplicationTheme.Light); }
+            if (_userSettings.Appearance.Theme.Equals("Dark"))
+            {
+                ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+            }
+            else if (_userSettings.Appearance.Theme.Equals("Light"))
+            {
+                ApplicationThemeManager.Apply(ApplicationTheme.Light);
+            }
             else if (_userSettings.Appearance.Theme.Equals("System"))
             {
                 ApplicationThemeManager.ApplySystemTheme();
@@ -135,10 +144,8 @@
             // and changes the resource dictionary to allign with the app theme
             var newTheme = ApplicationThemeManager.GetAppTheme();
             string newThemeDictionaryPath = "Resources/" + newTheme.ToString() + ".xaml";
-            ResourceDictionary newThemeDictionary = new()
-            {
-                Source = new Uri(newThemeDictionaryPath, UriKind.Relative)
-            };
+            ResourceDictionary newThemeDictionary =
+                new() { Source = new Uri(newThemeDictionaryPath, UriKind.Relative) };
             Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
 
             RefreshNotifyIconAppearance(); // finally, we ensure the notify icon will use the correct team when visible
@@ -165,12 +172,21 @@
 
             // these are here in the rare case that the user manually changed the settings file while the program was off,
             // in which case the OnPropertyChanged of the user settings would have never triggered to add it/remove it from startup
-            if (_userSettings.General.RunOnStartup) { AddToStartup(); }
-            else { RemoveFromStartup(); }
+            if (_userSettings.General.RunOnStartup)
+            {
+                AddToStartup();
+            }
+            else
+            {
+                RemoveFromStartup();
+            }
 
             // we want to make sure it's clear when there is an update, so it's good to do these on each load
             RefreshUpdateIndicator();
-            if (_userSettings.About.UpdateVersion is not null) { _updateChecker.NotifyAboutUpdate(); }
+            if (_userSettings.About.UpdateVersion is not null)
+            {
+                _updateChecker.NotifyAboutUpdate();
+            }
 
             ToolboxTextBox.Text = _dummyDataHolder.CurrentText;
         }
@@ -211,7 +227,10 @@
         /// <param name="args">Navigated events arguments - used here to check whether the page being navigated to is <see cref="About"/></param>
         private void RootNavigation_Navigated(NavigationView sender, NavigatedEventArgs args)
         {
-            if (args.Page is About aboutPage && aboutPage.UpdateChecker is null) { aboutPage.UpdateChecker = _updateChecker; }
+            if (args.Page is About aboutPage && aboutPage.UpdateChecker is null)
+            {
+                aboutPage.UpdateChecker = _updateChecker;
+            }
         }
 
         /// <summary>
@@ -219,22 +238,39 @@
         /// </summary>
         /// <param name="currentApplicationTheme">The application theme after the change - used to delete the old resource and switch to the new.</param>
         /// <param name="systemAccent">System accent color (unused).</param>
-        private void ApplicationThemeManager_Changed(ApplicationTheme currentApplicationTheme, Color systemAccent)
+        private void ApplicationThemeManager_Changed(
+            ApplicationTheme currentApplicationTheme,
+            Color systemAccent
+        )
         {
             // determines what the old theme was
             Uri oldThemeUri;
-            if (currentApplicationTheme.Equals(ApplicationTheme.Light)) { oldThemeUri = new Uri("Resources/Dark.xaml", UriKind.Relative); }
-            else { oldThemeUri = new Uri("Resources/Light.xaml", UriKind.Relative); }
+            if (currentApplicationTheme.Equals(ApplicationTheme.Light))
+            {
+                oldThemeUri = new Uri("Resources/Dark.xaml", UriKind.Relative);
+            }
+            else
+            {
+                oldThemeUri = new Uri("Resources/Light.xaml", UriKind.Relative);
+            }
 
             // finds it by its uri
-            var oldThemeDictionary = Application.Current.Resources.MergedDictionaries.FirstOrDefault(d => d.Source == oldThemeUri);
+            var oldThemeDictionary =
+                Application.Current.Resources.MergedDictionaries.FirstOrDefault(d =>
+                    d.Source == oldThemeUri
+                );
 
             // removes it, if found
-            if (oldThemeDictionary is not null) { Application.Current.Resources.MergedDictionaries.Remove(oldThemeDictionary); }
+            if (oldThemeDictionary is not null)
+            {
+                Application.Current.Resources.MergedDictionaries.Remove(oldThemeDictionary);
+            }
 
             // and adds the new one in
-            string newThemeDictionaryPath = "Resources/" + currentApplicationTheme.ToString() + ".xaml";
-            ResourceDictionary newThemeDictionary = new () { Source = new Uri(newThemeDictionaryPath, UriKind.Relative) };
+            string newThemeDictionaryPath =
+                "Resources/" + currentApplicationTheme.ToString() + ".xaml";
+            ResourceDictionary newThemeDictionary =
+                new() { Source = new Uri(newThemeDictionaryPath, UriKind.Relative) };
             Application.Current.Resources.MergedDictionaries.Add(newThemeDictionary);
 
             // and finally also updates the update indicator with the new theme colors
@@ -247,11 +283,17 @@
         /// </summary>
         /// <param name="sender">Source of the event - typically <see cref="Microsoft.Win32.SystemEvents"/> in this case.</param>
         /// <param name="e">User preferences changed arguments (unused).</param>
-        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        private void SystemEvents_UserPreferenceChanged(
+            object sender,
+            UserPreferenceChangedEventArgs e
+        )
         {
             // Category is Desktop when we force theme via the Auto Dark Mode app, and General if we do it via the settings
             // I don't really know why
-            if (e.Category == UserPreferenceCategory.Desktop || e.Category == UserPreferenceCategory.General)
+            if (
+                e.Category == UserPreferenceCategory.Desktop
+                || e.Category == UserPreferenceCategory.General
+            )
             {
                 RefreshNotifyIconAppearance();
                 RefreshUpdateIndicator();
@@ -263,10 +305,16 @@
         /// </summary>
         /// <param name="sender">Source of the event - should be <see cref="SettingsManager"/> (unused).</param>
         /// <param name="e">Property changed event arguments - used to see which property has changed.</param>
-        private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void UserSettings_PropertyChanged(
+            object? sender,
+            System.ComponentModel.PropertyChangedEventArgs e
+        )
         {
             // when the flyouts are disabled, but on a change DIFFERENT than disabling them
-            if (e.PropertyName != nameof(SettingsManager.General.FlyoutsEnabled) && !_userSettings.General.FlyoutsEnabled)
+            if (
+                e.PropertyName != nameof(SettingsManager.General.FlyoutsEnabled)
+                && !_userSettings.General.FlyoutsEnabled
+            )
             {
                 WarningFooter.Visibility = Visibility.Visible; // we show the footer to warn the user
             }
@@ -297,21 +345,33 @@
                     if (_userSettings.General.FlyoutsEnabled)
                     {
                         ProgramStateMenuItem.Header = "Disable";
-                        ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Play24 };
+                        ProgramStateMenuItem.Icon = new SymbolIcon
+                        {
+                            Symbol = SymbolRegular.Play24
+                        };
                         WarningFooter.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
                         ProgramStateMenuItem.Header = "Enable";
-                        ProgramStateMenuItem.Icon = new SymbolIcon { Symbol = SymbolRegular.Pause24 };
+                        ProgramStateMenuItem.Icon = new SymbolIcon
+                        {
+                            Symbol = SymbolRegular.Pause24
+                        };
                     }
 
                     RefreshNotifyIconAppearance();
                     break;
 
                 case nameof(SettingsManager.General.RunOnStartup):
-                    if (_userSettings.General.RunOnStartup) { AddToStartup(); }
-                    else { RemoveFromStartup(); }
+                    if (_userSettings.General.RunOnStartup)
+                    {
+                        AddToStartup();
+                    }
+                    else
+                    {
+                        RemoveFromStartup();
+                    }
                     break;
 
                 case nameof(SettingsManager.About.UpdateVersion):
@@ -338,8 +398,14 @@
             var appName = Application.Current.Resources["ProgramName"] as string;
             var appFileName = appName + ".exe";
 
-            string executablePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, appFileName);
-            RegistryKey? registryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            string executablePath = System.IO.Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                appFileName
+            );
+            RegistryKey? registryKey = Registry.CurrentUser.OpenSubKey(
+                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                true
+            );
             registryKey?.SetValue(appName, executablePath);
         }
 
@@ -353,11 +419,16 @@
         {
             var appName = Application.Current.Resources["ProgramName"] as string;
 
-            RegistryKey? registryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            RegistryKey? registryKey = Registry.CurrentUser.OpenSubKey(
+                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                true
+            );
 
-            if (registryKey is not null
+            if (
+                registryKey is not null
                 && registryKey.GetValue(appName) is not null
-                && appName is not null)
+                && appName is not null
+            )
             {
                 registryKey.DeleteValue(appName, false);
             }
@@ -379,10 +450,11 @@
 
                 new ToastContentBuilder()
                     .AddText($"Minimized to system tray")
-                    .AddText($"{appName} will run in the background, and can still be accessed from the system tray!")
+                    .AddText(
+                        $"{appName} will run in the background, and can still be accessed from the system tray!"
+                    )
                     .Show();
             }
-
         }
 
         /// <summary>
@@ -413,11 +485,15 @@
 
             if (ApplicationThemeManager.GetSystemTheme() == SystemTheme.Dark)
             {
-                filePath += _userSettings.General.FlyoutsEnabled ? "logo-slim-darkmode" : "logo-slim-darkmode-disabled";
+                filePath += _userSettings.General.FlyoutsEnabled
+                    ? "logo-slim-darkmode"
+                    : "logo-slim-darkmode-disabled";
             }
             else
             {
-                filePath += _userSettings.General.FlyoutsEnabled ? "logo-slim" : "logo-slim-disabled";
+                filePath += _userSettings.General.FlyoutsEnabled
+                    ? "logo-slim"
+                    : "logo-slim-disabled";
             }
 
             filePath += ".ico";
@@ -435,7 +511,8 @@
             if (_userSettings.About.UpdateVersion is not null)
             {
                 AboutSymbol.Filled = true;
-                SolidColorBrush colorStatusDangerForeground1 = (SolidColorBrush)Application.Current.Resources["colorStatusDangerForeground1"];
+                SolidColorBrush colorStatusDangerForeground1 = (SolidColorBrush)
+                    Application.Current.Resources["colorStatusDangerForeground1"];
                 AboutSymbol.Foreground = colorStatusDangerForeground1;
             }
             else
@@ -497,7 +574,12 @@
 
         private async void ToolboxImageButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.Clipboard.SetDataObject(_dummyDataHolder.CurrentImage, false, 5, 200);
+            System.Windows.Forms.Clipboard.SetDataObject(
+                _dummyDataHolder.CurrentImage,
+                false,
+                5,
+                200
+            );
 
             ToolboxImageButton.IsEnabled = false;
             await Task.Delay(250);

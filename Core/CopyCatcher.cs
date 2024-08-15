@@ -6,8 +6,8 @@
     using System.Windows.Input;
     using System.Windows.Interop;
     using System.Windows.Threading;
-    using WK.Libraries.SharpClipboardNS;
     using CopyFlyouts.Settings;
+    using WK.Libraries.SharpClipboardNS;
 
     /// <summary>
     /// Responsible for catching and processing (i.e., generating flyouts for)
@@ -54,16 +54,25 @@
             // register Ctrl + C as global hotkey
             RegisterKeyboardCatching();
             // listens to non-keyboard copies
-            if (_userSettings.Behavior.EnableNonKeyboardFlyouts && _userSettings.General.FlyoutsEnabled) { SubscribeToClipboard(); }
+            if (
+                _userSettings.Behavior.EnableNonKeyboardFlyouts
+                && _userSettings.General.FlyoutsEnabled
+            )
+            {
+                SubscribeToClipboard();
+            }
         }
 
         /// <summary>
-        /// Event handler for the <see cref="SharpClipboard"/>'s ClipboardChanged event, 
+        /// Event handler for the <see cref="SharpClipboard"/>'s ClipboardChanged event,
         /// i.e. when the <see cref="Clipboard"/> has been modified.
         /// </summary>
         /// <param name="sender">Origin of the event - the <see cref="SharpClipboard"/> instance (unused).</param>
         /// <param name="e">Clipboard changed event arguments (unused).</param>
-        private void SharpClipboard_ClipboardChanged(object? sender, SharpClipboard.ClipboardChangedEventArgs e)
+        private void SharpClipboard_ClipboardChanged(
+            object? sender,
+            SharpClipboard.ClipboardChangedEventArgs e
+        )
         {
             // SharpClipboard detects a clipboard change when the program is turned on,
             // causing a flyout of the _previousClipboard to show.
@@ -84,10 +93,7 @@
             // note: could potentially be caused by the fact that we have to listen to multiple formats,
             // potentially triggering the event multiple times for one copy, when a copy has multiple DataFormats?
             UnscrubscribeFromClipboard();
-            var timer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(1)
-            };
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1) };
             timer.Start();
             timer.Tick += (sender, args) =>
             {
@@ -103,7 +109,10 @@
         /// </summary>
         /// <param name="sender">Sender of the event - <see cref="SettingsManager"/> object (unused).</param>
         /// <param name="e">Property changed event arguments - used to see which property has changed.</param>
-        private void UserSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void UserSettings_PropertyChanged(
+            object? sender,
+            System.ComponentModel.PropertyChangedEventArgs e
+        )
         {
             switch (e.PropertyName)
             {
@@ -111,8 +120,14 @@
 
                     if (_userSettings.General.FlyoutsEnabled)
                     {
-                        if (_userSettings.Behavior.EnableKeyboardFlyouts) { RegisterKeyboardCatching(); }
-                        if (_userSettings.Behavior.EnableNonKeyboardFlyouts) { SubscribeToClipboard(); }
+                        if (_userSettings.Behavior.EnableKeyboardFlyouts)
+                        {
+                            RegisterKeyboardCatching();
+                        }
+                        if (_userSettings.Behavior.EnableNonKeyboardFlyouts)
+                        {
+                            SubscribeToClipboard();
+                        }
                     }
                     else
                     {
@@ -124,8 +139,20 @@
 
                 case (nameof(SettingsManager.Behavior.EnableNonKeyboardFlyouts)):
 
-                    if (_userSettings.Behavior.EnableNonKeyboardFlyouts && _userSettings.General.FlyoutsEnabled) { SubscribeToClipboard(); }
-                    else if (!_userSettings.Behavior.EnableKeyboardFlyouts || !_userSettings.General.FlyoutsEnabled) { UnscrubscribeFromClipboard(); }
+                    if (
+                        _userSettings.Behavior.EnableNonKeyboardFlyouts
+                        && _userSettings.General.FlyoutsEnabled
+                    )
+                    {
+                        SubscribeToClipboard();
+                    }
+                    else if (
+                        !_userSettings.Behavior.EnableKeyboardFlyouts
+                        || !_userSettings.General.FlyoutsEnabled
+                    )
+                    {
+                        UnscrubscribeFromClipboard();
+                    }
 
                     break;
 
@@ -136,16 +163,18 @@
 
         private void SubscribeToClipboard()
         {
-            if (!_clipboardSubscribed) { 
-                _sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged; 
+            if (!_clipboardSubscribed)
+            {
+                _sharpClipboard.ClipboardChanged += SharpClipboard_ClipboardChanged;
                 _clipboardSubscribed = true;
             }
         }
 
         private void UnscrubscribeFromClipboard()
         {
-            if (_clipboardSubscribed) { 
-                _sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged; 
+            if (_clipboardSubscribed)
+            {
+                _sharpClipboard.ClipboardChanged -= SharpClipboard_ClipboardChanged;
                 _clipboardSubscribed = false;
             }
         }
@@ -172,7 +201,10 @@
                 handled = true;
                 UnscrubscribeFromClipboard(); // we stop listening to other copies here, since we know this is a keyboard copy attempt
 
-                if (_userSettings.Behavior.EnableKeyboardFlyouts) { HandleKeyboardCopy(); }
+                if (_userSettings.Behavior.EnableKeyboardFlyouts)
+                {
+                    HandleKeyboardCopy();
+                }
                 else // note: this behavior is so that non-keyboard flyouts don't get triggerred with EnableKeyboardFlyouts off
                 {
                     UnregisterKeyboardCatching();
@@ -180,7 +212,13 @@
                     RegisterKeyboardCatching();
                 }
 
-                if (_userSettings.Behavior.EnableNonKeyboardFlyouts && _userSettings.General.FlyoutsEnabled) { SubscribeToClipboard(); }
+                if (
+                    _userSettings.Behavior.EnableNonKeyboardFlyouts
+                    && _userSettings.General.FlyoutsEnabled
+                )
+                {
+                    SubscribeToClipboard();
+                }
             }
             return nint.Zero;
         }
@@ -191,7 +229,7 @@
         /// </summary>
         /// <remarks>
         /// Since it was us who consumed the CTRL + C, and not the process that was meant to receive it to trigger a copy,
-        /// we temporarily remove the hotkey listening, and send in another CTRL + C to be processed normally - 
+        /// we temporarily remove the hotkey listening, and send in another CTRL + C to be processed normally -
         /// but now with the knowledge that there's a potential copy waiting for us to process.
         /// </remarks>
         private void HandleKeyboardCopy()
@@ -212,7 +250,7 @@
         /// and then generates and shows a <see cref="Flyout"/> to show this content.
         /// </summary>
         /// <remarks>
-        /// As it's possible that a flyout is already on screen when this is called, 
+        /// As it's possible that a flyout is already on screen when this is called,
         /// the method starts with killing the former flyout.
         /// </remarks>
         private void ShowNewFlyout()
@@ -222,7 +260,7 @@
 
             Thread.Sleep(100); // we wait a little bit to prevent clipboard access conflict
 
-            ClipboardContent currentClipboard = new (_userSettings.Behavior);
+            ClipboardContent currentClipboard = new(_userSettings.Behavior);
             bool copyIsEmpty = currentClipboard.Text.Length == 0;
 
             var flyout = new Flyout(_previousClipboard, currentClipboard, _userSettings);
@@ -232,7 +270,10 @@
             _currentFlyout = flyout;
 
             // creates a DispatcherTimer to close the flyout after the user-specified time
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(_userSettings.Behavior.FlyoutLifetime) };
+            var timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(_userSettings.Behavior.FlyoutLifetime)
+            };
             timer.Tick += (sender, args) =>
             {
                 timer.Stop();
@@ -274,7 +315,12 @@
                 _source = HwndSource.FromHwnd(helper.Handle);
                 _source.AddHook(WndProc);
 
-                RegisterHotKey(helper.Handle, HOTKEY_ID, (uint)ModifierKeys.Control, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
+                RegisterHotKey(
+                    helper.Handle,
+                    HOTKEY_ID,
+                    (uint)ModifierKeys.Control,
+                    (uint)KeyInterop.VirtualKeyFromKey(Key.C)
+                );
             }
         }
 
@@ -288,7 +334,10 @@
         {
             CloseFlyout();
             _source?.RemoveHook(WndProc);
-            UnregisterHotKey(new WindowInteropHelper(Application.Current.MainWindow).Handle, HOTKEY_ID);
+            UnregisterHotKey(
+                new WindowInteropHelper(Application.Current.MainWindow).Handle,
+                HOTKEY_ID
+            );
         }
 
         ~CopyCatcher()
