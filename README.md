@@ -4,8 +4,8 @@
 </p>
 
 <p align="center">
-	<img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/krznck/copy-flyouts/total">
-	<img alt="GitHub Release" src="https://img.shields.io/github/v/release/krznck/copy-flyouts">
+	<img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/krznck/CopyFlyouts/total">
+	<img alt="GitHub Release" src="https://img.shields.io/github/v/release/krznck/CopyFlyouts">
 </p>
 
 CopyFlyouts is a configurable Windows program meant to give visual and optionally audible feedback to copy operations, with the aim of avoiding situations in which a copy attempt has been made, and yet it is unclear whether the target was correctly copied.
@@ -16,7 +16,7 @@ While the main purpose and goal of CopyFlyouts is to be a genuinely useful progr
 
 ## Getting started
 
-Install the program via the [setup executable](https://github.com/krznck/copy-flyouts/releases/latest/download/Setup_CopyFlyouts.exe), or download the [portable version](https://github.com/krznck/copy-flyouts/releases/latest/download/CopyFlyouts_Portable.zip).
+Install the program via the [setup executable](https://github.com/krznck/CopyFlyouts/releases/latest/download/Setup_CopyFlyouts.exe), or download the [portable version](https://github.com/krznck/CopyFlyouts/releases/latest/download/CopyFlyouts_Portable.zip).
 
 ## Showcase
 

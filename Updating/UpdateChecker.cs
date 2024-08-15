@@ -21,7 +21,9 @@
         // note - adding a token like this straight into source code is bad, but it will be fine so long as the repo is private.
         // by the time this repo is publicized, the token will be expired or deleted
         private readonly string _personalAccessToken = "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";
-        private readonly string? _currentVersion;
+        private readonly string _currentVersion;
+        private readonly string _authorName;
+        private readonly string _programName;
         private readonly DispatcherTimer _updateCheckTimer = new ();
         // cached instead of creating a new one every time GetLatestReleaseAsync() is called
         private static readonly JsonSerializerOptions _jsonOptions = new () { PropertyNameCaseInsensitive = true }; 
@@ -34,12 +36,16 @@
         {
             _userAboutSettings = aboutSettings;
 
-            var commonResources = new ResourceDictionary
+            var commonResources = new ResourceDictionary { Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative) };
+            if (commonResources["AuthorName"] is not string authorName 
+                || commonResources["ProgramName"] is not string programName
+                || commonResources["Version"] is not string currentVersion)
             {
-                Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative)
-            };
-            _currentVersion = commonResources["Version"] as string;
-            _currentVersion = _currentVersion?[1..];
+                throw new NullReferenceException("Cannot find program naming resources.");
+            }
+            _authorName = authorName;
+            _programName = programName;
+            _currentVersion = currentVersion[1..]; // we remove the v
 
             aboutSettings.PropertyChanged += UserSettings_PropertyChanged;
 
@@ -83,7 +89,7 @@
         {
             try
             {
-                var url = $"https://api.github.com/repos/krznck/copy-flyouts/releases/latest";
+                var url = $"https://api.github.com/repos/{_authorName}/{_programName}/releases/latest";
                 _client.DefaultRequestHeaders.UserAgent.ParseAdd("request");
                 _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Token", _personalAccessToken);
                 var response = await _client.GetStringAsync(url);
@@ -174,17 +180,17 @@
         /// Sends a notification toast that a new update is available, with an option to open its page.
         /// </summary>
         /// <remarks>
-        /// Does not actually use the url taken from <see cref="GitHubRelease"/> and stored in the user <see cref="SettingsManager"/> objects,
+        /// Does not actually use the url taken from <see cref="GitHubRelease"/>,
         /// since we can just point to the latest releases and ensure the user always opens the newest version when clicking the button.
         /// </remarks>
-        public static void NotifyAboutUpdate()
+        public void NotifyAboutUpdate()
         {
             new ToastContentBuilder()
                 .AddText("New update available")
                 .AddText($"A new version is available!")
                 .AddButton(new ToastButton()
                     .SetContent("Open update page")
-                    .SetProtocolActivation(new Uri("https://github.com/krznck/copy-flyouts/releases/latest")))
+                    .SetProtocolActivation(new Uri($"https://github.com/{_authorName}/{_programName}/releases/latest")))
                 .Show();
         }
 
@@ -195,7 +201,7 @@
         {
             if (_userAboutSettings.UpdateVersion is not null)
             {
-                Process.Start(new ProcessStartInfo("https://github.com/krznck/copy-flyouts/releases/latest") { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo($"https://github.com/{_authorName}/{_programName}/releases/latest") { UseShellExecute = true });
             }
         }
 

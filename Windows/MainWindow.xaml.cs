@@ -170,7 +170,7 @@
 
             // we want to make sure it's clear when there is an update, so it's good to do these on each load
             RefreshUpdateIndicator();
-            if (_userSettings.About.UpdateVersion is not null) { UpdateChecker.NotifyAboutUpdate(); }
+            if (_userSettings.About.UpdateVersion is not null) { _updateChecker.NotifyAboutUpdate(); }
 
             ToolboxTextBox.Text = _dummyDataHolder.CurrentText;
         }

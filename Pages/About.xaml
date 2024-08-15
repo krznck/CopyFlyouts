@@ -74,7 +74,14 @@
                     <ui:TextBlock Text="Website" FontTypography="BodyStrong" TextWrapping="WrapWithOverflow"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <ui:HyperlinkButton Content="GitHub" NavigateUri="https://github.com/krznck/copy-flyouts"/>
+            <ui:HyperlinkButton Content="GitHub">
+                <ui:HyperlinkButton.NavigateUri>
+                    <MultiBinding StringFormat="https://github.com/{0}/{1}">
+                        <Binding Source="{StaticResource AuthorName}"/>
+                        <Binding Source="{StaticResource ProgramName}"/>
+                    </MultiBinding>
+                </ui:HyperlinkButton.NavigateUri>
+            </ui:HyperlinkButton>
         </ui:CardControl>
 
         <ui:Button Grid.Row="5" Content="Reset update settings" Icon="{ui:SymbolIcon ArrowReset24}" x:Name="Reset" Click="Reset_Click" Margin="0 0 0 10"/>
