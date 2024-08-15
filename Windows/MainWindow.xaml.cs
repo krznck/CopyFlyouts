@@ -170,7 +170,7 @@
 
             // we want to make sure it's clear when there is an update, so it's good to do these on each load
             RefreshUpdateIndicator();
-            if (_userSettings.About.UpdatePageUrl is not null) { UpdateChecker.NotifyAboutUpdate(); }
+            if (_userSettings.About.UpdateVersion is not null) { UpdateChecker.NotifyAboutUpdate(); }
 
             ToolboxTextBox.Text = _dummyDataHolder.CurrentText;
         }
@@ -314,7 +314,7 @@
                     else { RemoveFromStartup(); }
                     break;
 
-                case nameof(SettingsManager.About.UpdatePageUrl):
+                case nameof(SettingsManager.About.UpdateVersion):
                     RefreshUpdateIndicator();
                     break;
 
@@ -432,7 +432,7 @@
         /// </summary>
         private void RefreshUpdateIndicator()
         {
-            if (_userSettings.About.UpdatePageUrl is not null)
+            if (_userSettings.About.UpdateVersion is not null)
             {
                 AboutSymbol.Filled = true;
                 SolidColorBrush colorStatusDangerForeground1 = (SolidColorBrush)Application.Current.Resources["colorStatusDangerForeground1"];

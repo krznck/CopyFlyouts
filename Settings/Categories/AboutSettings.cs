@@ -9,19 +9,42 @@
     /// </summary>
     public class AboutSettings : SettingHolder
     {
-        private string? _updatePageUrl = null;
+        private Version? _updateVersion = null;
         private bool _autoUpdate = true;
         private string _updateFrequency = UpdateFrequencies.TwoHours.Name;
 
         #region PublicProperties
 
-        public string? UpdatePageUrl
+        /// <summary>
+        /// Stores the update version of the program, to check whether the program can be updates.
+        /// The special setter behavior is to ensure that when the store version becomes lower than
+        /// the program version (which can happen when the program is updated), this is put back to null.
+        /// </summary>
+        public Version? UpdateVersion
         {
-            get => _updatePageUrl;
+            get => _updateVersion;
             set
             {
-                _updatePageUrl = value;
-                OnPropertyChanged(nameof(UpdatePageUrl));
+                var commonResources = new ResourceDictionary
+                {
+                    Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative)
+                };
+                var currentVersionString = commonResources["Version"] as string;
+                currentVersionString = currentVersionString?[1..];
+
+                _ = currentVersionString ?? throw new NullReferenceException("Can't find current version resource string.");
+
+                var currentVersion = new Version(currentVersionString);
+
+                if (value is not null && value.CompareTo(currentVersion) > 0)
+                {
+                    _updateVersion = value;
+                }
+                else
+                {
+                    _updateVersion = null;
+                }
+                OnPropertyChanged(nameof(UpdateVersion));
             }
         }
 
@@ -55,46 +78,14 @@
         #endregion
 
         /// <summary>
-        /// Instantiates the <see cref="AboutSettings"/> object.
-        /// </summary>
-        /// <remarks>
-        /// This constructor checks that the saved upate url (which indicates that there is an update)
-        /// is not pointing to a program version that is lower than the current program.
-        /// This is to ensure that when the user UPDATES the program, it removes the update url as it is now outdates.
-        /// </remarks>
-        public AboutSettings()
-        {
-            if (UpdatePageUrl is null) { return; }
-
-            var commonResources = new ResourceDictionary
-            {
-                Source = new Uri("Resources/CommonResources.xaml", UriKind.Relative)
-            };
-            string? version = commonResources["Version"] as string;
-            version = version?[1..];
-
-            string pattern = @"\d+\.\d+\.\d+";
-            Match match = Regex.Match(UpdatePageUrl, pattern);
-            if (match.Success && version is not null)
-            {
-                Version urlVersion = new(match.Value);
-                Version programVersion = new(version);
-                if (urlVersion.CompareTo(programVersion) < 0)
-                {
-                    UpdatePageUrl = null;
-                }
-            }
-        }
-
-        /// <summary>
         /// The method is overriden from <see cref="SettingHolder.Reset()"/> 
-        /// to ensure <see cref="UpdatePageUrl"/> cannot be reset, as that is not shown to the user.
+        /// to ensure <see cref="UpdateVersion"/> cannot be reset, as that is not shown to the user.
         /// </summary>
         public override void Reset()
         {
-            var page = UpdatePageUrl;
+            var page = UpdateVersion;
             base.Reset();
-            UpdatePageUrl = page;
+            UpdateVersion = page;
         }
     }
 }

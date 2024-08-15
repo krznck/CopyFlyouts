@@ -65,7 +65,7 @@
 
             switch (e.PropertyName)
             {
-                case nameof(SettingsManager.About.UpdatePageUrl):
+                case nameof(SettingsManager.About.UpdateVersion):
                     RefreshUpdateStatusIndicators();
                     break;
 
@@ -87,7 +87,7 @@
 
         private void RefreshUpdateStatusIndicators()
         {
-            if (_userAboutSettings is null || _userAboutSettings.UpdatePageUrl is null)
+            if (_userAboutSettings is null || _userAboutSettings.UpdateVersion is null)
             {
                 OpenUpdatePageButton.IsEnabled = false;
                 return;

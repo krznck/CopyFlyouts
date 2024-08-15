@@ -44,7 +44,7 @@
             aboutSettings.PropertyChanged += UserSettings_PropertyChanged;
 
             // checks for updates on startup, before the timer starts
-            if (aboutSettings.UpdatePageUrl is null && aboutSettings.AutoUpdate) { Task task = CheckForUpdatesAutomatically(); }
+            if (aboutSettings.UpdateVersion is null && aboutSettings.AutoUpdate) { Task task = CheckForUpdatesAutomatically(); }
             InitializeUpdateCheckTimer();
         }
 
@@ -57,8 +57,8 @@
         {
             switch (e.PropertyName)
             {
-                case nameof(SettingsManager.About.UpdatePageUrl):
-                    if (_userAboutSettings.UpdatePageUrl is not null) { StopUpdateCheckTimer(); }
+                case nameof(SettingsManager.About.UpdateVersion):
+                    if (_userAboutSettings.UpdateVersion is not null) { StopUpdateCheckTimer(); }
                     else { InitializeUpdateCheckTimer(); }
                     break;
 
@@ -130,7 +130,7 @@
                     PrimaryButtonText = "Open update page"
                 };
 
-                _userAboutSettings.UpdatePageUrl = latestRelease.HtmlUrl;
+                _userAboutSettings.UpdateVersion = GetVersionFromString(latestRelease.TagName);
 
                 if (await messageBox.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary) { OpenUpdatePage(); }
             }
@@ -165,7 +165,7 @@
 
             if (IsNewVersionAvailable(_currentVersion, latestRelease.TagName))
             {
-                _userAboutSettings.UpdatePageUrl = latestRelease.HtmlUrl;
+                _userAboutSettings.UpdateVersion = GetVersionFromString(latestRelease.TagName);
                 NotifyAboutUpdate();
             }
         }
@@ -193,7 +193,7 @@
         /// </summary>
         public void OpenUpdatePage()
         {
-            if (_userAboutSettings.UpdatePageUrl is not null)
+            if (_userAboutSettings.UpdateVersion is not null)
             {
                 Process.Start(new ProcessStartInfo("https://github.com/krznck/copy-flyouts/releases/latest") { UseShellExecute = true });
             }
@@ -201,14 +201,18 @@
 
         private static bool IsNewVersionAvailable(string currentVersion, string latestVersion)
         {
-            if (latestVersion.StartsWith('v'))
-            {
-                latestVersion = latestVersion[1..];
-            }
-
             Version current = new (currentVersion);
-            Version latest = new (latestVersion);
+            Version latest = GetVersionFromString(latestVersion);
             return latest.CompareTo(current) > 0;
+        }
+
+        private static Version GetVersionFromString(string version)
+        {
+            if (version.StartsWith('v'))
+            {
+                version = version[1..];
+            }
+            return new Version(version);
         }
 
         /// <summary>
@@ -217,7 +221,7 @@
         /// </summary>
         private void InitializeUpdateCheckTimer()
         {
-            if (_userAboutSettings.UpdatePageUrl is not null || !_userAboutSettings.AutoUpdate)
+            if (_userAboutSettings.UpdateVersion is not null || !_userAboutSettings.AutoUpdate)
             {
                 return;
             }
