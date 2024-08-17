@@ -18,10 +18,6 @@
     {
         private readonly AboutSettings _userAboutSettings;
         private readonly HttpClient _client = new();
-
-        // note - adding a token like this straight into source code is bad, but it will be fine so long as the repo is private.
-        // by the time this repo is publicized, the token will be expired or deleted
-        private readonly string _personalAccessToken = "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";
         private readonly string _currentVersion;
         private readonly string _authorName;
         private readonly string _programName;
@@ -118,11 +114,6 @@
                 var url =
                     $"https://api.github.com/repos/{_authorName}/{_programName}/releases/latest";
                 _client.DefaultRequestHeaders.UserAgent.ParseAdd("request");
-                _client.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue(
-                        "Token",
-                        _personalAccessToken
-                    );
                 var response = await _client.GetStringAsync(url);
                 var release = JsonSerializer.Deserialize<GitHubRelease>(response, _jsonOptions);
                 return release;
