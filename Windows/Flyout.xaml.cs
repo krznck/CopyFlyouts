@@ -121,7 +121,7 @@
                 ApplyInverseTheme();
             }
 
-            if (!_userSettings.Behavior.EnableFlyoutAnimations)
+            if (!_userSettings.Behavior.EnableFlyoutEntranceAnimations)
             {
                 FadeInAnimation.Duration = TimeSpan.FromSeconds(0);
                 MoveUpAnimation.Duration = TimeSpan.FromSeconds(0);
@@ -135,7 +135,7 @@
         /// <param name="e">Cancel event arguments - used to cancel the closure to show an animation first.</param>
         private void Flyout_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!_closingAnimationFinished)
+            if (!_closingAnimationFinished && _userSettings.Behavior.EnableFlyoutExitAnimations)
             {
                 e.Cancel = true;
 

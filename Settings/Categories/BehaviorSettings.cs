@@ -12,7 +12,8 @@
         private bool _allowImages = true;
 
         private double _flyoutLifetime = 1.5;
-        private bool _enableFlyoutAnimations = true;
+        private bool _enableFlyoutEntranceAnimations = true;
+        private bool _enableFlyoutExitAnimations = true;
 
         private bool _flyoutUnderCursor = false;
         private string _flyoutScreen = "Follow cursor";
@@ -66,13 +67,23 @@
             }
         }
 
-        public bool EnableFlyoutAnimations
+        public bool EnableFlyoutEntranceAnimations
         {
-            get => _enableFlyoutAnimations;
+            get => _enableFlyoutEntranceAnimations;
             set
             {
-                _enableFlyoutAnimations = value;
-                OnPropertyChanged(nameof(EnableFlyoutAnimations));
+                _enableFlyoutEntranceAnimations = value;
+                OnPropertyChanged(nameof(EnableFlyoutEntranceAnimations));
+            }
+        }
+
+        public bool EnableFlyoutExitAnimations
+        {
+            get => _enableFlyoutExitAnimations;
+            set
+            {
+                _enableFlyoutExitAnimations = value;
+                OnPropertyChanged(nameof(EnableFlyoutExitAnimations));
             }
         }
 
