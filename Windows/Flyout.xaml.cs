@@ -9,6 +9,7 @@
     using System.Windows.Forms;
     using System.Windows.Interop;
     using System.Windows.Media;
+    using System.Windows.Media.Animation;
     using System.Windows.Media.Imaging;
     using CopyFlyouts.Core;
     using CopyFlyouts.Resources;
@@ -29,6 +30,8 @@
         private readonly SettingsManager _userSettings; // we use the entire settings, since Flyout uses both Appearance and Behavior
         private readonly ClipboardContent _clipContent;
         private readonly ClipboardContent _previousClip;
+
+        private bool _closingAnimationFinished = false; // flag to close only after an animation has played
 
         // these methods are used to make it possible to click through the Flyout window instance
         // note: SYSLIB1054 suggests changing DllImport to LibraryImport, saying it may improve performance
@@ -107,6 +110,7 @@
             MaxHeight = _userSettings.Appearance.FlyoutHeight;
 
             Loaded += Flyout_Loaded;
+            Closing += Flyout_Closing;
 
             // we don't want this to look like a window
             ShowInTaskbar = false;
@@ -121,6 +125,34 @@
             {
                 FadeInAnimation.Duration = TimeSpan.FromSeconds(0);
                 MoveUpAnimation.Duration = TimeSpan.FromSeconds(0);
+            }
+        }
+
+        /// <summary>
+        /// Changes closing behavior to play an exit animation before closure.
+        /// </summary>
+        /// <param name="sender">Sender of the event - the Flyout instance itself (unused).</param>
+        /// <param name="e">Cancel event arguments - used to cancel the closure to show an animation first.</param>
+        private void Flyout_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!_closingAnimationFinished)
+            {
+                e.Cancel = true;
+
+                DoubleAnimation fadeOutAnimation = new()
+                {
+                    Duration = new Duration(TimeSpan.FromSeconds(0.12)),
+                    From = 1.0,
+                    To = 0.0
+                };
+
+                fadeOutAnimation.Completed += (s, a) =>
+                {
+                    _closingAnimationFinished = true;
+                    Close(); // just closes again but without triggering this code again
+                };
+
+                BeginAnimation(OpacityProperty, fadeOutAnimation);
             }
         }
 
