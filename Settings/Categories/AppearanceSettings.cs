@@ -13,7 +13,7 @@
         private double _flyoutWidthScale = 1.0;
         private double _flyoutWidth = 600;
         private double _flyoutHeightScale = 1.0;
-        private double _flyoutHeight = 180;
+        private double _flyoutHeight = 185;
         private double _flyoutFontSizeScale = 1.0;
         private double _flyoutFontSize = 20;
         private double _flyoutIconSize = 26;

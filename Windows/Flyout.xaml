@@ -32,9 +32,10 @@
         </Grid.Triggers>
 
         <!-- Flyout area -->
-        <Border BorderThickness="1" CornerRadius="{Binding Appearance.FlyoutCorners}" Padding="10" BorderBrush="{DynamicResource border}" Background="{DynamicResource colorNeutralBackground1}" Opacity="{Binding Appearance.FlyoutOpacity}">
+        <Border BorderThickness="1" CornerRadius="{Binding Appearance.FlyoutCorners}" Padding="10" BorderBrush="{DynamicResource border}" Background="{DynamicResource colorNeutralBackground1}" Opacity="{Binding Appearance.FlyoutOpacity}" x:Name="FlyoutBorder">
             <Grid x:Name="grid">
                 <Grid.RowDefinitions>
+                    <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
@@ -44,8 +45,10 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <ui:SymbolIcon x:Name="icon" Grid.Column="0" Grid.Row="0" Symbol="ClipboardCheckmark16" Filled="True" Margin="5,0,15,0" FontSize="{Binding Appearance.FlyoutIconSize}"/>
-                <Grid x:Name="fileGrid" Grid.Column="1" Grid.Row="0" Visibility="Collapsed" Margin="0 0 15 0">
+                <ui:TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="" FontSize="12" x:Name="SourceLabel" Visibility="Collapsed" Appearance="Tertiary" HorizontalAlignment="Left" TextWrapping="NoWrap"/>
+
+                <ui:SymbolIcon x:Name="icon" Grid.Column="0" Grid.Row="1" Symbol="ClipboardCheckmark16" Filled="True" Margin="5,0,15,0" FontSize="{Binding Appearance.FlyoutIconSize}"/>
+                <Grid x:Name="fileGrid" Grid.Column="1" Grid.Row="1" Visibility="Collapsed" Margin="0 0 15 0">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                         <ui:SymbolIcon x:Name="icon2" Visibility="Visible" FontSize="{Binding Appearance.FlyoutIconSize}" Filled="True" Symbol="DocumentCopy24"/>
                         <ui:InfoBadge x:Name="amount" Visibility="Collapsed" Value="0" Severity="Informational" HorizontalAlignment="Right" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
@@ -63,7 +66,7 @@
                            TextWrapping="Wrap" 
                            TextTrimming="CharacterEllipsis"
                            Grid.Column="2"
-                           Grid.Row="0"
+                           Grid.Row="1"
                            VerticalAlignment="Center" 
                            Padding="0" 
                            TextAlignment="Left" 
@@ -75,7 +78,7 @@
 
                 <ui:Image x:Name="flyoutImage"
                           Margin="0 10 0 0"
-                          Grid.Row="1"
+                          Grid.Row="2"
                           Grid.ColumnSpan="3"
                           Stretch="Uniform"
                           StretchDirection="DownOnly"

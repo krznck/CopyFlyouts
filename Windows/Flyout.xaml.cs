@@ -14,6 +14,7 @@
     using CopyFlyouts.Core;
     using CopyFlyouts.Resources;
     using CopyFlyouts.Settings;
+    using WK.Libraries.SharpClipboardNS;
     using Wpf.Ui.Appearance;
     using Wpf.Ui.Controls;
 
@@ -53,10 +54,12 @@
         /// <param name="previousClip">Previous clipboard content, to compare with current for success or failure.</param>
         /// <param name="clipContent">Current clipboard content, to be compared and shown.</param>
         /// <param name="userSettings">The settings necessary to manipulate the flyout per user's wishes.</param>
+        /// <param name="sourceApplication">Optional parameter of which application triggered the copy.</param>
         public Flyout(
             ClipboardContent previousClip,
             ClipboardContent clipContent,
-            SettingsManager userSettings
+            SettingsManager userSettings,
+            SourceApplication? sourceApplication = null
         )
         {
             InitializeComponent();
@@ -67,6 +70,16 @@
             DataContext = _userSettings;
 
             text.Text = _clipContent.Text;
+
+            if (
+                sourceApplication is not null
+                && _userSettings.Behavior.ShowNonKeyboardFlyoutSources
+            )
+            {
+                FlyoutBorder.Padding = new Thickness(10, 0, 10, 10);
+                SourceLabel.Visibility = Visibility.Visible;
+                SourceLabel.Text = sourceApplication.Name;
+            }
 
             if (_clipContent.FileAmount > 0)
             {
@@ -139,12 +152,13 @@
             {
                 e.Cancel = true;
 
-                DoubleAnimation fadeOutAnimation = new()
-                {
-                    Duration = new Duration(TimeSpan.FromSeconds(0.12)),
-                    From = 1.0,
-                    To = 0.0
-                };
+                DoubleAnimation fadeOutAnimation =
+                    new()
+                    {
+                        Duration = new Duration(TimeSpan.FromSeconds(0.12)),
+                        From = 1.0,
+                        To = 0.0
+                    };
 
                 fadeOutAnimation.Completed += (s, a) =>
                 {

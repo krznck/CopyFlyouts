@@ -85,7 +85,7 @@
             }
             _isInitialSubscription = false; // we also force the flag here in case _previousClipboard was ineed empty
 
-            ShowNewFlyout();
+            ShowNewFlyout(e.SourceApplication);
 
             // we remove and return the clipboard change listener on a short timer to prevent the bug of a copy
             // sometimes being shown twice, like on the main window, or when screenshotting anything.
@@ -253,7 +253,8 @@
         /// As it's possible that a flyout is already on screen when this is called,
         /// the method starts with killing the former flyout.
         /// </remarks>
-        private void ShowNewFlyout()
+        /// <param name="copyOriginator">Optional parameter to pass which application triggered the copy.</param>
+        private void ShowNewFlyout(SourceApplication? copyOriginator = null)
         {
             // closes the existing flyout and stops the timer immediately
             CloseFlyout();
@@ -263,7 +264,12 @@
             ClipboardContent currentClipboard = new(_userSettings.Behavior);
             bool copyIsEmpty = currentClipboard.Text.Length == 0;
 
-            var flyout = new Flyout(_previousClipboard, currentClipboard, _userSettings);
+            var flyout = new Flyout(
+                _previousClipboard,
+                currentClipboard,
+                _userSettings,
+                copyOriginator
+            );
             flyout.Show();
 
             _previousClipboard = currentClipboard;

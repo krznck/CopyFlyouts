@@ -10,6 +10,7 @@
         private bool _enableKeyboardFlyouts = true;
         private bool _enableNonKeyboardFlyouts = true;
         private bool _allowImages = true;
+        private bool _showNonKeyboardFlyoutSources = false;
 
         private double _flyoutLifetime = 1.5;
         private bool _enableFlyoutEntranceAnimations = true;
@@ -54,6 +55,16 @@
             {
                 _allowImages = value;
                 OnPropertyChanged(nameof(AllowImages));
+            }
+        }
+
+        public bool ShowNonKeyboardFlyoutSources
+        {
+            get => _showNonKeyboardFlyoutSources;
+            set
+            {
+                _showNonKeyboardFlyoutSources = value;
+                OnPropertyChanged(nameof(ShowNonKeyboardFlyoutSources));
             }
         }
 

@@ -89,10 +89,14 @@
                     AllowImagesLabel.Text = _userBehaviorSettings.AllowImages ? "On" : "Off";
                     break;
 
+                case nameof(SettingsManager.Behavior.ShowNonKeyboardFlyoutSources):
+                    ShowNonKeyboardFlyoutSourcesLabel.Text =
+                        _userBehaviorSettings.ShowNonKeyboardFlyoutSources ? "On" : "Off";
+                    break;
+
                 case nameof(SettingsManager.Behavior.EnableFlyoutEntranceAnimations):
-                    FlyoutAnimationsLabel.Text = _userBehaviorSettings.EnableFlyoutEntranceAnimations
-                        ? "On"
-                        : "Off";
+                    FlyoutAnimationsLabel.Text =
+                        _userBehaviorSettings.EnableFlyoutEntranceAnimations ? "On" : "Off";
                     break;
 
                 case nameof(SettingsManager.Behavior.EnableSuccessSound):
@@ -203,6 +207,8 @@
                 ? "On"
                 : "Off";
             AllowImagesLabel.Text = _userBehaviorSettings.AllowImages ? "On" : "Off";
+            ShowNonKeyboardFlyoutSourcesLabel.Text =
+                _userBehaviorSettings.ShowNonKeyboardFlyoutSources ? "On" : "Off";
             FlyoutAnimationsLabel.Text = _userBehaviorSettings.EnableFlyoutEntranceAnimations
                 ? "On"
                 : "Off";
