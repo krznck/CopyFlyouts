@@ -20,7 +20,7 @@
         private DispatcherTimer? _currentTimer = null;
         private ClipboardContent _previousClipboard;
         private readonly SharpClipboard _sharpClipboard = new(); // will be used to monitor mouse-clicked copies and copies not started by the user
-        private bool _isInitialSubscription = true; // this ensures the above does not show the flyout of what's in the clipboard on opening the program
+        private bool _isInitialCopy = true; // this ensures the above does not show the flyout of what's in the clipboard on opening the program
         private bool _clipboardSubscribed = false;
         private HwndSource? _source;
 
@@ -78,12 +78,12 @@
             // causing a flyout of the _previousClipboard to show.
             // to fix that, we introduce a simple flag to ensure SharpClipboard doesn't do anything the first time
             // it is triggered, but only if the clipboard isn't empty (otherwise it will erronously not show when it should)
-            if (_isInitialSubscription && !(_previousClipboard.IsEmpty()))
+            if (_isInitialCopy && !(_previousClipboard.IsEmpty()))
             {
-                _isInitialSubscription = false;
+                _isInitialCopy = false;
                 return;
             }
-            _isInitialSubscription = false; // we also force the flag here in case _previousClipboard was ineed empty
+            _isInitialCopy = false; // we also force the flag here in case _previousClipboard was ineed empty
 
             ShowNewFlyout(e.SourceApplication);
 
@@ -93,7 +93,7 @@
             // note: could potentially be caused by the fact that we have to listen to multiple formats,
             // potentially triggering the event multiple times for one copy, when a copy has multiple DataFormats?
             UnscrubscribeFromClipboard();
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1) };
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(25) };
             timer.Start();
             timer.Tick += (sender, args) =>
             {
@@ -234,6 +234,10 @@
         /// </remarks>
         private void HandleKeyboardCopy()
         {
+            // not setting this here causes a problem where we think it's the initial copy if the user
+            // non-keyboard copies something *after* keyboard copying something
+            _isInitialCopy = false;
+
             // unregisters hotkey to send in a standard Ctrl+C to copy stuff
             UnregisterKeyboardCatching();
 
