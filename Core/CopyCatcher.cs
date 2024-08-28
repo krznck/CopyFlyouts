@@ -287,7 +287,7 @@
             timer.Tick += (sender, args) =>
             {
                 timer.Stop();
-                if (flyout == _currentFlyout) // checks if the flyout is still the current one
+                if (flyout is not null) // might already be closed before timer runs out
                 {
                     flyout.Close();
                     _currentFlyout = null;
@@ -301,17 +301,20 @@
 
         private void CloseFlyout()
         {
-            if (_currentFlyout is not null)
+            // some machines somehow lose reference to _currentFlyout, and cannot be closed that way
+            // hence, we just get the flyout reference from the application
+            foreach (Flyout flyout in Application.Current.Windows.OfType<Flyout>())
             {
-                _currentFlyout.Close();
-                _currentFlyout = null;
+                // Hide instead of Close because Close can unexpected behavior and exceptions,
+                // while the flyout is going to be safely closed anyway after its timer has run out
+                flyout.Hide();
             }
 
-            if (_currentTimer is not null)
-            {
-                _currentTimer.Stop();
-                _currentTimer = null;
-            }
+            _currentFlyout?.Close();
+            _currentFlyout = null;
+
+            _currentTimer?.Stop();
+            _currentTimer = null;
         }
 
         /// <summary>
