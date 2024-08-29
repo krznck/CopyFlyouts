@@ -1,5 +1,6 @@
 ﻿namespace CopyFlyouts.Settings.Categories
 {
+    using System.Diagnostics;
     using System.Text.Json.Serialization;
 
     /// <summary>
@@ -16,6 +17,7 @@
         private double _flyoutHeight = 185;
         private double _flyoutFontSizeScale = 1.0;
         private double _flyoutFontSize = 20;
+        private double _flyoutSourceProcessFontSize = 12;
         private double _flyoutIconSize = 26;
         private int _flyoutCorners = 5;
 
@@ -102,6 +104,7 @@
             {
                 _flyoutFontSizeScale = RestrictDouble(0.5, 3.0, RoundToNearestTenth(value));
                 FlyoutFontSize = 20 * _flyoutFontSizeScale;
+                FlyoutSourceProcessFontSize = 0.6 * FlyoutFontSize; // 60% of the normal font
                 FlyoutIconSize = 26 * _flyoutFontSizeScale;
                 OnPropertyChanged(nameof(FlyoutFontSizeScale));
             }
@@ -115,6 +118,17 @@
             {
                 _flyoutFontSize = value;
                 OnPropertyChanged(nameof(FlyoutFontSize));
+            }
+        }
+
+        [JsonIgnore]
+        public double FlyoutSourceProcessFontSize
+        {
+            get => _flyoutSourceProcessFontSize;
+            set
+            {
+                _flyoutSourceProcessFontSize = value;
+                OnPropertyChanged(nameof(FlyoutSourceProcessFontSize));
             }
         }
 

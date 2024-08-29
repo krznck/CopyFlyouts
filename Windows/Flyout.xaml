@@ -45,7 +45,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <ui:TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="" FontSize="12" x:Name="SourceLabel" Visibility="Collapsed" Appearance="Tertiary" HorizontalAlignment="Left" TextWrapping="NoWrap"/>
+                <ui:TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="" FontSize="{Binding Appearance.FlyoutSourceProcessFontSize}" x:Name="SourceLabel" Visibility="Collapsed" Appearance="Tertiary" HorizontalAlignment="Left" TextWrapping="NoWrap"/>
 
                 <ui:SymbolIcon x:Name="icon" Grid.Column="0" Grid.Row="1" Symbol="ClipboardCheckmark16" Filled="True" Margin="5,0,15,0" FontSize="{Binding Appearance.FlyoutIconSize}"/>
                 <Grid x:Name="fileGrid" Grid.Column="1" Grid.Row="1" Visibility="Collapsed" Margin="0 0 15 0">
