@@ -39,8 +39,7 @@ Flyouts can be displayed from copies not done through the keyboard, including co
 
 CopyFlyouts works with files and images!
 
-![Image showing a flyout with file paths](/Assets/Presentation/FilesExample.png)  
-![Image showing a flyout with an image](/Assets/Presentation/ImageExample.png)
+![Gif showing image and files copy attempts](/Assets/Presentation/ImageAndFilesCopy.gif)
 
 Both the appearance and behavior of CopyFlyouts is customizable via the settings.
 
@@ -52,3 +51,4 @@ Other useful features of CopyFlyouts are:
 - ability to start minimized on system startup
 - ability to minimize to the system tray
 - portability to removable drives while retaining settings
+- ability to show which process triggered a copy
