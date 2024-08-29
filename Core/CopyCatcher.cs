@@ -16,8 +16,6 @@
     public class CopyCatcher
     {
         private readonly SettingsManager _userSettings;
-        private Flyout? _currentFlyout = null;
-        private DispatcherTimer? _currentTimer = null;
         private ClipboardContent _previousClipboard;
         private readonly SharpClipboard _sharpClipboard = new(); // will be used to monitor mouse-clicked copies and copies not started by the user
         private bool _isInitialCopy = true; // this ensures the above does not show the flyout of what's in the clipboard on opening the program
@@ -255,18 +253,16 @@
         /// </summary>
         /// <remarks>
         /// As it's possible that a flyout is already on screen when this is called,
-        /// the method starts with killing the former flyout.
+        /// the method starts with hiding the former flyout.
         /// </remarks>
         /// <param name="copyOriginator">Optional parameter to pass which application triggered the copy.</param>
         private void ShowNewFlyout(SourceApplication? copyOriginator = null)
         {
-            // closes the existing flyout and stops the timer immediately
-            CloseFlyout();
+            CloseFlyout(); // only should be one flyout on screen
 
             Thread.Sleep(100); // we wait a little bit to prevent clipboard access conflict
 
             ClipboardContent currentClipboard = new(_userSettings.Behavior);
-            bool copyIsEmpty = currentClipboard.Text.Length == 0;
 
             var flyout = new Flyout(
                 _previousClipboard,
@@ -277,9 +273,8 @@
             flyout.Show();
 
             _previousClipboard = currentClipboard;
-            _currentFlyout = flyout;
 
-            // creates a DispatcherTimer to close the flyout after the user-specified time
+            // we want to close the flyout after the user-specified time
             var timer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(_userSettings.Behavior.FlyoutLifetime)
@@ -287,34 +282,20 @@
             timer.Tick += (sender, args) =>
             {
                 timer.Stop();
-                if (flyout is not null) // might already be closed before timer runs out
-                {
-                    flyout.Close();
-                    _currentFlyout = null;
-                }
+                flyout?.Close();
             };
             timer.Start();
-
-            // updates the current timer reference
-            _currentTimer = timer;
         }
 
-        private void CloseFlyout()
+        private static void CloseFlyout()
         {
-            // some machines somehow lose reference to _currentFlyout, and cannot be closed that way
-            // hence, we just get the flyout reference from the application
+            // instead of holding a reference to the previous flyout, we just close the ones that are still up
             foreach (Flyout flyout in Application.Current.Windows.OfType<Flyout>())
             {
-                // Hide instead of Close because Close can unexpected behavior and exceptions,
+                // though we Hide instead of Close because Close can cause unexpected behavior and exceptions,
                 // while the flyout is going to be safely closed anyway after its timer has run out
                 flyout.Hide();
             }
-
-            _currentFlyout?.Close();
-            _currentFlyout = null;
-
-            _currentTimer?.Stop();
-            _currentTimer = null;
         }
 
         /// <summary>
