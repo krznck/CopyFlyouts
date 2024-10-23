@@ -16,6 +16,8 @@ While the main purpose and goal of CopyFlyouts is to be a genuinely useful progr
 
 ## Getting started
 
+**Note:** Release 1.1.0 appears to have introduced a critical bug, causing copy detection to fail a lot of the time. It is not recommended to use the 1.1.0 build, and the below links should now point to 1.0.0.
+
 Install the program via the [setup executable](https://github.com/krznck/CopyFlyouts/releases/latest/download/Setup_CopyFlyouts.exe), or download the [portable version](https://github.com/krznck/CopyFlyouts/releases/latest/download/CopyFlyouts_Portable.zip).
 
 ## Showcase
