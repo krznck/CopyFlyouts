@@ -40,6 +40,7 @@ Flyouts can be displayed from copies not done through the keyboard, including co
 CopyFlyouts works with files and images!
 
 ![Gif showing image and files copy attempts](/Assets/Presentation/ImageAndFilesCopy.gif)
+![Gif showing image and files copy attempts](/Assets/Presentation/ImageAndFilesCopy.gif)
 
 Both the appearance and behavior of CopyFlyouts is customizable via the settings.
 

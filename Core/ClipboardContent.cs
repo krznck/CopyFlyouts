@@ -1,8 +1,6 @@
 ﻿namespace CopyFlyouts.Core
 {
-    using System.Diagnostics;
     using System.IO;
-    using System.Runtime.InteropServices;
     using System.Text.RegularExpressions;
     using CopyFlyouts.Settings.Categories;
 
@@ -52,33 +50,22 @@
 
         /// <summary>
         /// Wrapper for <see cref="GetDataFromClipboard"/>,
-        /// that calls it an additional five times if the initial call resulted in no data,
-        /// and looks for any <see cref="ExternalException"/> from the clipboard.
+        /// that calls it an additional five times if the initial call resulted in no data.
         /// </summary>
         /// <remarks>
         /// This is done due to the method sometimes failing to assign <see cref="Clipboard"/> data correctly,
         /// due to what I assume is a result of the quirkiness of the system clipboard being a precious shared resource.
-        /// Similarly, <see cref="ExternalException"/> can happen rarely, and are worth worrying about.
         /// </remarks>
         private void LoadContent()
         {
-            for (int i = 0; i < 8; i++)
+            GetDataFromClipboard();
+
+            int failure = 0;
+            while (_copyText.Length.Equals(0) && FileAmount == 0 && Image is null && failure < 5)
             {
-                try
-                {
-                    GetDataFromClipboard();
-
-                    if (_copyText.Length.Equals(0) || FileAmount > 0 || Image != null)
-                    {
-                        break;
-                    }
-
-                    Thread.Sleep(1);
-                }
-                catch (ExternalException)
-                {
-                    Thread.Sleep(1000); // since the clipboard is probably busy at the moment, we wait a bit
-                }
+                Thread.Sleep(1);
+                GetDataFromClipboard();
+                failure++;
             }
         }
 
