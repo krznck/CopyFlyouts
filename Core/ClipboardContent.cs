@@ -1,6 +1,7 @@
 ﻿namespace CopyFlyouts.Core
 {
     using System.IO;
+    using System.Runtime.InteropServices;
     using System.Text.RegularExpressions;
     using CopyFlyouts.Settings.Categories;
 
@@ -35,9 +36,11 @@
         }
 
         /// <summary>
-        /// Initializes the <see cref="ClipboardContent"/> instance.
-        /// On this initialization, the object builds itself using the system <see cref="Clipboard"/>.
+        /// Constructs the <see cref="ClipboardContent"/> instance.
         /// </summary>
+        /// <remarks>
+        /// Upon construction, the object is empty. See <see cref="LoadContent"/> to initialize properly.
+        /// </remarks>
         /// <param name="behaviorSettings">
         /// User's <see cref="BehaviorSettings"/> object -
         /// used here to determine whether we need to perform the potentially performance intenstive process of getting an image.
@@ -45,26 +48,28 @@
         public ClipboardContent(BehaviorSettings behaviorSettings)
         {
             _userBehaviorSettings = behaviorSettings;
-            LoadContent();
         }
 
         /// <summary>
+        /// Initializes the object attributes asynchronously using the system <see cref="Clipboard"/>.
         /// Wrapper for <see cref="GetDataFromClipboard"/>,
         /// that calls it an additional five times if the initial call resulted in no data.
         /// </summary>
         /// <remarks>
         /// This is done due to the method sometimes failing to assign <see cref="Clipboard"/> data correctly,
         /// due to what I assume is a result of the quirkiness of the system clipboard being a precious shared resource.
+        /// 
+        /// It is additionally asynchronous to prevent the UI being blocked when the system refuses to let go of the clipboard altogether.
         /// </remarks>
-        private void LoadContent()
+        public async Task LoadContent()
         {
-            GetDataFromClipboard();
+            await GetDataFromClipboard();
 
             int failure = 0;
             while (_copyText.Length.Equals(0) && FileAmount == 0 && Image is null && failure < 5)
             {
-                Thread.Sleep(1);
-                GetDataFromClipboard();
+                await Task.Delay(1);
+                await GetDataFromClipboard();
                 failure++;
             }
         }
@@ -73,36 +78,55 @@
         /// Assigns <see cref="Clipboard"/> data to the object instance's attributes,
         /// after having processed them.
         /// </summary>
-        private void GetDataFromClipboard()
+        private async Task GetDataFromClipboard()
         {
-            if (Clipboard.ContainsText())
-            {
-                Text = Clipboard.GetText();
-            }
+            const int RETRY_LIMIT = 7;
+            int retries = 0;
+            int delay = 100; // initial delay - will be increased
+            bool success = false;
 
-            if (Clipboard.ContainsFileDropList())
+            while (!success && retries < RETRY_LIMIT) // note: we let the program crash if this isn't enough - something's wrong
             {
-                string combinedPaths = "";
-                foreach (string? filePath in Clipboard.GetFileDropList())
+                try
                 {
-                    combinedPaths += filePath + " ; ";
-                    FileAmount++;
-                }
-                Text = combinedPaths.TrimEnd([' ', ';']); // removes the trailing semicolon
-            }
+                    if (Clipboard.ContainsText())
+                    {
+                        Text = Clipboard.GetText();
+                    }
 
-            if (Clipboard.ContainsImage())
-            {
-                // we're using user settings here instead of simply not displaying the image in the Flyout,
-                // so that we don't have to call GetImage(), which can be intensive on big images
-                if (_userBehaviorSettings.AllowImages)
-                {
-                    Image = Clipboard.GetImage();
+                    if (Clipboard.ContainsFileDropList())
+                    {
+                        string combinedPaths = "";
+                        foreach (string? filePath in Clipboard.GetFileDropList())
+                        {
+                            combinedPaths += filePath + " ; ";
+                            FileAmount++;
+                        }
+                        Text = combinedPaths.TrimEnd([' ', ';']); // removes the trailing semicolon
+                    }
+
+                    if (Clipboard.ContainsImage())
+                    {
+                        // we're using user settings here instead of simply not displaying the image in the Flyout,
+                        // so that we don't have to call GetImage(), which can be intensive on big images
+                        if (_userBehaviorSettings.AllowImages)
+                        {
+                            Image = Clipboard.GetImage();
+                        }
+                        else
+                        {
+                            Image = new Bitmap(1, 1);
+                        } // creates a fake image that can be passed on and easily detected
+                    }
+
+                    success = true;
                 }
-                else
+                catch (ExternalException)
                 {
-                    Image = new Bitmap(1, 1);
-                } // creates a fake image that can be passed on and easily detected
+                    retries++;
+                    await Task.Delay(delay);
+                    delay *= 2; // exponential backoff
+                }
             }
         }
 

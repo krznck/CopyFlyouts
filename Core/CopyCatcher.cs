@@ -40,6 +40,7 @@
         {
             _userSettings = userSettings;
             _previousClipboard = new ClipboardContent(_userSettings.Behavior);
+            Task task = _previousClipboard.LoadContent();
 
             _userSettings.PropertyChanged += UserSettings_PropertyChanged;
 
@@ -263,6 +264,7 @@
             Thread.Sleep(100); // we wait a little bit to prevent clipboard access conflict
 
             ClipboardContent currentClipboard = new(_userSettings.Behavior);
+            Task task = currentClipboard.LoadContent();
 
             var flyout = new Flyout(
                 _previousClipboard,

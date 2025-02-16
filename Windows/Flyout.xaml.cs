@@ -55,7 +55,8 @@
         /// <param name="clipContent">Current clipboard content, to be compared and shown.</param>
         /// <param name="userSettings">The settings necessary to manipulate the flyout per user's wishes.</param>
         /// <param name="sourceApplication">Optional parameter of which application triggered the copy.</param>
-        public Flyout(
+        
+public Flyout(
             ClipboardContent previousClip,
             ClipboardContent clipContent,
             SettingsManager userSettings,
