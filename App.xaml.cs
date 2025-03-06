@@ -4,12 +4,13 @@
     using System.Windows;
     using log4net;
     using log4net.Config;
+    using System.Windows.Forms;
 
     /// <summary>
     /// Interaction logic for App.xaml
     /// Oversees starting the application and handling the logging and Mutex logic.
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         // crash logging stuff
         private readonly ILog _log = LogManager.GetLogger(typeof(App));
@@ -73,6 +74,39 @@
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             DispatcherUnhandledException += App_DispatcherUnhandledException;
+
+            // note: This is so that Windows Forms also catches exceptions - it appears that SharpClipboard uses Forms
+            System.Windows.Forms.Application.SetUnhandledExceptionMode(System.Windows.Forms.UnhandledExceptionMode.CatchException);
+            System.Windows.Forms.Application.ThreadException += WinForms_ThreadException;
+
+        }
+        
+
+        private async void WinForms_ThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            if (e.Exception is ExternalException)
+            {
+                _log.Warn("Ignored ExternalException in WinForms thread", e.Exception);
+                return; // ignore :)
+            } else
+            {
+                _log.Error("Unhandled UI Exception", e.Exception);
+
+                await ShowExceptionWindow();
+
+                Current.Shutdown();
+            }
+        }
+
+        private async Task ShowExceptionWindow()
+        {
+            string? appName = Current.Resources["ProgramName"] as string;
+
+            string message =
+            $"An unexpected error occurred. {appName} will close.\nLog file can be located at {_logFilePath}";
+
+            Wpf.Ui.Controls.MessageBox messageBox = new() { Title = "Error", Content = message, };
+            await messageBox.ShowDialogAsync();
         }
 
         /// <summary>
@@ -95,16 +129,9 @@
             System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e
         )
         {
-            string? appName = Current.Resources["ProgramName"] as string;
-
             _log.Error("Unhandled UI Exception", e.Exception);
 
-            // we inform the user that the program has crashed
-            string message =
-                $"An unexpected error occurred. {appName} will close.\nLog file can be located at {_logFilePath}";
-
-            Wpf.Ui.Controls.MessageBox messageBox = new() { Title = "Error", Content = message, };
-            await messageBox.ShowDialogAsync();
+            await ShowExceptionWindow();
 
             e.Handled = true;
             Current.Shutdown();
